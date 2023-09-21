@@ -1,4 +1,4 @@
-package com.example.pokefight.ui.dashboard
+package com.example.pokefight.ui.home.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.example.pokefight.ui.dashboard
+package com.example.pokefight.ui.home.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

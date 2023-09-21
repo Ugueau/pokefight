@@ -30,6 +30,8 @@ class loginActivity : AppCompatActivity() {
         password = this.findViewById(R.id.password)
 
         connexion.setOnClickListener { click -> this.testConnexion() }
+
+        newUser.setOnClickListener { click -> this.tunnelConnexion()}
     }
 
     fun testConnexion(){
