@@ -5,7 +5,7 @@
     android:id="@+id/fragment_confirm_creation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentConfirmCreation">
+    tools:context=".ui.fragmentcreationcompte.FragmentConfirmCreation">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

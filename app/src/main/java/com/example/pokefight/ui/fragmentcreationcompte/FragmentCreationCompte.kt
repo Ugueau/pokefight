@@ -9,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.example.pokefight.R
+import com.example.pokefight.TunnelConnexionActivity
 
 class FragmentCreationCompte : Fragment() {
 
     private lateinit var createUser : Button
+
 
     companion object {
         fun newInstance() = FragmentCreationCompte()
@@ -22,23 +24,30 @@ class FragmentCreationCompte : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         viewModel = ViewModelProvider(this).get(FragmentCreationCompteViewModel::class.java)
 
-        createUser = this.activity!!.findViewById(R.id.CreateUser)
-
-        createUser.setOnClickListener { click -> this.createUser() }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_creation_compte, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_creation_compte, container, false)
+
+        createUser = view.findViewById(R.id.CreateUser)
+        createUser.setOnClickListener { click -> this.createUser() }
+
+        return view
     }
 
     fun createUser(){
 
         Log.e("TEST", "test", )
+
+        (activity as TunnelConnexionActivity).replaceFragmentConfirmCreation()
 
     }
 
