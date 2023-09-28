@@ -4,9 +4,8 @@ import com.example.pokefight.model.Pokemon
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
-import retrofit2.http.Query
 
-interface PokemonService {
+interface IPokemonService {
     @GET("pokemon/{id}/") // Use {id} as a path parameter
     fun getPokemonById(@Path("id") id: Int): Call<Pokemon>
 
