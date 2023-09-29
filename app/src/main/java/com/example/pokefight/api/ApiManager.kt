@@ -4,6 +4,8 @@ import android.util.Log
 import com.example.pokefight.IDataSource
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.services.IPokemonService
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call
@@ -36,8 +38,22 @@ object ApiManager : IDataSource, IPokemonDataCallback{
 
     override fun getData(from: Int?, to: Int?) {
         for (i in (from ?: 1) ..(to ?: 10)){
-            getPokemonById(this,i)
+            //getPokemonById(this,i)
+            GlobalScope.launch {
+                getPokemonId(ApiManager, i)
+            }
         }
+    }
+
+    suspend fun getPokemonId(callBack: IPokemonDataCallback, id :Int) {
+        val p = pokemonService?.getPokemonId(5)
+        if (p?.isSuccessful == true) {
+            p.body()?.let {pokemon ->
+                callBack.getPokemonResponseSuccess(pokemon)
+            }
+
+        }
+
     }
 
     private fun getPokemonById(callBack: IPokemonDataCallback, id :Int) {

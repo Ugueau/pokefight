@@ -2,12 +2,17 @@ package com.example.pokefight.services
 
 import com.example.pokefight.model.Pokemon
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface IPokemonService {
     @GET("pokemon/{id}/") // Use {id} as a path parameter
     fun getPokemonById(@Path("id") id: Int): Call<Pokemon>
+
+    @GET("pokemon/{id}/") // Use {id} as a path parameter
+    suspend fun getPokemonId(@Path("id") id: Int): Response<Pokemon>
+
 
     @GET("pokemon/1/")
     fun getBulbasaur(): Call<Pokemon>
