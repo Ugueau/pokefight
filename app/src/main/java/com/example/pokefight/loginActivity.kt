@@ -4,15 +4,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
+import com.google.android.material.textfield.TextInputLayout
 
 class loginActivity : AppCompatActivity() {
 
     //élément de ma vue
     private lateinit var connexion : Button
     private lateinit var newUser : Button
-    private lateinit var email : EditText
-    private lateinit var password : EditText
+    private lateinit var email : TextInputLayout
+    private lateinit var password : TextInputLayout
 
     //activity du tunnel de connexion
     private lateinit var tunnelConnexion : Intent
@@ -26,8 +26,8 @@ class loginActivity : AppCompatActivity() {
 
         connexion = this.findViewById(R.id.connexion)
         newUser = this.findViewById(R.id.newUser)
-        email = this.findViewById(R.id.email)
-        password = this.findViewById(R.id.password)
+        email = this.findViewById(R.id.InputCreateEmail)
+        password = this.findViewById(R.id.InputCreatePassword)
 
         connexion.setOnClickListener { click -> this.testConnexion() }
 
@@ -42,5 +42,6 @@ class loginActivity : AppCompatActivity() {
     fun tunnelConnexion(){
         tunnelConnexion = Intent(this, TunnelConnexionActivity::class.java)
         startActivity(tunnelConnexion)
+        finish()
     }
 }

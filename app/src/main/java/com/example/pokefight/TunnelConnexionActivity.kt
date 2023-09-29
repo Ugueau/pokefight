@@ -1,7 +1,9 @@
 package com.example.pokefight
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import com.example.pokefight.ui.fragmentcreationcompte.FragmentConfirmCreation
 import com.example.pokefight.ui.fragmentcreationcompte.FragmentCreationCompte
 
@@ -18,13 +20,16 @@ class TunnelConnexionActivity : AppCompatActivity() {
 
     }
 
-    // Ajoutez une fonction pour remplacer FragmentCreationCompte par FragmentConfirmCreation
-    fun replaceFragmentConfirmCreation() {
-        val fragment = FragmentConfirmCreation()
+    fun replaceFragment(TargetFragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
+            .replace(R.id.container, TargetFragment)
             .addToBackStack(null)
             .commit()
     }
 
+    fun endTunnelConnexion(TargetActivity: Intent){
+
+        startActivity(TargetActivity)
+        finish()
+    }
 }
