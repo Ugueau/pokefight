@@ -42,9 +42,9 @@ class FragmentCreationCompte : Fragment() {
 
         InputNickname = view.findViewById(R.id.InputCreateNickname)
 
-        InputEmail = view.findViewById(R.id.InputCreateEmail)
+        InputEmail = view.findViewById(R.id.LayoutEmailCreation)
 
-        InputPassword = view.findViewById(R.id.InputCreatePassword)
+        InputPassword = view.findViewById(R.id.layoutPasswordCreation)
 
         InputConfirmPassword = view.findViewById(R.id.InputCreateConfirmPassword)
 
