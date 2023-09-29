@@ -15,4 +15,8 @@
     <string name="name">Name</string>
     <string name="new_user_created">New user created</string>
     <string name="main_page">Main page</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="account_created">Account created</string>
+    <string name="nickname">Nickname</string>
 </resources>
