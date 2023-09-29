@@ -5,6 +5,7 @@
     android:id="@+id/fragment_confirm_creation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_theme_light_surface"
     tools:context=".ui.fragmentcreationcompte.FragmentConfirmCreation">
 
     <ImageView
@@ -24,7 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="92dp"
-        android:text="@string/main_page"
+        android:background="@color/md_theme_light_primary"
+        android:text="@string/connection_page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -34,7 +36,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="90dp"
+        android:fontFamily="@font/montserrat_regular"
         android:text="@string/account_created"
+        android:textColor="@color/md_theme_light_onSurfaceVariant"
+        android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />

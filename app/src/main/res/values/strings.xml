@@ -19,4 +19,5 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="account_created">Account created</string>
     <string name="nickname">Nickname</string>
+    <string name="connection_page">Connection page</string>
 </resources>
