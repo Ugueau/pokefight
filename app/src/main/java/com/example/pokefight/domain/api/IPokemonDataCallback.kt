@@ -1,4 +1,4 @@
-package com.example.pokefight.api
+package com.example.pokefight.domain.api
 
 import com.example.pokefight.model.Pokemon
 
