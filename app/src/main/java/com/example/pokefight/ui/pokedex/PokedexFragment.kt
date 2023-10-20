@@ -1,4 +1,4 @@
-package com.example.pokefight.ui.notifications
+package com.example.pokefight.ui.pokedex
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.pokefight.databinding.FragmentNotificationsBinding
+import com.example.pokefight.databinding.FragmentPokedexBinding
 
-class NotificationsFragment : Fragment() {
+class PokedexFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private var _binding: FragmentPokedexBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +22,14 @@ class NotificationsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
+        val pokedexViewModel =
+            ViewModelProvider(this).get(PokedexViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentPokedexBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textPokedex
+        pokedexViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
