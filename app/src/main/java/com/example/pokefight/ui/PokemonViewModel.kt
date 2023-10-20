@@ -3,31 +3,37 @@ package com.example.pokefight.ui
 import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.model.Pokemon
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class PokemonViewModel: ViewModel() {
-    private var _pokemonLiveData = MutableLiveData<Response<Pokemon>>()
-    var pokemonLiveData : LiveData<Response<Pokemon>> = _pokemonLiveData
-    fun fetchPokemons(){
+    private var _pokemonLiveData = MutableLiveData<List<Pokemon>>()
+    var pokemonLiveData : LiveData<List<Pokemon>> = _pokemonLiveData
+    fun fetchPokemons(fromId : Int = 1, toId :Int = fromId + 10){
         viewModelScope.launch {
-            val data = PokemonRepository.getPokemonById(1)
+            val data = PokemonRepository.fetchPokemon(fromId,toId)
             data.collect {
                 _pokemonLiveData.postValue(it)
             }
         }
     }
 
-    fun getPokemons() : LiveData<Response<Pokemon>>{
-        val liveData = MutableLiveData<Response<Pokemon>>()
+    fun getPokemonList(fromId: Int = 1, toId: Int = fromId+10): LiveData<List<Pokemon>>{
+        val liveData = MutableLiveData<List<Pokemon>>()
         viewModelScope.launch {
-            val data = PokemonRepository.getPokemonById(1)
-            data.collect{
-                liveData.postValue(it)
-            }
+            val data = PokemonRepository.getPokemons(fromId, toId)
+            liveData.postValue(data)
         }
-
         return liveData
     }
+
+//    fun getPokemonById(id : Int) : LiveData<Pokemon>{
+//        val liveData = MutableLiveData<Pokemon>()
+//        viewModelScope.launch {
+//            val data = PokemonRepository.fetchPokemon(id,id)
+//            data.collect{
+//                liveData.postValue(it)
+//            }
+//        }
+//        return liveData
+//    }
 }
