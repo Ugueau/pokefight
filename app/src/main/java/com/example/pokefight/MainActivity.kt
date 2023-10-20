@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(){
         // cacher les barres système
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
-        
+
 
         vm = ViewModelProvider(this).get(PokemonViewModel::class.java)
         binding = ActivityMainBinding.inflate(layoutInflater)
