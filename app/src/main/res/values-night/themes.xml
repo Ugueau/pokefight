@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Pokefight" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryVariant">@color/md_theme_dark_inversePrimary</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <!-- Status bar color. -->
