@@ -24,4 +24,11 @@ object DSPokemonCache {
         }
         return null;
     }
+
+    fun getPokemon(id :Int): Pokemon?{
+        if(pokemonList.find { it.id == id } != null){
+            return pokemonList[id]
+        }
+        return null
+    }
 }

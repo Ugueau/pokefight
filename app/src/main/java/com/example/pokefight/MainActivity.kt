@@ -63,8 +63,14 @@ class MainActivity : AppCompatActivity(){
     }
 
     fun getPokemons(fromId : Int = 1, toId : Int = fromId+10, callback : (List<Pokemon>) -> Unit){
-        pokemonViewModel.getPokemonList(1,15).observe(this){pokemonList ->
+        pokemonViewModel.getPokemonList(fromId,toId).observe(this){pokemonList ->
             callback(pokemonList);
+        }
+    }
+
+    fun getPokemonById(id : Int, callback : (Pokemon) -> Unit){
+        pokemonViewModel.getPokemonById(id).observe(this){pokemon ->
+            callback(pokemon);
         }
     }
 }
