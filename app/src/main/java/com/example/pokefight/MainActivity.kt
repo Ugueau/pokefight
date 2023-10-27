@@ -2,30 +2,26 @@ package com.example.pokefight
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.pokefight.databinding.ActivityMainBinding
 import com.example.pokefight.model.Pokemon
-import com.example.pokefight.ui.PokemonViewModel
+import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityMainBinding
-    val pokemonViewModel by viewModels<PokemonViewModel>()
-    lateinit var vm : PokemonViewModel
+    val mainViewModel by viewModels<MainViewModel>()
+    lateinit var vm : MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +38,14 @@ class MainActivity : AppCompatActivity(){
 
 
 
-        vm = ViewModelProvider(this).get(PokemonViewModel::class.java)
+        vm = ViewModelProvider(this).get(MainViewModel::class.java)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
         //EXAMPLE OF USE
 
-        pokemonViewModel.pokemonLiveData.observe(this) {pokemonList ->
+        mainViewModel.pokemonLiveData.observe(this) { pokemonList ->
             var nameList = String()
             pokemonList.forEach{
                 nameList += "${it.name} ; "
@@ -82,13 +78,13 @@ class MainActivity : AppCompatActivity(){
     }
 
     fun getPokemons(fromId : Int = 1, toId : Int = fromId+10, callback : (List<Pokemon>) -> Unit){
-        pokemonViewModel.getPokemonList(fromId,toId).observe(this){pokemonList ->
+        mainViewModel.getPokemonList(fromId,toId).observe(this){ pokemonList ->
             callback(pokemonList);
         }
     }
 
     fun getPokemonById(id : Int, callback : (Pokemon) -> Unit){
-        pokemonViewModel.getPokemonById(id).observe(this){pokemon ->
+        mainViewModel.getPokemonById(id).observe(this){ pokemon ->
             callback(pokemon);
         }
     }

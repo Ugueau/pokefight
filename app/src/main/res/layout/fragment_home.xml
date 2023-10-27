@@ -28,7 +28,6 @@
             android:layout_marginBottom="4dp"
             android:fontFamily="@font/montserrat_regular"
             android:gravity="center|center_horizontal|center_vertical"
-            android:text="4444444"
             android:textColor="?attr/colorOnPrimaryContainer"
             android:textSize="24sp"
             android:textStyle="bold" />
