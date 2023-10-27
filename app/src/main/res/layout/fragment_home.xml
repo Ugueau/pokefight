@@ -66,7 +66,6 @@
         android:layout_marginBottom="128dp"
         android:background="@drawable/full_button"
         android:fontFamily="@font/montserrat_regular"
-        android:shadowColor="#000000"
         android:text="FIGHT !"
         android:textAlignment="center"
         android:textSize="34sp"
