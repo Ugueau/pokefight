@@ -5,7 +5,7 @@
     android:id="@+id/fragment_confirm_creation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_light_surface"
+    android:background="?attr/colorSurfaceVariant"
     tools:context=".ui.fragmentcreationcompte.FragmentConfirmCreation">
 
     <ImageView
@@ -38,7 +38,7 @@
         android:layout_marginTop="90dp"
         android:fontFamily="@font/montserrat_regular"
         android:text="@string/account_created"
-        android:textColor="@color/md_theme_light_onSurfaceVariant"
+        android:textColor="?attr/colorOnSurfaceVariant"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
