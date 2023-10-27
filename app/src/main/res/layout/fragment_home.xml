@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment"
-    android:background="@color/md_theme_light_surface">
+    android:background="?attr/colorSurfaceVariant">
 
     <LinearLayout
         android:id="@+id/layout_trophee"
@@ -29,7 +29,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:gravity="center|center_horizontal|center_vertical"
             android:text="4444444"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
         android:background="@drawable/full_button"
         android:fontFamily="@font/montserrat_regular"
         android:shadowColor="#000000"
-        android:text="FIGHT !"
+        android:text="@string/fight"
         android:textAlignment="center"
         android:textSize="34sp"
         android:textStyle="bold"

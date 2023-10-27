@@ -5,7 +5,7 @@
     android:id="@+id/fragment_creation_compte"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_light_surface"
+    android:background="?attr/colorSurfaceVariant"
     tools:context=".ui.fragmentcreationcompte.FragmentCreationCompte">
 
     <TextView
@@ -32,10 +32,10 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_theme_light_primaryContainer"
+            android:background="?attr/colorPrimaryContainer"
             android:hint="@string/nickname"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:textColorHint="@color/md_theme_light_onPrimaryContainer" />
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColorHint="?attr/colorOnPrimaryContainer" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -53,10 +53,10 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_theme_light_primaryContainer"
+            android:background="?attr/colorPrimaryContainer"
             android:hint="@string/email"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:textColorHint="@color/md_theme_light_onPrimaryContainer" />
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColorHint="?attr/colorOnPrimaryContainer" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -73,11 +73,11 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_theme_light_primaryContainer"
+            android:background="?attr/colorPrimaryContainer"
             android:hint="@string/password"
-            android:password="true"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:textColorHint="@color/md_theme_light_onPrimaryContainer" />
+            android:inputType="textPassword"
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColorHint="?attr/colorOnPrimaryContainer" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,11 +95,11 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_theme_light_primaryContainer"
+            android:background="?attr/colorPrimaryContainer"
             android:hint="@string/confirm_password"
-            android:password="true"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:textColorHint="@color/md_theme_light_onPrimaryContainer" />
+            android:inputType="textPassword"
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColorHint="?attr/colorOnPrimaryContainer" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

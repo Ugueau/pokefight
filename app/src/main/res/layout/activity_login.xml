@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_light_surfaceVariant"
+    android:background="?attr/colorSurfaceVariant"
     tools:context=".loginActivity">
 
     <ImageView
@@ -38,10 +38,10 @@
             android:id="@+id/InputEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_theme_light_primaryContainer"
+            android:background="?attr/colorPrimaryContainer"
             android:hint="@string/email"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:textColorHint="@color/md_theme_light_onPrimaryContainer" />
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColorHint="?attr/colorOnPrimaryContainer" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -61,11 +61,11 @@
             android:id="@+id/InputPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_theme_light_primaryContainer"
+            android:background="?attr/colorPrimaryContainer"
             android:hint="@string/password"
-            android:password="true"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:textColorHint="@color/md_theme_light_onPrimaryContainer" />
+            android:inputType="textPassword"
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColorHint="?attr/colorOnPrimaryContainer" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,8 +102,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/divider2"
-            app:layout_constraintTop_toTopOf="parent"
-            app:strokeColor="@color/bleu" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/newUser"
@@ -115,7 +114,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/outlined_button"
             android:text="@string/create_user"
-            android:textColor="@color/md_theme_light_primary"
+            android:textColor="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/divider2"
             app:layout_constraintStart_toStartOf="parent"
