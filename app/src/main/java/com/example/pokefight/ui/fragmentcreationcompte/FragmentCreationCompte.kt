@@ -7,9 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.R
 import com.example.pokefight.TunnelConnexionActivity
+import com.example.pokefight.VIewModel.UserViewModel
 import com.example.pokefight.model.User
+import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.textfield.TextInputLayout
 
 class FragmentCreationCompte : Fragment() {
@@ -21,6 +25,9 @@ class FragmentCreationCompte : Fragment() {
     private lateinit var InputConfirmPassword: TextInputLayout
     private lateinit var user : User
 
+    val MainViewModel by viewModels<MainViewModel>()
+    lateinit var vm : MainViewModel
+
     companion object {
         fun newInstance() = FragmentCreationCompte()
     }
@@ -28,6 +35,7 @@ class FragmentCreationCompte : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        vm = ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -62,6 +70,8 @@ class FragmentCreationCompte : Fragment() {
         )
 
         Log.e("user_créé", user.toString())
+
+        MainViewModel.createUser(user)
 
         val fragmentConfirmCreation = FragmentConfirmCreation()
         (activity as TunnelConnexionActivity).replaceFragment(fragmentConfirmCreation)
