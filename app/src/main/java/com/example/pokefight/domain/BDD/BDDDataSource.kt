@@ -26,14 +26,21 @@ object BDDDataSource {
         val BDDUser : UserBDD? = PokefightBDD.getInstance().userDAO().findUserFromEmail(email)
 
         if (BDDUser != null){
-            returnUser = User(BDDUser.Email, BDDUser.Password, BDDUser.Nickname, BDDUser.trophy, BDDUser.UserToken)
+            returnUser = User(BDDUser.Email, BDDUser.Password, BDDUser.Nickname, BDDUser.trophy, BDDUser.pokedollar,BDDUser.UserToken)
         }
 
         return returnUser
     }
 
-    suspend fun UserExistFromEmailAndPassword(email:String, password:String): Boolean{
+    suspend fun UserExistFromEmailAndPassword(email:String, password:String): User?{
 
-        return PokefightBDD.getInstance().userDAO().findUserFromEmailAndPassword(email, password) != null
+        var connectedUser = PokefightBDD.getInstance().userDAO().findUserFromEmailAndPassword(email, password)
+
+        if (connectedUser == null){
+            return null
+        }
+        else{
+            return User(connectedUser.Email, connectedUser.Password, connectedUser.Nickname, connectedUser.trophy, connectedUser.pokedollar,connectedUser.UserToken)
+        }
     }
 }

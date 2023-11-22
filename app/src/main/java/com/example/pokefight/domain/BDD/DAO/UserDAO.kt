@@ -15,9 +15,9 @@ interface UserDAO {
     @Delete
     suspend fun deleteUser(userBDD: UserBDD)
 
-    @Query("SELECT idUser, email, nickname, trophy, userToken, password FROM UserBDD WHERE email = :email LIMIT 1")
-    suspend fun findUserFromEmail(email: String): UserBDD
+    @Query("SELECT * FROM UserBDD WHERE email = :email LIMIT 1")
+    suspend fun findUserFromEmail(email: String): UserBDD?
 
     @Query("Select * from UserBDD where email = :email and password = :password")
-    suspend fun findUserFromEmailAndPassword(email: String, password: String): UserBDD
+    suspend fun findUserFromEmailAndPassword(email: String, password: String): UserBDD?
 }

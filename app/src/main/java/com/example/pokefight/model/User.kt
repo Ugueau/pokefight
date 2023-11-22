@@ -9,25 +9,18 @@ import com.google.gson.annotations.SerializedName
     @SerializedName("Password") @Expose var Password: String,
     @SerializedName("Nickname") @Expose var Nickname: String,
     @SerializedName("trophy") @Expose var Trophy: Int,
+    @SerializedName("pokedollar") @Expose var pokedollar: Int,
     @SerializedName("UserToken") @Expose val UserToken: String
 ) {
-     fun getDefaultUser():User{
-
-         return User("Test@test.test", "1234", "Bob le bricolo", 4444, "0987654321")
-     }
-
-     fun getDefaultPassword():String{
-         return "1234"
-     }
-
      fun toEntity(): UserBDD{
-         lateinit var UserEntity:UserBDD
-
-         UserEntity.UserToken = this.UserToken;
-         UserEntity.Email = this.Email
-         UserEntity.Password = this.Password
-         UserEntity.trophy = this.Trophy
-         UserEntity.Nickname = this.Nickname
+         val UserEntity = UserBDD(
+             this.Email,
+             this.Nickname,
+             this.Trophy,
+             this.pokedollar,
+             this.UserToken,
+             this.Password
+         )
 
          return UserEntity
      }

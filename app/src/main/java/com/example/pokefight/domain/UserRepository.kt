@@ -1,6 +1,8 @@
 package com.example.pokefight.domain
 
+import android.provider.ContactsContract.CommonDataKinds.Email
 import com.example.pokefight.domain.BDD.BDDDataSource
+import com.example.pokefight.domain.BDD.entity.UserBDD
 import com.example.pokefight.domain.api.DSRetrofit
 import com.example.pokefight.domain.cache.DSPokemonCache
 import com.example.pokefight.domain.cache.UserCache
@@ -21,11 +23,19 @@ object UserRepository {
         emit(connectedUser)
     }
 
-    suspend fun createUser(user : User): Flow<User> = flow{
+    suspend fun userExist(email: String, password: String): User?{
+        return BDDDataSource.UserExistFromEmailAndPassword(email, password)
+    }
+
+    suspend fun insertUser(user : User): Boolean{
+        var toReturn: Boolean = false
+
         //TODO faire l'appel a firebase pour la creation d'utilisateur
 
-        UserCache.addToCache(user)
-        emit(user)
+        //Todo faire l'appel a insert de room
+        toReturn = BDDDataSource.insertUser(user)
+
+        return toReturn
     }
 
     fun getUser(): User {
@@ -35,6 +45,10 @@ object UserRepository {
             return connectedUser
         }
 
-        return User("", "", "", 0 , "")
+        return User("", "", "", 0 , 0,"")
+    }
+
+    suspend fun connectUser(connectedUser: User){
+        UserCache.addToCache(connectedUser)
     }
 }
