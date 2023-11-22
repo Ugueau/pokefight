@@ -1,5 +1,6 @@
 package com.example.pokefight.ui.pokedex
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -44,17 +45,16 @@ class PokedexFragment : Fragment() {
         recyclerView.layoutManager = recyclerViewLayoutManager
         recyclerView.adapter = recyclerViewAdapter
 
-        val lifeCycleOwner = this
-
         isLoading = true
-        mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 8)
-            .observe(lifeCycleOwner) {
+        mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
+            .observe(viewLifecycleOwner) {
                 isLoading = false
                 recyclerViewAdapter.updatePokemonList(it.toList())
                 recyclerViewAdapter.notifyDataSetChanged()
             }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
@@ -68,7 +68,7 @@ class PokedexFragment : Fragment() {
                     // Load more data
                     isLoading = true
                     mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 9)
-                        .observe(lifeCycleOwner) {
+                        .observe(viewLifecycleOwner) {
                             isLoading = false
                             recyclerViewAdapter.updatePokemonList(it.toList())
                             recyclerViewAdapter.notifyDataSetChanged()

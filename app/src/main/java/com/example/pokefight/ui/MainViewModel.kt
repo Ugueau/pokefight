@@ -11,10 +11,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     private var _pokemonLiveData = MutableLiveData<List<Pokemon>>()
-    var pokemonLiveData: LiveData<List<Pokemon>> = _pokemonLiveData
 
     private var _userLiveData = MutableLiveData<User>()
-    var userLiveData: LiveData<User> = _userLiveData
 
 
 
