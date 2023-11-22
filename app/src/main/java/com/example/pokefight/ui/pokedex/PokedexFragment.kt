@@ -14,13 +14,13 @@ import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentPokedexBinding
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.model.Pokemon
-import com.example.pokefight.ui.PokemonViewModel
+import com.example.pokefight.ui.MainViewModel
 import okhttp3.internal.notify
 
 class PokedexFragment : Fragment() {
 
     private var _binding: FragmentPokedexBinding? = null
-    val pokemonViewModel by activityViewModels<PokemonViewModel>()
+    val mainViewModel by activityViewModels<MainViewModel>()
 
     private val binding get() = _binding!!
     private var isLoading = true
@@ -47,7 +47,7 @@ class PokedexFragment : Fragment() {
         val lifeCycleOwner = this
 
         isLoading = true
-        pokemonViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 8)
+        mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 8)
             .observe(lifeCycleOwner) {
                 isLoading = false
                 recyclerViewAdapter.updatePokemonList(it.toList())
@@ -67,7 +67,7 @@ class PokedexFragment : Fragment() {
                 if (totalItemCount < PokemonRepository.MAX_ID && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && !isLoading) {
                     // Load more data
                     isLoading = true
-                    pokemonViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 9)
+                    mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 9)
                         .observe(lifeCycleOwner) {
                             isLoading = false
                             recyclerViewAdapter.updatePokemonList(it.toList())

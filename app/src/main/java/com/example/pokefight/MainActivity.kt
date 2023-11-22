@@ -41,26 +41,7 @@ class MainActivity : AppCompatActivity(){
         vm = ViewModelProvider(this).get(MainViewModel::class.java)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-        //EXAMPLE OF USE
-
-        mainViewModel.pokemonLiveData.observe(this) { pokemonList ->
-            var nameList = String()
-            pokemonList.forEach{
-                nameList += "${it.name} ; "
-            }
-            Log.i("From_cache",nameList)
-        }
-
-        getPokemons(1,10){pokemonList ->
-            var nameList = String()
-            pokemonList.forEach{
-                nameList += "${it.name} ; "
-            }
-            Log.i("From_cache",nameList)
-        }
-        // ------
+        
 
         val navView: BottomNavigationView = binding.navView
 
