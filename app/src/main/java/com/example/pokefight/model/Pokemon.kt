@@ -74,3 +74,25 @@ fun Pokemon.getAttribute(pokemon: Pokemon, attribute: Attribute): Int{
 
     }
 }
+
+enum class PokemonElement(val hexColor: String) {
+    FIRE("#FF3D00"),
+    WATER("#2979FF"),
+    GRASS("#00C853"),
+    ELECTRIC("#FFEA00"),
+    ICE("#B3E5FC"),
+    PSYCHIC("#AA00FF"),
+    DARK("#212121"),
+    FLYING("#03A9F4"),
+    ROCK("#795548"),
+    GROUND("#FF6D00"),
+    FAIRY("#FF4081"),
+    STEEL("#9E9E9E"),
+    POISON("#8E24AA"),
+    BUG("#4CAF50"),
+    GHOST("#7B1FA2"),
+    DRAGON("#00BCD4"),
+    FIGHTING("#795548"),
+    NORMAL("#D7CCC8");
+}
+
