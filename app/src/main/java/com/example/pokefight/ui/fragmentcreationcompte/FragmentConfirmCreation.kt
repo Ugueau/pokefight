@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.example.pokefight.R
 import com.example.pokefight.TunnelConnexionActivity
-import com.example.pokefight.loginActivity
+import com.example.pokefight.LoginActivity
 
 
 class FragmentConfirmCreation : Fragment() {
@@ -30,7 +30,7 @@ class FragmentConfirmCreation : Fragment() {
 
         buttonContinue = view.findViewById(R.id.ButtonContinue)
         buttonContinue.setOnClickListener { click ->
-            val loginActivity = Intent((activity as TunnelConnexionActivity), loginActivity::class.java)
+            val loginActivity = Intent((activity as TunnelConnexionActivity), LoginActivity::class.java)
             (activity as TunnelConnexionActivity).endTunnelConnexion(loginActivity)
         }
         return view

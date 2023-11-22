@@ -9,7 +9,7 @@ import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pokefight.R
-import com.example.pokefight.loginActivity
+import com.example.pokefight.LoginActivity
 
 class SplashScreen : AppCompatActivity() {
     val mainViewModel by viewModels<MainViewModel>()
@@ -21,7 +21,7 @@ class SplashScreen : AppCompatActivity() {
         applyReboundZoomAnimation(logo,5)
 
         mainViewModel.getPokemonList(1, 30).observe(this) {
-            val i = Intent(applicationContext, loginActivity::class.java)
+            val i = Intent(applicationContext, LoginActivity::class.java)
             startActivity(i)
             finish()
         }
