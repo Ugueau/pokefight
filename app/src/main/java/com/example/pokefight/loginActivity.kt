@@ -20,8 +20,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 class loginActivity : AppCompatActivity() {
 
-    val MainViewModel by viewModels<MainViewModel>()
-    lateinit var vm : MainViewModel
+    val mainViewModel by viewModels<MainViewModel>()
 
     //élément de ma vue
     private lateinit var connexion : Button
@@ -52,8 +51,6 @@ class loginActivity : AppCompatActivity() {
         // cacher les barres système
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
-        vm = ViewModelProvider(this).get(MainViewModel::class.java)
-
         connexion = this.findViewById(R.id.connexion)
         newUser = this.findViewById(R.id.newUser)
         email = this.findViewById(R.id.InputEmail)
@@ -82,7 +79,7 @@ class loginActivity : AppCompatActivity() {
 
         }
         else{
-            if (MainViewModel.fetchUser(email.text.toString(), password.text.toString())){
+            if (mainViewModel.fetchUser(email.text.toString(), password.text.toString())){
                 mainActivity = Intent(this, MainActivity::class.java)
                 startActivity(mainActivity)
                 finish()
