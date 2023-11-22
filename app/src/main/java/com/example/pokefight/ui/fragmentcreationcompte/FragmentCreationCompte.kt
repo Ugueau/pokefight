@@ -64,6 +64,7 @@ class FragmentCreationCompte : Fragment() {
 
         user = User(
             InputEmail.editText?.text.toString(),
+            InputPassword.editText?.text.toString(),
             InputNickname.editText?.text.toString(),
             0,
             "1234567890",

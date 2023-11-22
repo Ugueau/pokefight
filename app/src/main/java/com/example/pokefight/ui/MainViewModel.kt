@@ -19,9 +19,9 @@ class MainViewModel : ViewModel() {
 
 
     fun fetchUser(email: String, password: String): Boolean {
-        val user = User(email, "Bob le bricolo", 12345678, "0987654321")
+        val user = User(email, password, "Bob le bricolo", 12345678, "0987654321")
 
-        //TODO a refaire lors de la recupération des info sur firebase
+        //TODO a refaire lors de la recupération des informations sur firebase
 
         //User par defaut
         if (user.Email == user.getDefaultUser().Email
