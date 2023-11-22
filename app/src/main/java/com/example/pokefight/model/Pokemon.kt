@@ -4,46 +4,73 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class Pokemon(
-    @SerializedName("base_experience") @Expose val baseExperience: Int,
-    @SerializedName("height") @Expose val height: Int,
-    @SerializedName("id") @Expose val id: Int,
-    @SerializedName("is_default") @Expose val isDefault: Boolean,
-    @SerializedName("name") @Expose val name: String,
-    @SerializedName("order") @Expose val order: Int,
-    @SerializedName("sprites") @Expose val sprites: Sprites,
-    @SerializedName("stats") @Expose val stats: List<Stat>,
-    @SerializedName("types") @Expose val types: List<Type>,
-    @SerializedName("weight") @Expose val weight: Int
+    @SerializedName("base_experience")  val baseExperience: Int,
+    @SerializedName("height")  val height: Int,
+    @SerializedName("id")  val id: Int,
+    @SerializedName("is_default")  val isDefault: Boolean,
+    @SerializedName("name")  val name: String,
+    @SerializedName("order")  val order: Int,
+    @SerializedName("sprites")  val sprites: Sprites,
+    @SerializedName("stats")  val stats: List<Stat>,
+    @SerializedName("types")  val types: List<Type>,
+    @SerializedName("weight")  val weight: Int
 )
 
 data class Sprites(
-    @SerializedName("back_default") @Expose val backDefault: String?,
-    @SerializedName("back_female") @Expose val backFemale: String?, // Nullable because it can be null in the JSON
-    @SerializedName("back_shiny") @Expose val backShiny: String?,
-    @SerializedName("back_shiny_female") @Expose val backShinyFemale: String?, // Nullable because it can be null in the JSON
-    @SerializedName("front_default") @Expose val frontDefault: String?,
-    @SerializedName("front_female") @Expose val frontFemale: String?, // Nullable because it can be null in the JSON
-    @SerializedName("front_shiny") @Expose val frontShiny: String?,
-    @SerializedName("front_shiny_female") @Expose val frontShinyFemale: String? // Nullable because it can be null in the JSON
+    @SerializedName("back_default")  val backDefault: String?,
+    @SerializedName("back_female")  val backFemale: String?, // Nullable because it can be null in the JSON
+    @SerializedName("back_shiny")  val backShiny: String?,
+    @SerializedName("back_shiny_female")  val backShinyFemale: String?, // Nullable because it can be null in the JSON
+    @SerializedName("front_default")  val frontDefault: String?,
+    @SerializedName("front_female")  val frontFemale: String?, // Nullable because it can be null in the JSON
+    @SerializedName("front_shiny")  val frontShiny: String?,
+    @SerializedName("front_shiny_female")  val frontShinyFemale: String? // Nullable because it can be null in the JSON
 )
 
 data class Stat(
-    @SerializedName("base_stat") @Expose val baseStat: Int,
-    @SerializedName("effort") @Expose val effort: Int,
-    @SerializedName("StatInfo") @Expose val stat: StatInfo
+    @SerializedName("base_stat")  val baseStat: Int,
+    @SerializedName("effort")  val effort: Int,
+    @SerializedName("StatInfo")  val stat: StatInfo
 )
 
 data class StatInfo(
-    @SerializedName("name") @Expose val name: String,
-    @SerializedName("url") @Expose val url: String
+    @SerializedName("name")  val name: String,
+    @SerializedName("url")  val url: String
 )
 
 data class Type(
-    @SerializedName("slot") @Expose val slot: Int,
-    @SerializedName("type") @Expose val type: TypeInfo
+    @SerializedName("slot")  val slot: Int,
+    @SerializedName("type")  val type: TypeInfo
 )
 
 data class TypeInfo(
-    @SerializedName("name") @Expose val name: String,
-    @SerializedName("url") @Expose val url: String
+    @SerializedName("name")  val name: String,
+    @SerializedName("url")  val url: String
 )
+
+fun Pokemon.formatId(id : Int):String{
+    if(id < 10){
+        return "#00$id"
+    }else if(id < 100){
+        return "#0$id"
+    }else{
+        return "#$id"
+    }
+}
+
+enum class Attribute{
+    HP,
+    ATTACK,
+    DEFENSE,
+    SPEED
+}
+
+fun Pokemon.getAttribute(pokemon: Pokemon, attribute: Attribute): Int{
+    return when(attribute){
+        Attribute.HP -> pokemon.stats[0].baseStat
+        Attribute.ATTACK -> pokemon.stats[1].baseStat
+        Attribute.DEFENSE -> pokemon.stats[2].baseStat
+        Attribute.SPEED -> pokemon.stats[5].baseStat
+
+    }
+}

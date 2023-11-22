@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(){
             pokemonList.forEach{
                 nameList += "${it.name} ; "
             }
-            Log.e("From cache",nameList)
+            Log.i("From_cache",nameList)
         }
 
         getPokemons(1,10){pokemonList ->
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(){
             pokemonList.forEach{
                 nameList += "${it.name} ; "
             }
-            Log.e("From cache",nameList)
+            Log.i("From_cache",nameList)
         }
         // ------
 
@@ -89,7 +89,12 @@ class MainActivity : AppCompatActivity(){
 
     fun getPokemonById(id : Int, callback : (Pokemon) -> Unit){
         pokemonViewModel.getPokemonById(id).observe(this){pokemon ->
-            callback(pokemon);
+            if(pokemon == null){
+                Log.e("PokemonError", "Pokemon not found or unauthorized")
+            }
+            else{
+                callback(pokemon)
+            }
         }
     }
 }

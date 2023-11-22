@@ -64,7 +64,6 @@ class loginActivity : AppCompatActivity() {
 
         //gestion de la connexion du User par defaut
         if (email.text.isNullOrEmpty()){
-            Log.d("Test", "blablabla")
             //faire en sorte que l'utilisateur voit que l'email est obligatoire
             emailLayout.setError("Mandatory Email")
 

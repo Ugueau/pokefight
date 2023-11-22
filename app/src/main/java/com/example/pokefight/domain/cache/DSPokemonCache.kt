@@ -19,10 +19,14 @@ object DSPokemonCache {
     fun getFromTo(from : Int, to: Int): List<Pokemon>?{
         if(pokemonList.find { it.id == from } != null){
             if (pokemonList.find { it.id == to } != null){
-                return pokemonList.subList(from,to)
+                return pokemonList.subList(from-1,to)
             }
         }
         return null;
+    }
+
+    fun isAlreadyLoaded(pokemonId : Int):Boolean{
+        return pokemonList.any { it.id == pokemonId }
     }
 
     fun getPokemon(id :Int): Pokemon?{
@@ -30,5 +34,13 @@ object DSPokemonCache {
             return pokemonList[id]
         }
         return null
+    }
+
+    fun getCacheSize():Int{
+        return pokemonList.size
+    }
+
+    fun all():List<Pokemon>{
+        return pokemonList
     }
 }

@@ -1,5 +1,6 @@
 package com.example.pokefight.domain
 
+import android.util.Log
 import com.example.pokefight.domain.api.DSRetrofit
 import com.example.pokefight.domain.cache.DSPokemonCache
 import com.example.pokefight.model.Pokemon
@@ -8,9 +9,28 @@ import kotlinx.coroutines.flow.flow
 
 object PokemonRepository {
 
+    const val MAX_ID: Int = 151
     suspend fun fetchPokemons(fromId: Int, toId: Int): Flow<List<Pokemon>> = flow {
+        if (DSPokemonCache.getCacheSize() == MAX_ID) {
+            emit(DSPokemonCache.all())
+        }
         val fetchedPokemons = ArrayList<Pokemon>()
         for (i in fromId..toId) {
+            val pokemon = DSRetrofit.pokemonService.getPokemonById(i)
+            if (pokemon.isSuccessful) {
+                pokemon.body()?.let {
+                    DSPokemonCache.addToCache(it)
+                    fetchedPokemons.add(it)
+                }
+            }
+        }
+        DSPokemonCache.sortCache()
+        emit(fetchedPokemons)
+    }
+
+    private suspend fun fetchPokemons(pokemonsToFetch: List<Int>): Flow<List<Pokemon>> = flow {
+        val fetchedPokemons = ArrayList<Pokemon>()
+        for (i in pokemonsToFetch) {
             val pokemon = DSRetrofit.pokemonService.getPokemonById(i)
             if (pokemon.isSuccessful) {
                 pokemon.body()?.let {
@@ -24,34 +44,49 @@ object PokemonRepository {
     }
 
     suspend fun getPokemons(fromId: Int, toId: Int): List<Pokemon> {
+
         DSPokemonCache.sortCache()
 
-        var returnedList = DSPokemonCache.getFromTo(fromId, toId)
+        var returnedList = emptyList<Pokemon>()
+        val missingPokemons = ArrayList<Int>()
 
-        if (returnedList != null) {
-            return returnedList
+        for (id in fromId..toId) {
+            if (!DSPokemonCache.isAlreadyLoaded(id)) {
+                missingPokemons.add(id)
+            }
         }
 
-        val data = fetchPokemons(fromId, toId)
-        data.collect {
-            returnedList = it
+        if (missingPokemons.isEmpty()) {
+            DSPokemonCache.getFromTo(fromId, toId)?.let { returnedList = it }
+        } else {
+            val data = fetchPokemons(missingPokemons)
+            data.collect {
+                DSPokemonCache.getFromTo(fromId, toId)?.let { returnedList = it }
+            }
         }
-        return returnedList!!
+
+        return returnedList
     }
 
-    suspend fun getPokemonById(id: Int): Pokemon {
+    suspend fun getPokemonById(id: Int): Pokemon? {
         DSPokemonCache.sortCache()
 
-        var returnedList = DSPokemonCache.getPokemon(id)
+        var askedPokemon = DSPokemonCache.getPokemon(id)
 
-        if (returnedList != null) {
-            return returnedList
+        if (askedPokemon != null) {
+            return askedPokemon
         }
 
-        val data = fetchPokemons(id,id)
+        val data = fetchPokemons(id, id)
         data.collect {
-            returnedList = it[0]
+            askedPokemon = it[0]
         }
-        return returnedList!!
+
+        return askedPokemon
     }
+
+    fun getLoadedPokemonAmount(): Int {
+        return DSPokemonCache.getCacheSize();
+    }
+
 }
