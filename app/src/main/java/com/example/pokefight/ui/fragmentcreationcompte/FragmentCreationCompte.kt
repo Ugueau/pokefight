@@ -15,6 +15,7 @@ import com.example.pokefight.VIewModel.UserViewModel
 import com.example.pokefight.model.User
 import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.textfield.TextInputLayout
+import kotlin.random.Random
 
 class FragmentCreationCompte : Fragment() {
 
@@ -62,23 +63,57 @@ class FragmentCreationCompte : Fragment() {
 
     fun createUser(){
 
-        user = User(
-            InputEmail.editText?.text.toString(),
-            InputPassword.editText?.text.toString(),
-            InputNickname.editText?.text.toString(),
-            0,
-            "1234567890",
-        )
+        if (controlChamp()){
+            var userToConnect = User(
+                InputEmail.editText?.text.toString(),
+                InputPassword.editText?.text.toString(),
+                InputNickname.editText?.text.toString(),
+                0,
+                0,
+                Random.nextInt(1, 99999999).toString()
+            )
 
-        Log.e("user_créé", user.toString())
+            vm.insertUser(userToConnect).observe(viewLifecycleOwner){
+                if (it){
+                    val fragmentConfirmCreation = FragmentConfirmCreation()
+                    (activity as TunnelConnexionActivity).replaceFragment(fragmentConfirmCreation)
+                }
+                else{
+                    InputEmail.error = "User allready existe"
+                }
+            }
+        }
+    }
 
-        MainViewModel.createUser(user)
+    fun controlChamp(): Boolean{
 
-        val fragmentConfirmCreation = FragmentConfirmCreation()
-        (activity as TunnelConnexionActivity).replaceFragment(fragmentConfirmCreation)
+        if(InputEmail.editText?.text.isNullOrEmpty()){
+            InputEmail.error = "Enter an email"
+            return false
+        }
 
+        if(InputNickname.editText?.text.isNullOrEmpty()){
+            InputNickname.error = "Enter a nickname"
+            return false
+        }
 
+        if(InputPassword.editText?.text.isNullOrEmpty()){
+            InputPassword.error = "Entrer a password"
+            return false
+        }
 
+        if(InputConfirmPassword.editText?.text.isNullOrEmpty()){
+            InputConfirmPassword.error = "Confirm your password"
+            return false
+        }
+
+        if (InputConfirmPassword.editText?.text.toString() != InputPassword.editText?.text.toString()){
+            InputPassword.error = "Different password"
+            InputConfirmPassword.error = "Different password"
+            return false
+        }
+
+        return true
     }
 
 }

@@ -11,7 +11,10 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.liveData
 import com.example.pokefight.VIewModel.UserViewModel
 import com.example.pokefight.model.User
 import com.example.pokefight.ui.MainViewModel
@@ -20,8 +23,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 class loginActivity : AppCompatActivity() {
 
-    val MainViewModel by viewModels<MainViewModel>()
-    lateinit var vm : MainViewModel
+    val mainViewModel by viewModels<MainViewModel>()
 
     //élément de ma vue
     private lateinit var connexion : Button
@@ -52,8 +54,6 @@ class loginActivity : AppCompatActivity() {
         // cacher les barres système
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
-        vm = ViewModelProvider(this).get(MainViewModel::class.java)
-
         connexion = this.findViewById(R.id.connexion)
         newUser = this.findViewById(R.id.newUser)
         email = this.findViewById(R.id.InputEmail)
@@ -66,26 +66,38 @@ class loginActivity : AppCompatActivity() {
         newUser.setOnClickListener { click -> this.tunnelConnexion()}
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     fun Connexion(){
 
         //gestion de la connexion du User par defaut
         if (email.text.isNullOrEmpty()){
             //faire en sorte que l'utilisateur voit que l'email est obligatoire
-            emailLayout.setError("Mandatory Email")
+            emailLayout.error = "Mandatory Email"
 
         }
         else if(password.text.isNullOrEmpty()){
             //faire en sorte que l'utilisateur voit que le password est obligatoire
-            email.error = null
-            passwordLayout.setError("Mandatory Password")
+            passwordLayout.error = "Mandatory Password"
 
         }
         else{
-            if (MainViewModel.fetchUser(email.text.toString(), password.text.toString())){
-                mainActivity = Intent(this, MainActivity::class.java)
-                startActivity(mainActivity)
-                finish()
+            //le user existe dans la bdd local
+            mainViewModel.userExistLocal(email.text.toString(), password.text.toString())
+                .observe(this){
+
+                    if (it != null){
+
+                        mainViewModel.connectUser(it);
+
+                        mainActivity = Intent(this, MainActivity::class.java)
+                        startActivity(mainActivity)
+                        finish()
+                    }
+                    else{
+                        // Todo possible rajout de firebase
+
+                        emailLayout.error = "unknown user"
+                        passwordLayout.error = "unknown user"
+                    }
             }
         }
     }

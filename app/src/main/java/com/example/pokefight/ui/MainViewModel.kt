@@ -1,8 +1,11 @@
 package com.example.pokefight.ui
 
 import android.content.Intent
+import android.provider.ContactsContract.CommonDataKinds.Email
+import android.text.BoringLayout
 import androidx.lifecycle.*
 import com.example.pokefight.MainActivity
+import com.example.pokefight.domain.BDD.BDDDataSource
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.UserRepository
 import com.example.pokefight.model.Pokemon
@@ -16,44 +19,34 @@ class MainViewModel : ViewModel() {
     private var _userLiveData = MutableLiveData<User>()
     var userLiveData: LiveData<User> = _userLiveData
 
-
-
-    fun fetchUser(email: String, password: String): Boolean {
-        val user = User(email, password, "Bob le bricolo", 12345678, "0987654321")
-
-        //TODO a refaire lors de la recupération des informations sur firebase
-
-        //User par defaut
-        if (user.Email == user.getDefaultUser().Email
-            && password == user.getDefaultPassword())
-        {
-           //envoie dans le cache des information du l'utilisateur pour les récupérer dans les autres Activity
-            viewModelScope.launch {
-                val data = UserRepository.fetchUser(user)
-                data.collect {
-                    _userLiveData.postValue(it)
-                }
-            }
-            return true
-        }
-        else
-        {
-            return false
+    fun userExistLocal(email: String, password: String): LiveData<User?>{
+        //vérifier que l'utilisateur existe dans la BBD local
+        val liveData = MutableLiveData<User?>()
+        viewModelScope.launch {
+            liveData.postValue(UserRepository.userExist(email, password))
         }
 
+        return liveData
     }
 
-    fun createUser(user : User){
+    fun connectUser(connectedUser: User){
+
         viewModelScope.launch {
-            val data = UserRepository.createUser(user)
-            data.collect {
-                _userLiveData.postValue(it)
-            }
+            UserRepository.connectUser(connectedUser)
         }
+
     }
 
     fun getConnectedUserFromCache(): User{
         return UserRepository.getUser()
+    }
+
+    fun insertUser(userToInsert: User): LiveData<Boolean>{
+        val liveData = MutableLiveData<Boolean>()
+
+        viewModelScope.launch { liveData.postValue(UserRepository.insertUser(userToInsert)) }
+
+        return liveData
     }
 
     fun fetchPokemons(fromId: Int = 1, toId: Int = fromId + 10) {
