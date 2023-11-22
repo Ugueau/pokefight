@@ -1,5 +1,6 @@
 package com.example.pokefight.domain
 
+import com.example.pokefight.domain.BDD.BDDDataSource
 import com.example.pokefight.domain.api.DSRetrofit
 import com.example.pokefight.domain.cache.DSPokemonCache
 import com.example.pokefight.domain.cache.UserCache
@@ -12,6 +13,8 @@ object UserRepository {
 
     suspend fun fetchUser(connectedUser: User): Flow<User> = flow {
         //TODO a faire lorsque l'api firebase sera faite
+
+
 
         //ajout dans le cache du user connecté
         UserCache.addToCache(connectedUser)
@@ -32,6 +35,6 @@ object UserRepository {
             return connectedUser
         }
 
-        return User("", "", 0 , "")
+        return User("", "", "", 0 , "")
     }
 }
