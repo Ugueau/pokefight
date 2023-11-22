@@ -1,8 +1,6 @@
 package com.example.pokefight.ui.pokedex
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentPokedexBinding
 import com.example.pokefight.domain.PokemonRepository
-import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
-import okhttp3.internal.notify
 
 class PokedexFragment : Fragment() {
 

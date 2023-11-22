@@ -2,7 +2,6 @@ package com.example.pokefight.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
@@ -11,8 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pokefight.R
 import com.example.pokefight.loginActivity
-import java.util.Timer
-import java.util.TimerTask
 
 class SplashScreen : AppCompatActivity() {
     val mainViewModel by viewModels<MainViewModel>()
@@ -24,16 +21,9 @@ class SplashScreen : AppCompatActivity() {
         applyReboundZoomAnimation(logo,5)
 
         mainViewModel.getPokemonList(1, 30).observe(this) {
-
-            val timer = Timer()
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    val i = Intent(applicationContext, loginActivity::class.java)
-                    startActivity(i)
-                    timer.cancel()
-                    finish()
-                }
-            }, 1500)
+            val i = Intent(applicationContext, loginActivity::class.java)
+            startActivity(i)
+            finish()
         }
     }
 

@@ -16,7 +16,6 @@ object PokemonRepository {
         }
         val fetchedPokemons = ArrayList<Pokemon>()
         for (i in fromId..toId) {
-            Log.e("Fetched", "id : $i")
             val pokemon = DSRetrofit.pokemonService.getPokemonById(i)
             if (pokemon.isSuccessful) {
                 pokemon.body()?.let {
@@ -31,7 +30,6 @@ object PokemonRepository {
 
     private suspend fun fetchPokemons(pokemonsToFetch: List<Int>): Flow<List<Pokemon>> = flow {
         val fetchedPokemons = ArrayList<Pokemon>()
-        Log.e("Fetched", "ids : $pokemonsToFetch")
         for (i in pokemonsToFetch) {
             val pokemon = DSRetrofit.pokemonService.getPokemonById(i)
             if (pokemon.isSuccessful) {
@@ -48,7 +46,6 @@ object PokemonRepository {
     suspend fun getPokemons(fromId: Int, toId: Int): List<Pokemon> {
 
         DSPokemonCache.sortCache()
-        Log.e("Cache", DSPokemonCache.getCacheSize().toString())
         var returnedList = emptyList<Pokemon>()
         val missingPokemons = ArrayList<Int>()
 

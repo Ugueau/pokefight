@@ -1,10 +1,7 @@
 package com.example.pokefight.domain.api
 
-import android.util.Log
 import com.example.pokefight.domain.IDataSource
 import com.example.pokefight.model.Pokemon
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
