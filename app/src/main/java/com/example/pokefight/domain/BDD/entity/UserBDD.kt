@@ -5,11 +5,13 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class UserBDD(
-    @PrimaryKey(autoGenerate = true)
-    val idUser: Int,
+
     var Email: String,
     var Nickname: String,
     var trophy: Int,
     var UserToken: String,
     var Password: String
-)
+){
+    @PrimaryKey(autoGenerate = true)
+    var idUser: Int? = null
+}
