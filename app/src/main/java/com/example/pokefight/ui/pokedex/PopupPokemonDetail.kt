@@ -1,6 +1,7 @@
 package com.example.pokefight.ui.pokedex
 
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,12 +12,15 @@ import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.example.pokefight.R
 import com.example.pokefight.model.Attribute
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.formatId
 import com.example.pokefight.model.getAttribute
+import com.example.pokefight.model.getTypeColor
 import com.squareup.picasso.Picasso
 
 class PopupPokemonDetail : DialogFragment() {
@@ -61,9 +65,21 @@ class PopupPokemonDetail : DialogFragment() {
         val defense = view.findViewById<TextView>(R.id.pokedex_detail_defense)
 
         nameAndId.text = "${pokemon.name} ${pokemon.formatId(pokemon.id)}"
+
+        val label = ContextCompat.getDrawable((activity as AppCompatActivity).baseContext, R.drawable.label)
+        val color = ContextCompat.getColor((activity as AppCompatActivity).baseContext, pokemon.getTypeColor(pokemon.types[0]))
+
         type1.text = pokemon.types[0].type.name
+        type1.background = label
+        type1.background?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+
         if(pokemon.types.size == 2){
+            val label = ContextCompat.getDrawable((activity as AppCompatActivity).baseContext, R.drawable.label)
+            val color = ContextCompat.getColor((activity as AppCompatActivity).baseContext, pokemon.getTypeColor(pokemon.types[1]))
+
             type2.text = pokemon.types[1].type.name
+            type2.background = label
+            type2.background?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }else{
             type2.text = ""
         }

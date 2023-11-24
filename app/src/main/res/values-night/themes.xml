@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimaryVariant">@color/md_theme_dark_inversePrimary</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/design_default_color_secondary_variant</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->

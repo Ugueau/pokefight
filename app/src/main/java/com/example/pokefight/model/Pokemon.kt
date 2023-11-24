@@ -1,7 +1,9 @@
 package com.example.pokefight.model
 
+import com.example.pokefight.R
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.util.HexFormat
 
 data class Pokemon(
     @SerializedName("base_experience")  val baseExperience: Int,
@@ -75,25 +77,25 @@ fun Pokemon.getAttribute(pokemon: Pokemon, attribute: Attribute): Int{
     }
 }
 
-enum class PokemonElement(val hexColor: String) {
-    FIRE("#FF3D00"),
-    WATER("#2979FF"),
-    GRASS("#00C853"),
-    ELECTRIC("#FFEA00"),
-    ICE("#B3E5FC"),
-    PSYCHIC("#AA00FF"),
-    DARK("#212121"),
-    FLYING("#03A9F4"),
-    ROCK("#795548"),
-    GROUND("#FF6D00"),
-    FAIRY("#FF4081"),
-    STEEL("#9E9E9E"),
-    POISON("#8E24AA"),
-    BUG("#4CAF50"),
-    GHOST("#7B1FA2"),
-    DRAGON("#00BCD4"),
-    FIGHTING("#795548"),
-    NORMAL("#D7CCC8");
+enum class PokemonElement(val color: Int) {
+    FIRE(R.color.fire_color),
+    WATER(R.color.water_color),
+    GRASS(R.color.grass_color),
+    ELECTRIC(R.color.electric_color),
+    ICE(R.color.ice_color),
+    PSYCHIC(R.color.psychic_color),
+    DARK(R.color.dark_color),
+    FLYING(R.color.flying_color),
+    ROCK(R.color.rock_color),
+    GROUND(R.color.ground_color),
+    FAIRY(R.color.fairy_color),
+    STEEL(R.color.steel_color),
+    POISON(R.color.poison_color),
+    BUG(R.color.bug_color),
+    GHOST(R.color.ghost_color),
+    DRAGON(R.color.dragon_color),
+    FIGHTING(R.color.fighting_color),
+    NORMAL(R.color.normal_color);
 }
 
 enum class Rarity(val value: Int){
@@ -103,4 +105,28 @@ enum class Rarity(val value: Int){
     RARE(90), // 81 - 90
     EPIC(100), // 91 - 100
     LEGENDARY(255) // 101+
+}
+
+fun Pokemon.getTypeColor(type: Type): Int {
+    return when (type.type.name) {
+        "fire" -> PokemonElement.FIRE.color
+        "water" -> PokemonElement.WATER.color
+        "grass" -> PokemonElement.GRASS.color
+        "electric" -> PokemonElement.ELECTRIC.color
+        "ice" -> PokemonElement.ICE.color
+        "psychic" -> PokemonElement.PSYCHIC.color
+        "dark" -> PokemonElement.DARK.color
+        "flying" -> PokemonElement.FLYING.color
+        "rock" -> PokemonElement.ROCK.color
+        "ground" -> PokemonElement.GROUND.color
+        "fairy" -> PokemonElement.FAIRY.color
+        "steel" -> PokemonElement.STEEL.color
+        "poison" -> PokemonElement.POISON.color
+        "bug" -> PokemonElement.BUG.color
+        "ghost" -> PokemonElement.GHOST.color
+        "dragon" -> PokemonElement.DRAGON.color
+        "fighting" -> PokemonElement.FIGHTING.color
+        "normal" -> PokemonElement.NORMAL.color
+        else -> -1
+    }
 }
