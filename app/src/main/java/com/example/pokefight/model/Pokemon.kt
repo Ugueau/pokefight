@@ -96,9 +96,10 @@ enum class PokemonElement(val hexColor: String) {
     NORMAL("#D7CCC8");
 }
 
-enum class Rarity(val rarity: Int){
+enum class Rarity(val value: Int){
     COMMON(70), // 0 - 70
     UNCOMMON(80), // 71 -80
+
     RARE(90), // 81 - 90
     EPIC(100), // 91 - 100
     LEGENDARY(255) // 101+
