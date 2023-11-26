@@ -84,9 +84,9 @@ class PopupPokemonDetail : DialogFragment() {
             type2.text = ""
         }
 
-        hp.text = "HP ${pokemon.getAttribute(pokemon, Attribute.HP).toString()}"
-        attack.text = pokemon.getAttribute(pokemon, Attribute.ATTACK).toString()
-        defense.text = pokemon.getAttribute(pokemon, Attribute.DEFENSE).toString()
+        hp.text = "HP ${pokemon.getAttribute(Attribute.HP).toString()}"
+        attack.text = pokemon.getAttribute(Attribute.ATTACK).toString()
+        defense.text = pokemon.getAttribute(Attribute.DEFENSE).toString()
     }
 
 }
