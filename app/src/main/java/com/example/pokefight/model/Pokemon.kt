@@ -64,16 +64,19 @@ enum class Attribute{
     HP,
     ATTACK,
     DEFENSE,
-    SPEED
+    SPEED,
+    SPECIAL_ATTACK,
+    SPECIAL_DEFENSE
 }
 
-fun Pokemon.getAttribute(pokemon: Pokemon, attribute: Attribute): Int{
+fun Pokemon.getAttribute(attribute: Attribute): Int{
     return when(attribute){
-        Attribute.HP -> pokemon.stats[0].baseStat
-        Attribute.ATTACK -> pokemon.stats[1].baseStat
-        Attribute.DEFENSE -> pokemon.stats[2].baseStat
-        Attribute.SPEED -> pokemon.stats[5].baseStat
-
+        Attribute.HP -> this.stats[0].baseStat
+        Attribute.ATTACK -> this.stats[1].baseStat
+        Attribute.DEFENSE -> this.stats[2].baseStat
+        Attribute.SPECIAL_ATTACK -> this.stats[3].baseStat
+        Attribute.SPECIAL_DEFENSE -> this.stats[4].baseStat
+        Attribute.SPEED -> this.stats[5].baseStat
     }
 }
 
@@ -98,15 +101,6 @@ enum class PokemonElement(val color: Int) {
     NORMAL(R.color.normal_color);
 }
 
-enum class Rarity(val value: Int){
-    COMMON(70), // 0 - 70
-    UNCOMMON(80), // 71 -80
-
-    RARE(90), // 81 - 90
-    EPIC(100), // 91 - 100
-    LEGENDARY(255) // 101+
-}
-
 fun Pokemon.getTypeColor(type: Type): Int {
     return when (type.type.name) {
         "fire" -> PokemonElement.FIRE.color
@@ -128,5 +122,30 @@ fun Pokemon.getTypeColor(type: Type): Int {
         "fighting" -> PokemonElement.FIGHTING.color
         "normal" -> PokemonElement.NORMAL.color
         else -> -1
+    }
+}
+
+enum class Rarity(val value: Int){
+    COMMON(70), // 0 - 70
+    UNCOMMON(80), // 71 -80
+    RARE(90), // 81 - 90
+    EPIC(100), // 91 - 100
+    LEGENDARY(255) // 101+
+}
+
+fun Pokemon.getRarity() : Rarity{
+
+    val score :Int = (this.getAttribute(Attribute.ATTACK)+this.getAttribute(Attribute.SPECIAL_ATTACK)+this.getAttribute(Attribute.SPECIAL_DEFENSE)+this.getAttribute(Attribute.DEFENSE)+this.getAttribute(Attribute.HP)+this.getAttribute(Attribute.SPEED))/6
+
+    return if(score <= Rarity.COMMON.value){
+        Rarity.COMMON
+    }else if(score <= Rarity.UNCOMMON.value){
+        Rarity.UNCOMMON
+    }else if(score <= Rarity.RARE.value){
+        Rarity.RARE
+    }else if(score <= Rarity.EPIC.value){
+        Rarity.EPIC
+    }else {
+        Rarity.LEGENDARY
     }
 }
