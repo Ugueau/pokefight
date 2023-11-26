@@ -18,7 +18,12 @@ import com.example.pokefight.model.getRarity
 import com.example.pokefight.model.getTypeColor
 import com.squareup.picasso.Picasso
 
-class TeamAdapter(val context : Context, val pokemonList : List<Pokemon>) : BaseAdapter() {
+class TeamAdapter(val context : Context) : BaseAdapter() {
+
+    private var pokemonList : List<Pokemon> = emptyList()
+    public fun setPokemonList(list: List<Pokemon>){
+        pokemonList = list
+    }
     override fun getCount(): Int {
         return pokemonList.size
     }
@@ -56,11 +61,11 @@ class TeamAdapter(val context : Context, val pokemonList : List<Pokemon>) : Base
 
         val type2 = layout.findViewById<TextView>(R.id.team_type2)
         if(pokemon.types.size == 2){
-            color = ContextCompat.getColor(context, pokemon.getTypeColor(pokemon.types[1]))
+            var color2 = ContextCompat.getColor(context, pokemon.getTypeColor(pokemon.types[0]))
 
             type2.text = pokemon.types[1].type.name
             type2.background = label
-            type2.background?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+            type2.background?.setColorFilter(color2, PorterDuff.Mode.SRC_ATOP)
         }else{
             type2.text = ""
         }

@@ -13,8 +13,9 @@
         android:id="@+id/team_sprite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleX="3"
-        android:scaleY="3"
+        android:layout_marginStart="32dp"
+        android:scaleX="2.5"
+        android:scaleY="2.5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,9 +23,9 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_gravity="center"
         android:layout_marginEnd="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,16 +49,20 @@
 
             <TextView
                 android:id="@+id/team_type1"
-                android:layout_width="wrap_content"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="TextView" />
 
             <TextView
                 android:id="@+id/team_type2"
-                android:layout_width="wrap_content"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="TextView" />
         </LinearLayout>
 

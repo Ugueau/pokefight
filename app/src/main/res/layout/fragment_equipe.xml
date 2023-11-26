@@ -7,6 +7,7 @@
     tools:context=".ui.equipe.EquipeFragment">
 
     <ListView
+        android:id="@+id/team"
         android:layout_width="409dp"
         android:layout_height="729dp"
         app:layout_constraintBottom_toBottomOf="parent"
