@@ -14,5 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:paddingBottom="60dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

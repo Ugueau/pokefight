@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:background="@drawable/primary_container"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:id="@+id/team_pokemon">
 
 
     <ImageView

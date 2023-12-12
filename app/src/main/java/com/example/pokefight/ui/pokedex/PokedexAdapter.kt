@@ -38,7 +38,7 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
 
     override fun onBindViewHolder(holder: PokedexViewHolder, position: Int) {
         val pokemon = pokemonList[position];
-        holder.pokemon_name.text = pokemon.name
+        holder.pokemon_name.text = pokemon.name.capitalize()
         holder.pokemon_id.text = pokemon.formatId(pokemon.id)
         holder.pokemon_card.setOnClickListener {
             val popupPokemonDetail = PopupPokemonDetail()

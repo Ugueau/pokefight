@@ -5,15 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentEquipeBinding
-import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
+import androidx.appcompat.app.AppCompatActivity
 
 class EquipeFragment : Fragment() {
 
@@ -37,7 +34,7 @@ class EquipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val teamAdapter = TeamAdapter(requireContext())
+        val teamAdapter = TeamAdapter(requireContext(), (activity as AppCompatActivity).supportFragmentManager)
         val team = view.findViewById<ListView>(R.id.team)
         team.adapter = teamAdapter
 
