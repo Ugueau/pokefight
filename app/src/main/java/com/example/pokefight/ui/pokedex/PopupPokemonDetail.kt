@@ -39,7 +39,7 @@ class PopupPokemonDetail : DialogFragment() {
                 requestFeature(Window.FEATURE_NO_TITLE)
             }
         }
-        return v;
+        return v
     }
 
     fun setPokemonToDisplay(pokemonToDisplay: Pokemon){
