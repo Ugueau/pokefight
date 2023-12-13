@@ -70,7 +70,8 @@ class FragmentCreationCompte : Fragment() {
                 InputNickname.editText?.text.toString(),
                 0,
                 0,
-                Random.nextInt(1, 99999999).toString()
+                Random.nextInt(1, 99999999).toString(),
+                null
             )
 
             vm.insertUser(userToConnect).observe(viewLifecycleOwner){

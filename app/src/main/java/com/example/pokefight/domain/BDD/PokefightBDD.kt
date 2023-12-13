@@ -8,9 +8,10 @@ import com.example.pokefight.domain.BDD.DAO.DiscoveredPokemonDAO
 import com.example.pokefight.domain.BDD.Converters
 import com.example.pokefight.domain.BDD.DAO.TeamDAO
 import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
+import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
 
-@Database(entities = [ UserBDD::class, DiscoveredPokemonBDD::class ], version = 1)
+@Database(entities = [ UserBDD::class, DiscoveredPokemonBDD::class, TeamBDD::class ], version = 1)
 @TypeConverters(Converters::class)
 abstract class PokefightBDD: RoomDatabase() {
 

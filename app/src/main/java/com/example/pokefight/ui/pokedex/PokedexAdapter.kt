@@ -16,6 +16,7 @@ import com.example.pokefight.model.formatId
 import com.squareup.picasso.Picasso
 
 class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemon>, private val fragmentManager: FragmentManager)  : RecyclerView.Adapter<PokedexAdapter.PokedexViewHolder>(){
+    private var teamMode = false
     class PokedexViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val pokemon_name: TextView = view.findViewById(R.id.pokedex_pokemon_name)
         val pokemon_id: TextView = view.findViewById(R.id.pokedex_pokemon_id)
@@ -25,6 +26,10 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
 
     fun updatePokemonList(pokemonList: List<Pokemon>){
         this.pokemonList = pokemonList
+    }
+
+    fun setToTeamChoiceMode(){
+        teamMode = true
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokedexViewHolder {
         val adapterLayout = LayoutInflater.from(parent.context)
@@ -40,10 +45,12 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
         val pokemon = pokemonList[position];
         holder.pokemon_name.text = pokemon.name.capitalize()
         holder.pokemon_id.text = pokemon.formatId(pokemon.id)
-        holder.pokemon_card.setOnClickListener {
-            val popupPokemonDetail = PopupPokemonDetail()
-            popupPokemonDetail.setPokemonToDisplay(pokemon)
-            popupPokemonDetail.show(fragmentManager, "popupPokemonDetail")
+        if(!teamMode) {
+            holder.pokemon_card.setOnClickListener {
+                val popupPokemonDetail = PopupPokemonDetail()
+                popupPokemonDetail.setPokemonToDisplay(pokemon)
+                popupPokemonDetail.show(fragmentManager, "popupPokemonDetail")
+            }
         }
         val imageUrl = pokemon.sprites.frontDefault
         Picasso.get().load(imageUrl).into(holder.pokemon_sprite)

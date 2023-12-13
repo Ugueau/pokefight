@@ -13,7 +13,7 @@ data class User (
     var Trophy: Int,
     var pokedollar: Int,
     val UserToken: String,
-    val userId: Int
+    val userId: Int?
 ) {
      fun toEntity(): UserBDD{
          val UserEntity = UserBDD(

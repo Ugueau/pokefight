@@ -18,6 +18,7 @@ import com.example.pokefight.model.formatId
 import com.example.pokefight.model.getRarity
 import com.example.pokefight.model.getTypeColor
 import com.example.pokefight.ui.pokedex.PopupPokemonDetail
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
 
 class TeamAdapter(val context : Context, private val fragmentManager: FragmentManager) : BaseAdapter() {
@@ -81,6 +82,13 @@ class TeamAdapter(val context : Context, private val fragmentManager: FragmentMa
             val popupPokemonDetail = PopupPokemonDetail()
             popupPokemonDetail.setPokemonToDisplay(pokemon)
             popupPokemonDetail.show(fragmentManager, "popupPokemonDetail")
+        }
+
+        val changePokemon = layout.findViewById<FloatingActionButton>(R.id.changePokemonButton)
+        changePokemon.setOnClickListener{
+            val popup = PopupTeamChoice()
+            popup.show(fragmentManager, "popupTeamChoice")
+
         }
 
         return layout
