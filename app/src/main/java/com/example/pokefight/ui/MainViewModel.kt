@@ -89,4 +89,14 @@ class MainViewModel : ViewModel() {
         }
         return liveData
     }
+
+    public val prix_boutique = mutableMapOf<String, Int>(
+        "COMMON" to 50,
+        "UNCOMMON" to 150,
+        "RARE" to 300,
+        "POKEBALL" to 100,
+        "SUPERBALL" to 250,
+        "HYPERBALL" to 500
+    )
+
 }

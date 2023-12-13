@@ -24,7 +24,6 @@ class FragmentCreationCompte : Fragment() {
     private lateinit var InputEmail: TextInputLayout
     private lateinit var InputPassword: TextInputLayout
     private lateinit var InputConfirmPassword: TextInputLayout
-    private lateinit var user : User
 
     val MainViewModel by viewModels<MainViewModel>()
     lateinit var vm : MainViewModel
