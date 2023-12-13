@@ -45,10 +45,18 @@ object UserRepository {
             return connectedUser
         }
 
-        return User("", "", "", 0 , 0,"")
+        return User("", "", "", 0 , 0,"",-1)
     }
 
     suspend fun connectUser(connectedUser: User){
         UserCache.addToCache(connectedUser)
+    }
+
+    suspend fun getDiscoveredPokemon(): List<Int>{
+        val userId = UserCache.getUser()?.userId
+        userId?.let {
+            return BDDDataSource.getDiscoveredPokemonFromUserId(userId)
+        }
+        return emptyList()
     }
 }

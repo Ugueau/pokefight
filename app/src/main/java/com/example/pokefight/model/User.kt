@@ -4,13 +4,16 @@ import android.provider.ContactsContract.CommonDataKinds.Nickname
 import com.example.pokefight.domain.BDD.entity.UserBDD
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
- data class User (
-    @SerializedName("Email") @Expose var Email: String,
-    @SerializedName("Password") @Expose var Password: String,
-    @SerializedName("Nickname") @Expose var Nickname: String,
-    @SerializedName("trophy") @Expose var Trophy: Int,
-    @SerializedName("pokedollar") @Expose var pokedollar: Int,
-    @SerializedName("UserToken") @Expose val UserToken: String
+import java.io.Serial
+
+data class User (
+    var Email: String,
+    var Password: String,
+    var Nickname: String,
+    var Trophy: Int,
+    var pokedollar: Int,
+    val UserToken: String,
+    val userId: Int
 ) {
      fun toEntity(): UserBDD{
          val UserEntity = UserBDD(
@@ -21,7 +24,6 @@ import com.google.gson.annotations.SerializedName
              this.UserToken,
              this.Password
          )
-
          return UserEntity
      }
 }

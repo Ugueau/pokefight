@@ -26,7 +26,9 @@ object BDDDataSource {
         val BDDUser : UserBDD? = PokefightBDD.getInstance().userDAO().findUserFromEmail(email)
 
         if (BDDUser != null){
-            returnUser = User(BDDUser.Email, BDDUser.Password, BDDUser.Nickname, BDDUser.trophy, BDDUser.pokedollar,BDDUser.UserToken)
+            returnUser = User(BDDUser.Email, BDDUser.Password, BDDUser.Nickname, BDDUser.trophy, BDDUser.pokedollar,BDDUser.UserToken,
+                BDDUser.idUser!!
+            )
         }
 
         return returnUser
@@ -40,7 +42,15 @@ object BDDDataSource {
             return null
         }
         else{
-            return User(connectedUser.Email, connectedUser.Password, connectedUser.Nickname, connectedUser.trophy, connectedUser.pokedollar,connectedUser.UserToken)
+            return User(connectedUser.Email, connectedUser.Password, connectedUser.Nickname, connectedUser.trophy, connectedUser.pokedollar,connectedUser.UserToken, connectedUser.idUser!!)
         }
+    }
+
+    suspend fun getDiscoveredPokemonFromUserId(userId : Int): List<Int>{
+        val discoveredPokemons = PokefightBDD.getInstance().discoveredPokemonDAO().findDiscoveredPokemonFromUserId(userId)?.discovered
+        discoveredPokemons?.let {
+            return it
+        }
+        return emptyList()
     }
 }
