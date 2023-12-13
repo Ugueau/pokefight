@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.example.pokefight.domain.BDD.DAO.UserDAO
 import com.example.pokefight.domain.BDD.DAO.DiscoveredPokemonDAO
 import com.example.pokefight.domain.BDD.Converters
+import com.example.pokefight.domain.BDD.DAO.TeamDAO
 import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
 
@@ -15,6 +16,7 @@ abstract class PokefightBDD: RoomDatabase() {
 
     abstract fun userDAO(): UserDAO
     abstract fun discoveredPokemonDAO(): DiscoveredPokemonDAO
+    abstract fun teamDAO(): TeamDAO
 
     companion object{
 

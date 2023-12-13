@@ -53,4 +53,12 @@ object BDDDataSource {
         }
         return emptyList()
     }
+
+    suspend fun getTeamFromUserId(userId : Int): List<Int>{
+        val teamPokemons = PokefightBDD.getInstance().teamDAO().findTeamFromUserId(userId)?.teams
+        teamPokemons?.let {
+            return it
+        }
+        return emptyList()
+    }
 }

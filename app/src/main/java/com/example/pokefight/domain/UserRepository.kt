@@ -59,4 +59,12 @@ object UserRepository {
         }
         return emptyList()
     }
+
+    suspend fun getTeam(): List<Int>{
+        val userId = UserCache.getUser()?.userId
+        userId?.let {
+            return BDDDataSource.getDiscoveredPokemonFromUserId(userId)
+        }
+        return emptyList()
+    }
 }
