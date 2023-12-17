@@ -7,10 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.pokedex.PopupPokemonDetail
 import timber.log.Timber
 
 class BoutiqueFragment : Fragment() {
@@ -28,6 +31,9 @@ class BoutiqueFragment : Fragment() {
     
     //TextView solde de l'utilisateur
     private lateinit var tvSoldeUser : TextView
+
+    //lineareLayout pokedollard
+    private lateinit var layoutPokedollar : LinearLayout
 
     companion object {
         fun newInstance() = BoutiqueFragment()
@@ -67,7 +73,16 @@ class BoutiqueFragment : Fragment() {
         tvSoldeUser = view.findViewById(R.id.soldeUser)
         tvSoldeUser.text = vm.getConnectedUserFromCache().pokedollar.toString()
 
+        //création de la popup pour acheter des pokedollard
+        layoutPokedollar = view.findViewById(R.id.layoutPokedollar)
+        layoutPokedollar.setOnClickListener { click -> this.showPopup() }
+
         return view;
+    }
+
+    private fun showPopup(){
+        val popupPokedollar = PopupPokedollar()
+        popupPokedollar.show((activity as AppCompatActivity).supportFragmentManager, "popupPokedollar")
     }
 
 }
