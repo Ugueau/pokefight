@@ -165,6 +165,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="4dp"
+            android:layout_marginBottom="8dp"
             android:layout_weight="80"
             app:errorEnabled="true"
             app:errorIconDrawable="@drawable/baseline_error_24">
@@ -176,8 +177,8 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimaryInverse"
                 android:hint="@string/enter_a_code"
-                android:textColor="?attr/colorPrimaryContainer"
-                android:textColorHint="?attr/colorPrimaryContainer" />
+                android:textColor="?attr/colorOnPrimaryContainer"
+                android:textColorHint="?attr/colorOnPrimaryContainer" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

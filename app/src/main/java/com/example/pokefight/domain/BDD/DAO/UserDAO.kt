@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.pokefight.domain.BDD.entity.UserBDD
 
 @Dao
@@ -20,4 +21,8 @@ interface UserDAO {
 
     @Query("Select * from UserBDD where email = :email and password = :password")
     suspend fun findUserFromEmailAndPassword(email: String, password: String): UserBDD?
+
+    @Query("Update UserBDD set  pokedollar = :newSolde where email = :email and password = :password")
+    suspend fun updateSoldeUser(newSolde: Int, email: String, password: String)
+
 }

@@ -11,13 +11,27 @@ import android.view.Window
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.R
+import com.example.pokefight.ui.MainViewModel
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import java.util.Locale
+
 class PopupPokedollar : DialogFragment() {
 
-    private lateinit var offre1 : LinearLayout;
-    private lateinit var offre2 : LinearLayout;
+    val MainViewModel by viewModels<MainViewModel>()
+    lateinit var vm : MainViewModel
 
-    override fun onCreateView(
+    private lateinit var offre1 : LinearLayout
+    private lateinit var offre2 : LinearLayout
+
+    private lateinit var InputCode : TextInputEditText
+    private lateinit var LayoutInputCode : TextInputLayout
+    private lateinit var valideCode : Button
+
+     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -30,12 +44,41 @@ class PopupPokedollar : DialogFragment() {
             }
         }
 
-        offre1 = v.findViewById(R.id.offre1);
-        offre1.setOnClickListener{
+        vm = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        //gestion de l'offre a + 500 pokedollar
+        offre1 = v.findViewById(R.id.offre1)
+        offre1.setOnClickListener{
+            vm.updateUserSolde(500)
+            dismiss()
         }
 
-        offre2 = v.findViewById(R.id.offre2);
+        //gestion de l'offre a + 1000 pokedollar
+        offre2 = v.findViewById(R.id.offre2)
+        offre2.setOnClickListener{
+            vm.updateUserSolde(1000)
+            dismiss()
+        }
+
+        //gestion de la zone pour entrer un code
+        LayoutInputCode = v.findViewById(R.id.LayoutInputCode)
+        InputCode = v.findViewById(R.id.InputCode)
+        valideCode = v.findViewById(R.id.valideCode)
+
+        valideCode.setOnClickListener {
+            if (!InputCode.text.toString().isNullOrEmpty()){
+                if (InputCode.text.toString().uppercase(Locale.ROOT) == "STONKS"){
+                    vm.updateUserSolde(10000)
+                    dismiss()
+                }
+                else{
+                    LayoutInputCode.error = "Invalid code"
+                }
+            }
+            else{
+                LayoutInputCode.error = "Mandatory code"
+            }
+        }
 
         return v
     }

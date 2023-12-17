@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="fragment_confirm_achat_pokemon" type="id">fragment_confirm_achat_pokemon</item>
+    <item name="fragment_confirm_achat" type="id">fragment_confirm_achat</item>
+</resources>

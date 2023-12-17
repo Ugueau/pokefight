@@ -23,7 +23,7 @@ import com.example.pokefight.model.getAttribute
 import com.example.pokefight.model.getTypeColor
 import com.squareup.picasso.Picasso
 
-class PopupPokemonDetail : DialogFragment() {
+class  PopupPokemonDetail : DialogFragment() {
     lateinit var pokemon: Pokemon
 
     override fun onCreateView(

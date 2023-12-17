@@ -53,9 +53,12 @@ object UserRepository {
     }
 
     suspend fun updateUserSolde(value: Int){
+
         UserCache.updateUserSolde(value)
 
-        BDDDataSource.updateUsersolde(value)
+        val user = this.getUser()
+
+        BDDDataSource.updateUsersolde(user.pokedollar, user.Email, user.Password)
 
         //todo a faire quand firebase sera prêt
     }

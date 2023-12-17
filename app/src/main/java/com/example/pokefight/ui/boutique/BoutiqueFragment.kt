@@ -84,4 +84,7 @@ class BoutiqueFragment : Fragment() {
         popupPokedollar.show((activity as AppCompatActivity).supportFragmentManager, "popupPokedollar")
     }
 
+    fun reloadSolde(){
+        tvSoldeUser.text = vm.getConnectedUserFromCache().pokedollar.toString()
+    }
 }

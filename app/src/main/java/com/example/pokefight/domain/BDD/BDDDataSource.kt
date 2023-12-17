@@ -44,7 +44,7 @@ object BDDDataSource {
         }
     }
 
-    suspend fun updateUsersolde(value: Int){
-
+    suspend fun updateUsersolde(value: Int, email: String, password: String){
+        PokefightBDD.getInstance().userDAO().updateSoldeUser(value, email, password)
     }
 }
