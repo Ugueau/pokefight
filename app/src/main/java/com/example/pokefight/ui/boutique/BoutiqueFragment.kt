@@ -14,7 +14,6 @@ import androidx.fragment.app.viewModels
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
 import com.example.pokefight.ui.pokedex.PopupPokemonDetail
-import timber.log.Timber
 
 class BoutiqueFragment : Fragment() {
 

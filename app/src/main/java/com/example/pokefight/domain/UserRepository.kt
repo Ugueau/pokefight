@@ -51,4 +51,12 @@ object UserRepository {
     suspend fun connectUser(connectedUser: User){
         UserCache.addToCache(connectedUser)
     }
+
+    suspend fun updateUserSolde(value: Int){
+        UserCache.updateUserSolde(value)
+
+        BDDDataSource.updateUsersolde(value)
+
+        //todo a faire quand firebase sera prêt
+    }
 }

@@ -2,7 +2,6 @@ package com.example.pokefight.domain.BDD
 
 import android.content.Context
 import androidx.room.*
-import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.example.pokefight.domain.BDD.DAO.UserDAO
 import com.example.pokefight.domain.BDD.entity.UserBDD
 

@@ -35,6 +35,12 @@ class MainViewModel : ViewModel() {
 
     }
 
+    fun updateUserSolde(value: Int){
+        viewModelScope.launch {
+            UserRepository.updateUserSolde(value)
+        }
+    }
+
     fun getConnectedUserFromCache(): User{
         return UserRepository.getUser()
     }

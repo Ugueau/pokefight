@@ -20,4 +20,10 @@ object UserCache {
         }
         return null
     }
+
+    fun updateUserSolde(value: Int){
+        if (user != null){
+            user?.updateSoldeUser(value)
+        }
+    }
 }

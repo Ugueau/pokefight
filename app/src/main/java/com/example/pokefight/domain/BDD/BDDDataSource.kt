@@ -43,4 +43,8 @@ object BDDDataSource {
             return User(connectedUser.Email, connectedUser.Password, connectedUser.Nickname, connectedUser.trophy, connectedUser.pokedollar,connectedUser.UserToken)
         }
     }
+
+    suspend fun updateUsersolde(value: Int){
+
+    }
 }
