@@ -72,4 +72,11 @@ object UserRepository {
         }
         return emptyList()
     }
+
+    suspend fun updateTeam(newPokemonId : Int, oldPokemon : Int){
+        val user = getUser()
+        val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) }
+        (teamToUpdate as MutableList<Int>).set(oldPokemon,newPokemonId)
+        BDDDataSource.updateTeam(teamToUpdate, user.userId)
+    }
 }

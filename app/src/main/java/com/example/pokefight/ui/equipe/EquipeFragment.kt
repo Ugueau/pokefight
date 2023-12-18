@@ -12,10 +12,12 @@ import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentEquipeBinding
 import com.example.pokefight.ui.MainViewModel
 import androidx.appcompat.app.AppCompatActivity
+import com.example.pokefight.model.Pokemon
 
 class EquipeFragment : Fragment() {
 
     private var _binding: FragmentEquipeBinding? = null
+    private var _teamList = mutableListOf<Pokemon>()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -40,16 +42,23 @@ class EquipeFragment : Fragment() {
         team.adapter = teamAdapter
 
         mainViewModel.getTeam().observe(viewLifecycleOwner){
-            teamAdapter.setPokemonList(it)
+            _teamList = it.toMutableList()
+            teamAdapter.setPokemonList(_teamList)
             teamAdapter.notifyDataSetChanged()
         }
 
-        mainViewModel.chosenPokemon.observe(viewLifecycleOwner){toSwitch->
-            mainViewModel.getPokemonById(toSwitch.first).observe(viewLifecycleOwner){
-                Log.e("Changed", "${it?.name} replaced : ${toSwitch.second}")
+        mainViewModel.teamUpdated.observe(viewLifecycleOwner){
+            mainViewModel.getTeam().observe(viewLifecycleOwner){
+                _teamList = it.toMutableList()
+                teamAdapter.setPokemonList(_teamList)
+                teamAdapter.notifyDataSetChanged()
             }
         }
+
+
+
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

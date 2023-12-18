@@ -65,4 +65,9 @@ object BDDDataSource {
         }
         return emptyList()
     }
+
+    suspend fun updateTeam(newTeams : List<Int>, userId : Int){
+        val teamBDD = TeamBDD(teams = newTeams,userId)
+        PokefightBDD.getInstance().teamDAO().updateTeam(teamBDD)
+    }
 }
