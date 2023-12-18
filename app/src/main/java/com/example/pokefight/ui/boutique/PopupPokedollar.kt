@@ -19,7 +19,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.Locale
 
-class PopupPokedollar : DialogFragment() {
+class PopupPokedollar(val callback : () -> Unit) : DialogFragment() {
 
     val MainViewModel by viewModels<MainViewModel>()
     lateinit var vm : MainViewModel
@@ -50,6 +50,7 @@ class PopupPokedollar : DialogFragment() {
         offre1 = v.findViewById(R.id.offre1)
         offre1.setOnClickListener{
             vm.updateUserSolde(500)
+            callback()
             dismiss()
         }
 
@@ -57,6 +58,7 @@ class PopupPokedollar : DialogFragment() {
         offre2 = v.findViewById(R.id.offre2)
         offre2.setOnClickListener{
             vm.updateUserSolde(1000)
+            callback()
             dismiss()
         }
 
@@ -69,6 +71,7 @@ class PopupPokedollar : DialogFragment() {
             if (!InputCode.text.toString().isNullOrEmpty()){
                 if (InputCode.text.toString().uppercase(Locale.ROOT) == "STONKS"){
                     vm.updateUserSolde(10000)
+                    callback()
                     dismiss()
                 }
                 else{
@@ -88,6 +91,7 @@ class PopupPokedollar : DialogFragment() {
 
         val close = view.findViewById<Button>(R.id.close_popup2);
         close.setOnClickListener {
+            callback()
             dismiss()
         }
 

@@ -80,7 +80,7 @@ class BoutiqueFragment : Fragment() {
     }
 
     private fun showPopup(){
-        val popupPokedollar = PopupPokedollar()
+        val popupPokedollar = PopupPokedollar(){reloadSolde()}
         popupPokedollar.show((activity as AppCompatActivity).supportFragmentManager, "popupPokedollar")
     }
 
