@@ -367,14 +367,23 @@
                 android:layout_weight="1"
                 android:background="@drawable/pokemon_boutique">
 
-                <ImageView
-                    android:id="@+id/coffre_pokeball"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutImagePokeball"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/coffre_pokeball_foreground"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/coffre_pokeball3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/coffre_pokeball_foreground"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_prix4"
@@ -387,7 +396,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/coffre_pokeball">
+                    app:layout_constraintTop_toBottomOf="@+id/layoutImagePokeball">
 
                     <TextView
                         android:id="@+id/prix_coffre_pokeball"
@@ -404,6 +413,7 @@
                         android:layout_marginStart="4dp"
                         android:src="@drawable/pok_mon_dollar_sign" />
                 </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -415,14 +425,23 @@
                 android:layout_weight="1"
                 android:background="@drawable/pokemon_boutique">
 
-                <ImageView
-                    android:id="@+id/coffre_superball"
-                    android:layout_width="0dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutImageSuperball"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/coffre_superball_foreground"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/coffre_superball"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/coffre_superball_foreground"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_prix5"
@@ -435,7 +454,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/coffre_superball">
+                    app:layout_constraintTop_toBottomOf="@+id/layoutImageSuperball">
 
                     <TextView
                         android:id="@+id/prix_coffre_superball"
@@ -461,14 +480,23 @@
                 android:layout_weight="1"
                 android:background="@drawable/pokemon_boutique">
 
-                <ImageView
-                    android:id="@+id/coffre_hyperball"
-                    android:layout_width="0dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutImageHyperball"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/coffre_hyperball_foreground"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/coffre_hyperball"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/coffre_hyperball_foreground"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_prix6"
@@ -481,7 +509,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/coffre_hyperball">
+                    app:layout_constraintTop_toBottomOf="@+id/layoutImageHyperball">
 
                     <TextView
                         android:id="@+id/prix_coffre_hyperball"

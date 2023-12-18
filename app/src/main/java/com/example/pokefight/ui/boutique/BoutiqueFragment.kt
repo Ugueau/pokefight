@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
@@ -74,14 +75,70 @@ class BoutiqueFragment : Fragment() {
 
         //création de la popup pour acheter des pokedollard
         layoutPokedollar = view.findViewById(R.id.layoutPokedollar)
-        layoutPokedollar.setOnClickListener { click -> this.showPopup() }
+        layoutPokedollar.setOnClickListener { click -> this.showPopupPokedollar() }
+
+        // instentiation des layout d'achat du fragment
+        // première ligne pour l'achat de pokemon
+        val layoutCarte1 = (view.findViewById(R.id.layoutCarte1)as ConstraintLayout)
+        layoutCarte1.setOnClickListener {
+            showPopupConfirmAchat(
+                vm.prix_boutique.keys.elementAt(0),
+                view.findViewById(R.id.DetailPokemon1)
+            )
+        }
+
+        val layoutCarte2 = (view.findViewById(R.id.layoutCarte2)as ConstraintLayout)
+        layoutCarte2.setOnClickListener {
+            showPopupConfirmAchat(
+                vm.prix_boutique.keys.elementAt(1),
+                view.findViewById(R.id.DetailPokemon2)
+            )
+        }
+
+        val layoutCarte3 = (view.findViewById(R.id.layoutCarte3)as ConstraintLayout)
+        layoutCarte3.setOnClickListener {
+            showPopupConfirmAchat(
+                vm.prix_boutique.keys.elementAt(2),
+                view.findViewById(R.id.DetailPokemon3)
+            )
+        }
+
+        // deuxième ligne pour l'achat de coffre
+        val layoutPokeball = (view.findViewById(R.id.layoutPokeball)as ConstraintLayout)
+        layoutPokeball.setOnClickListener {
+            showPopupConfirmAchat(
+                vm.prix_boutique.keys.elementAt(3),
+                view.findViewById(R.id.layoutImagePokeball)
+            )
+        }
+
+        val layoutSuperball = (view.findViewById(R.id.layoutSuperball)as ConstraintLayout)
+        layoutSuperball.setOnClickListener {
+            showPopupConfirmAchat(
+                vm.prix_boutique.keys.elementAt(4),
+                view.findViewById(R.id.layoutSuperball)
+            )
+        }
+
+        val layoutHyperball = (view.findViewById(R.id.layoutHyperball)as ConstraintLayout)
+        layoutHyperball.setOnClickListener {
+            showPopupConfirmAchat(
+                vm.prix_boutique.keys.elementAt(5),
+                view.findViewById(R.id.layoutHyperball)
+            )
+        }
 
         return view;
     }
 
-    private fun showPopup(){
+    private fun showPopupPokedollar(){
         val popupPokedollar = PopupPokedollar(){reloadSolde()}
         popupPokedollar.show((activity as AppCompatActivity).supportFragmentManager, "popupPokedollar")
+    }
+
+    private fun showPopupConfirmAchat( key : String, layout: ConstraintLayout){
+        val popupConfirmAchat = PopupConfirmAchat(key, layout){reloadSolde()}
+        popupConfirmAchat.show((activity as AppCompatActivity).supportFragmentManager, "popupConfirmAchat")
     }
 
     fun reloadSolde(){
