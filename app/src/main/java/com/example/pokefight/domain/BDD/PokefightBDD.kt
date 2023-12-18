@@ -27,6 +27,7 @@ abstract class PokefightBDD: RoomDatabase() {
             instance = Room.databaseBuilder(
                 context, PokefightBDD::class.java, "PokefightBDD"
             )
+                .fallbackToDestructiveMigration()
                 .build()
         }
 

@@ -1,7 +1,6 @@
 package com.example.pokefight.ui.equipe
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,19 +10,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.domain.PokemonRepository
+import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
 import com.example.pokefight.ui.pokedex.PokedexAdapter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class PopupTeamChoice : BottomSheetDialogFragment() {
+class PopupTeamChoice(var pokemonPosToChange : Int) : BottomSheetDialogFragment() {
     private var isLoading = true
-    val mainViewModel by activityViewModels<MainViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
+    val mainViewModel by activityViewModels<MainViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,10 +29,7 @@ class PopupTeamChoice : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dialog?.setOnShowListener {
             val recyclerView: RecyclerView = requireView().findViewById(R.id.recycler_pokedex)
-            val bottomSheetBehavior = BottomSheetBehavior.from(recyclerView)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
             val recyclerViewLayoutManager = GridLayoutManager(context, 3)
             recyclerView.layoutManager = recyclerViewLayoutManager
@@ -47,8 +39,11 @@ class PopupTeamChoice : BottomSheetDialogFragment() {
                 emptyList(),
                 (activity as AppCompatActivity).supportFragmentManager
             )
+            recyclerViewAdapter.setToTeamChoiceMode(){pokemonId->
+                selectedPokemon(pokemonId)
+            }
             recyclerView.adapter = recyclerViewAdapter
-
+//
             isLoading = true
             mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
                 .observe(viewLifecycleOwner) {
@@ -87,8 +82,10 @@ class PopupTeamChoice : BottomSheetDialogFragment() {
 
             //Useful for optimization
             recyclerView.setHasFixedSize(true)
-        }
     }
 
+    fun selectedPokemon(pokemonId : Int){
+        mainViewModel.setChosenPokemon(pokemonId, pokemonPosToChange)
+    }
 
 }

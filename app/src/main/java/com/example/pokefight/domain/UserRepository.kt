@@ -34,7 +34,6 @@ object UserRepository {
 
         //Todo faire l'appel a insert de room
         toReturn = BDDDataSource.insertUser(user)
-
         return toReturn
     }
 
@@ -60,10 +59,16 @@ object UserRepository {
         return emptyList()
     }
 
-    suspend fun getTeam(): List<Int>{
+    suspend fun getTeam(): List<Pokemon>{
         val userId = UserCache.getUser()?.userId
         userId?.let {
-            return BDDDataSource.getDiscoveredPokemonFromUserId(userId)
+            val pokemonTeam = mutableListOf<Pokemon>()
+            BDDDataSource.getTeamFromUserId(userId).forEach {id ->
+                PokemonRepository.getPokemonById(id)?.let {pokemon ->
+                    pokemonTeam.add(pokemon)
+                }
+            }
+            return pokemonTeam
         }
         return emptyList()
     }

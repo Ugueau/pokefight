@@ -31,7 +31,7 @@ object DSPokemonCache {
 
     fun getPokemon(id :Int): Pokemon?{
         if(pokemonList.find { it.id == id } != null){
-            return pokemonList[id]
+            return pokemonList[id-1]
         }
         return null
     }

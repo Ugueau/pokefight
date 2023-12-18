@@ -1,6 +1,7 @@
 package com.example.pokefight.ui.equipe
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,9 +39,15 @@ class EquipeFragment : Fragment() {
         val team = view.findViewById<ListView>(R.id.team)
         team.adapter = teamAdapter
 
-        mainViewModel.getPokemonList(1,6).observe(viewLifecycleOwner){
+        mainViewModel.getTeam().observe(viewLifecycleOwner){
             teamAdapter.setPokemonList(it)
             teamAdapter.notifyDataSetChanged()
+        }
+
+        mainViewModel.chosenPokemon.observe(viewLifecycleOwner){toSwitch->
+            mainViewModel.getPokemonById(toSwitch.first).observe(viewLifecycleOwner){
+                Log.e("Changed", "${it?.name} replaced : ${toSwitch.second}")
+            }
         }
     }
     override fun onDestroyView() {

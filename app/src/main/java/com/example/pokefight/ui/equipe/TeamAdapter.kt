@@ -20,15 +20,18 @@ import com.example.pokefight.model.getTypeColor
 import com.example.pokefight.ui.pokedex.PopupPokemonDetail
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
+import java.util.concurrent.atomic.AtomicInteger
 
 class TeamAdapter(val context : Context, private val fragmentManager: FragmentManager) : BaseAdapter() {
 
     private var pokemonList : List<Pokemon> = emptyList()
-    public fun setPokemonList(list: List<Pokemon>){
+    private val size = AtomicInteger(0)
+    fun setPokemonList(list: List<Pokemon>){
         pokemonList = list
+        size.set(pokemonList.size)
     }
     override fun getCount(): Int {
-        return pokemonList.size
+        return size.get()
     }
 
     override fun getItem(p0: Int): Pokemon {
@@ -86,9 +89,8 @@ class TeamAdapter(val context : Context, private val fragmentManager: FragmentMa
 
         val changePokemon = layout.findViewById<FloatingActionButton>(R.id.changePokemonButton)
         changePokemon.setOnClickListener{
-            val popup = PopupTeamChoice()
+            val popup = PopupTeamChoice(index)
             popup.show(fragmentManager, "popupTeamChoice")
-
         }
 
         return layout

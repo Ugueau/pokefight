@@ -14,9 +14,12 @@ import com.example.pokefight.R
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.formatId
 import com.squareup.picasso.Picasso
+import okhttp3.internal.lockAndWaitNanos
 
 class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemon>, private val fragmentManager: FragmentManager)  : RecyclerView.Adapter<PokedexAdapter.PokedexViewHolder>(){
     private var teamMode = false
+    private var size : Int = 0
+    private lateinit var callbackChoice : (Int) -> Unit
     class PokedexViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val pokemon_name: TextView = view.findViewById(R.id.pokedex_pokemon_name)
         val pokemon_id: TextView = view.findViewById(R.id.pokedex_pokemon_id)
@@ -26,10 +29,12 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
 
     fun updatePokemonList(pokemonList: List<Pokemon>){
         this.pokemonList = pokemonList
+        size = pokemonList.size
     }
 
-    fun setToTeamChoiceMode(){
+    fun setToTeamChoiceMode(callbackChoice: (Int) -> Unit){
         teamMode = true
+        this.callbackChoice = callbackChoice
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokedexViewHolder {
         val adapterLayout = LayoutInflater.from(parent.context)
@@ -38,7 +43,7 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
     }
 
     override fun getItemCount(): Int {
-        return pokemonList.size;
+        return size
     }
 
     override fun onBindViewHolder(holder: PokedexViewHolder, position: Int) {
@@ -50,6 +55,11 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
                 val popupPokemonDetail = PopupPokemonDetail()
                 popupPokemonDetail.setPokemonToDisplay(pokemon)
                 popupPokemonDetail.show(fragmentManager, "popupPokemonDetail")
+            }
+        }
+        else{
+            holder.pokemon_card.setOnClickListener{
+                callbackChoice(pokemon.id)
             }
         }
         val imageUrl = pokemon.sprites.frontDefault

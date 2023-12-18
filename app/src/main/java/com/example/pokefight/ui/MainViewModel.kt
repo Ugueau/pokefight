@@ -17,6 +17,8 @@ class MainViewModel : ViewModel() {
 
     private var _userLiveData = MutableLiveData<User>()
 
+    var chosenPokemon = MutableLiveData<Pair<Int, Int>>()
+
     fun userExistLocal(email: String, password: String): LiveData<User?>{
         //vérifier que l'utilisateur existe dans la BBD local
         val liveData = MutableLiveData<User?>()
@@ -86,6 +88,19 @@ class MainViewModel : ViewModel() {
                 val data = PokemonRepository.getPokemonById(id)
                 liveData.postValue(data)
             }
+        }
+        return liveData
+    }
+
+    fun setChosenPokemon(pokemonId : Int, pokemonPosToChange : Int){
+        chosenPokemon.postValue(Pair(pokemonId,pokemonPosToChange))
+    }
+
+    fun getTeam(): LiveData<List<Pokemon>> {
+        val liveData = MutableLiveData<List<Pokemon>>()
+            viewModelScope.launch {
+                val data = UserRepository.getTeam()
+                liveData.postValue(data)
         }
         return liveData
     }

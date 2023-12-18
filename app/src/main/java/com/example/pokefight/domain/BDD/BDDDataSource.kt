@@ -1,5 +1,6 @@
 package com.example.pokefight.domain.BDD
 
+import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
 import com.example.pokefight.model.User
 
@@ -9,9 +10,12 @@ object BDDDataSource {
         lateinit var userCreated: UserBDD
 
         userCreated = user.toEntity()
+        val defaultPokemonIds = listOf<Int>(1,4,7)
+        val defaultTeam = TeamBDD(defaultPokemonIds,user.userId)
 
         if (PokefightBDD.getInstance().userDAO().findUserFromEmail(user.Email) == null){
             PokefightBDD.getInstance().userDAO().insertUser(userCreated)
+            PokefightBDD.getInstance().teamDAO().insertTeam(defaultTeam)
             return true
         }
         else{
