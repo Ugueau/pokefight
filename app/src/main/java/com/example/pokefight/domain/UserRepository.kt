@@ -15,19 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 object UserRepository {
-    private var auth: FirebaseAuth = Firebase.auth
-
-
-
-    suspend fun fetchUser(connectedUser: User): Flow<User> = flow {
-        //TODO a faire lorsque l'api firebase sera faite
-
-
-
-        //ajout dans le cache du user connecté
-        UserCache.addToCache(connectedUser)
-        emit(connectedUser)
-    }
 
     suspend fun userExist(email: String, password: String): User?{
         return BDDDataSource.UserExistFromEmailAndPassword(email, password)
@@ -35,10 +22,6 @@ object UserRepository {
 
     suspend fun insertUser(user : User): Boolean{
         var toReturn: Boolean = false
-
-        //TODO faire l'appel a firebase pour la creation d'utilisateur
-
-        //Todo faire l'appel a insert de room
         toReturn = BDDDataSource.insertUser(user)
         return toReturn
     }
