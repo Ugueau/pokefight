@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.R
@@ -15,6 +17,10 @@ import com.example.pokefight.VIewModel.UserViewModel
 import com.example.pokefight.model.User
 import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import java.lang.Exception
 import kotlin.random.Random
 
 class FragmentCreationCompte : Fragment() {
@@ -24,7 +30,7 @@ class FragmentCreationCompte : Fragment() {
     private lateinit var InputEmail: TextInputLayout
     private lateinit var InputPassword: TextInputLayout
     private lateinit var InputConfirmPassword: TextInputLayout
-    private lateinit var user : User
+    private lateinit var auth: FirebaseAuth
 
     val MainViewModel by viewModels<MainViewModel>()
     lateinit var vm : MainViewModel
@@ -37,6 +43,7 @@ class FragmentCreationCompte : Fragment() {
         super.onCreate(savedInstanceState)
 
         vm = ViewModelProvider(this).get(MainViewModel::class.java)
+        auth = Firebase.auth
     }
 
     override fun onCreateView(
@@ -61,29 +68,52 @@ class FragmentCreationCompte : Fragment() {
         return view
     }
 
-    fun createUser(){
-
+    fun createUser() : Boolean{
+        var succeed = true
         if (controlChamp()){
-            var userToConnect = User(
-                InputEmail.editText?.text.toString(),
-                InputPassword.editText?.text.toString(),
-                InputNickname.editText?.text.toString(),
-                0,
-                0,
-                Random.nextInt(1, 99999999).toString(),
-                null
-            )
 
-            vm.insertUser(userToConnect).observe(viewLifecycleOwner){
-                if (it){
-                    val fragmentConfirmCreation = FragmentConfirmCreation()
-                    (activity as TunnelConnexionActivity).replaceFragment(fragmentConfirmCreation)
+            auth.createUserWithEmailAndPassword(InputEmail.editText?.text.toString(), InputPassword.editText?.text.toString())
+                .addOnCompleteListener( activity as AppCompatActivity) { task ->
+                    if (task.isSuccessful) {
+                        val user = auth.currentUser
+                        Toast.makeText(
+                            context,
+                            "${user?.email} connected",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+
+                        val userToConnect = User(
+                            InputEmail.editText?.text.toString(),
+                            InputPassword.editText?.text.toString(),
+                            InputNickname.editText?.text.toString(),
+                            0,
+                            0,
+                            auth.currentUser!!.uid,
+                            null
+                        )
+
+                        vm.insertUser(userToConnect).observe(viewLifecycleOwner) {
+                            if (it) {
+                                val fragmentConfirmCreation = FragmentConfirmCreation()
+                                (activity as TunnelConnexionActivity).replaceFragment(
+                                    fragmentConfirmCreation
+                                )
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Account creation failed.",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                        succeed = false
+                    }
                 }
-                else{
-                    InputEmail.error = "User allready existe"
-                }
-            }
         }
+        else{
+            succeed = false
+        }
+        return succeed
     }
 
     fun controlChamp(): Boolean{

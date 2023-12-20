@@ -8,10 +8,16 @@ import com.example.pokefight.domain.cache.DSPokemonCache
 import com.example.pokefight.domain.cache.UserCache
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.User
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 object UserRepository {
+    private var auth: FirebaseAuth = Firebase.auth
+
+
 
     suspend fun fetchUser(connectedUser: User): Flow<User> = flow {
         //TODO a faire lorsque l'api firebase sera faite

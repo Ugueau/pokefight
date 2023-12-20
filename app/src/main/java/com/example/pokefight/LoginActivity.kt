@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -11,6 +12,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 
 class LoginActivity : AppCompatActivity() {
 
@@ -31,6 +35,8 @@ class LoginActivity : AppCompatActivity() {
     //activity principale de l'appli
     private lateinit var mainActivity : Intent
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -45,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
         // cacher les barres système
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
+        auth = Firebase.auth
         connexion = this.findViewById(R.id.connexion)
         newUser = this.findViewById(R.id.newUser)
         email = this.findViewById(R.id.InputEmail)
@@ -72,24 +79,39 @@ class LoginActivity : AppCompatActivity() {
         }
         else{
             //le user existe dans la bdd local
-            mainViewModel.userExistLocal(email.text.toString(), password.text.toString())
-                .observe(this){
+            auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
 
-                    if (it != null){
+                        mainViewModel.userExistLocal(email.text.toString(), password.text.toString())
+                            .observe(this) {
 
-                        mainViewModel.connectUser(it);
+                                if (it != null) {
+                                    Toast.makeText(
+                                        baseContext,
+                                        "${it.Email} connected",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
 
-                        mainActivity = Intent(this, MainActivity::class.java)
-                        startActivity(mainActivity)
-                        finish()
+                                    mainViewModel.connectUser(it);
+
+                                    mainActivity = Intent(this, MainActivity::class.java)
+                                    startActivity(mainActivity)
+                                    finish()
+                                }else{
+
+                                    emailLayout.error = "wrong/unknown email or password"
+                                    passwordLayout.error = "wrong/unknown email or password"
+                                }
+                            }
+                    } else {
+                        Toast.makeText(
+                            baseContext,
+                            "Authentication failed.",
+                            Toast.LENGTH_SHORT,
+                        ).show()
                     }
-                    else{
-                        // Todo possible rajout de firebase
-
-                        emailLayout.error = "unknown user"
-                        passwordLayout.error = "unknown user"
-                    }
-            }
+                }
         }
     }
 
