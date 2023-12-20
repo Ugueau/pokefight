@@ -85,7 +85,11 @@ class PopupTeamChoice(var pokemonPosToChange : Int) : BottomSheetDialogFragment(
     }
 
     fun selectedPokemon(pokemonId : Int){
-        mainViewModel.setChosenPokemon(pokemonId, pokemonPosToChange)
+        if (pokemonPosToChange == -1){
+            mainViewModel.addPokemonToTeam(pokemonId)
+        }else {
+            mainViewModel.setChosenPokemon(pokemonId, pokemonPosToChange)
+        }
         dismiss()
     }
 

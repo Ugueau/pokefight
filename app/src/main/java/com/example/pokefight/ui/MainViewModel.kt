@@ -97,11 +97,16 @@ class MainViewModel : ViewModel() {
         teamUpdated.postValue(true)
     }
 
+    fun addPokemonToTeam(pokemonId : Int){
+        viewModelScope.launch{ UserRepository.insertInTeam(pokemonId) }
+        teamUpdated.postValue(true)
+    }
+
     fun getTeam(): LiveData<List<Pokemon>> {
         val liveData = MutableLiveData<List<Pokemon>>()
-            viewModelScope.launch {
-                val data = UserRepository.getTeam()
-                liveData.postValue(data)
+        viewModelScope.launch {
+            val data = UserRepository.getTeam()
+            liveData.postValue(data)
         }
         return liveData
     }

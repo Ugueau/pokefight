@@ -76,7 +76,23 @@ object UserRepository {
     suspend fun updateTeam(newPokemonId : Int, oldPokemon : Int){
         val user = getUser()
         val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) }
-        (teamToUpdate as MutableList<Int>).set(oldPokemon,newPokemonId)
-        BDDDataSource.updateTeam(teamToUpdate, user.userId)
+        teamToUpdate?.let {
+            if(!teamToUpdate.contains(newPokemonId)) {
+                (teamToUpdate as MutableList<Int>).set(oldPokemon,newPokemonId)
+                BDDDataSource.updateTeam(teamToUpdate, user.userId)
+            }
+        }
     }
+
+    suspend fun insertInTeam(newPokemonId : Int){
+        val user = getUser()
+        val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) }
+        teamToUpdate?.let {
+            if(!teamToUpdate.contains(newPokemonId) && teamToUpdate.size < 6) {
+                (teamToUpdate as MutableList<Int>).add(newPokemonId)
+                BDDDataSource.updateTeam(teamToUpdate, user.userId)
+            }
+        }
+    }
+
 }

@@ -13,6 +13,7 @@ import com.example.pokefight.databinding.FragmentEquipeBinding
 import com.example.pokefight.ui.MainViewModel
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pokefight.model.Pokemon
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class EquipeFragment : Fragment() {
 
@@ -37,12 +38,22 @@ class EquipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val addPokemonButton = view.findViewById<FloatingActionButton>(R.id.addPokemon)
+        addPokemonButton.setOnClickListener{
+            val popup = PopupTeamChoice(-1)
+            popup.show((activity as AppCompatActivity).supportFragmentManager, "popupTeamChoice")
+        }
+
         val teamAdapter = TeamAdapter(requireContext(), (activity as AppCompatActivity).supportFragmentManager)
         val team = view.findViewById<ListView>(R.id.team)
         team.adapter = teamAdapter
 
         mainViewModel.getTeam().observe(viewLifecycleOwner){
             _teamList = it.toMutableList()
+            if(_teamList.size == 6){
+                addPokemonButton.visibility = View.GONE
+            }
             teamAdapter.setPokemonList(_teamList)
             teamAdapter.notifyDataSetChanged()
         }
@@ -50,13 +61,13 @@ class EquipeFragment : Fragment() {
         mainViewModel.teamUpdated.observe(viewLifecycleOwner){
             mainViewModel.getTeam().observe(viewLifecycleOwner){
                 _teamList = it.toMutableList()
+                if(_teamList.size == 6){
+                    addPokemonButton.visibility = View.GONE
+                }
                 teamAdapter.setPokemonList(_teamList)
                 teamAdapter.notifyDataSetChanged()
             }
         }
-
-
-
     }
 
     override fun onDestroyView() {
