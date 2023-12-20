@@ -45,7 +45,7 @@ class EquipeFragment : Fragment() {
             popup.show((activity as AppCompatActivity).supportFragmentManager, "popupTeamChoice")
         }
 
-        val teamAdapter = TeamAdapter(requireContext(), (activity as AppCompatActivity).supportFragmentManager)
+        var teamAdapter = TeamAdapter(requireContext(), (activity as AppCompatActivity).supportFragmentManager)
         val team = view.findViewById<ListView>(R.id.team)
         team.adapter = teamAdapter
 
@@ -55,6 +55,7 @@ class EquipeFragment : Fragment() {
                 addPokemonButton.visibility = View.GONE
             }
             teamAdapter.setPokemonList(_teamList)
+            team.adapter = teamAdapter
             teamAdapter.notifyDataSetChanged()
         }
 
@@ -64,7 +65,9 @@ class EquipeFragment : Fragment() {
                 if(_teamList.size == 6){
                     addPokemonButton.visibility = View.GONE
                 }
+
                 teamAdapter.setPokemonList(_teamList)
+                team.adapter = teamAdapter
                 teamAdapter.notifyDataSetChanged()
             }
         }
