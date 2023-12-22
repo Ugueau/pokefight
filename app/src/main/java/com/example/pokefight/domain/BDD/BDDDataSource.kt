@@ -1,5 +1,6 @@
 package com.example.pokefight.domain.BDD
 
+import android.util.Log
 import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
 import com.example.pokefight.model.User
@@ -12,10 +13,13 @@ object BDDDataSource {
         userCreated = user.toEntity()
         val defaultPokemonIds = listOf<Int>(1,4,7)
         val defaultTeam = TeamBDD(defaultPokemonIds,user.userId)
-
+        val log = PokefightBDD.getInstance().userDAO().findUserFromEmail(user.Email) == null
+        Log.e("bdd", log.toString())
         if (PokefightBDD.getInstance().userDAO().findUserFromEmail(user.Email) == null){
             PokefightBDD.getInstance().userDAO().insertUser(userCreated)
             PokefightBDD.getInstance().teamDAO().insertTeam(defaultTeam)
+
+
             return true
         }
         else{
@@ -38,9 +42,9 @@ object BDDDataSource {
         return returnUser
     }
 
-    suspend fun UserExistFromEmailAndPassword(email:String, password:String): User?{
+    suspend fun UserExistFromToken(userToken:String): User?{
 
-        var connectedUser = PokefightBDD.getInstance().userDAO().findUserFromEmailAndPassword(email, password)
+        var connectedUser = PokefightBDD.getInstance().userDAO().findUserFromToken(userToken)
 
         if (connectedUser == null){
             return null

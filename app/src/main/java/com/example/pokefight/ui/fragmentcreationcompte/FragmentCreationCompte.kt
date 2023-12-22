@@ -91,7 +91,7 @@ class FragmentCreationCompte : Fragment() {
                             auth.currentUser!!.uid,
                             null
                         )
-
+                        Log.e("uid", auth.currentUser!!.uid)
                         vm.insertUser(userToConnect).observe(viewLifecycleOwner) {
                             if (it) {
                                 val fragmentConfirmCreation = FragmentConfirmCreation()

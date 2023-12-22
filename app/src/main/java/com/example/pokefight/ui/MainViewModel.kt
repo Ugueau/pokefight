@@ -19,11 +19,16 @@ class MainViewModel : ViewModel() {
 
     var teamUpdated = MutableLiveData<Boolean>()
 
-    fun userExistLocal(email: String, password: String): LiveData<User?>{
+    fun userExistLocal(userToken: String): LiveData<User?>{
         //vérifier que l'utilisateur existe dans la BBD local
         val liveData = MutableLiveData<User?>()
         viewModelScope.launch {
-            liveData.postValue(UserRepository.userExist(email, password))
+            val user = UserRepository.userExist(userToken)
+            if(user == null){
+                liveData.postValue(UserRepository.getUserFromFirestore(userToken))
+            }else{
+                liveData.postValue(user)
+            }
         }
 
         return liveData
@@ -93,13 +98,17 @@ class MainViewModel : ViewModel() {
     }
 
     fun setChosenPokemon(pokemonId : Int, pokemonPosToChange : Int){
-        viewModelScope.launch{ UserRepository.updateTeam(pokemonId,pokemonPosToChange) }
-        teamUpdated.postValue(true)
+        viewModelScope.launch{
+            UserRepository.updateTeam(pokemonId,pokemonPosToChange)
+            teamUpdated.postValue(true)
+        }
     }
 
     fun addPokemonToTeam(pokemonId : Int){
-        viewModelScope.launch{ UserRepository.insertInTeam(pokemonId) }
-        teamUpdated.postValue(true)
+        viewModelScope.launch{
+            UserRepository.insertInTeam(pokemonId)
+            teamUpdated.postValue(true)
+        }
     }
 
     fun getTeam(): LiveData<List<Pokemon>> {

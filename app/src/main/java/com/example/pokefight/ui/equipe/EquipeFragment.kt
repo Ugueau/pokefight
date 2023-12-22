@@ -13,6 +13,7 @@ import com.example.pokefight.databinding.FragmentEquipeBinding
 import com.example.pokefight.ui.MainViewModel
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.stringify
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class EquipeFragment : Fragment() {
@@ -45,7 +46,7 @@ class EquipeFragment : Fragment() {
             popup.show((activity as AppCompatActivity).supportFragmentManager, "popupTeamChoice")
         }
 
-        var teamAdapter = TeamAdapter(requireContext(), (activity as AppCompatActivity).supportFragmentManager)
+        val teamAdapter = TeamAdapter(requireContext(), (activity as AppCompatActivity).supportFragmentManager)
         val team = view.findViewById<ListView>(R.id.team)
         team.adapter = teamAdapter
 

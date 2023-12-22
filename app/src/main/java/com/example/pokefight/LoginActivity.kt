@@ -15,6 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import java.lang.Exception
 
 class LoginActivity : AppCompatActivity() {
 
@@ -83,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
 
-                        mainViewModel.userExistLocal(email.text.toString(), password.text.toString())
+                        mainViewModel.userExistLocal(auth.currentUser!!.uid)
                             .observe(this) {
 
                                 if (it != null) {
@@ -99,15 +100,14 @@ class LoginActivity : AppCompatActivity() {
                                     startActivity(mainActivity)
                                     finish()
                                 }else{
-
-                                    emailLayout.error = "wrong/unknown email or password"
-                                    passwordLayout.error = "wrong/unknown email or password"
+                                    throw Exception("Cannot fetch user in firestore")
                                 }
                             }
+
                     } else {
                         Toast.makeText(
                             baseContext,
-                            "Authentication failed.",
+                            "Email or password doesn't match",
                             Toast.LENGTH_SHORT,
                         ).show()
                     }

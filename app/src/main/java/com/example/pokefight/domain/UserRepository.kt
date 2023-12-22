@@ -1,11 +1,13 @@
 package com.example.pokefight.domain
 
 import android.provider.ContactsContract.CommonDataKinds.Email
+import android.util.Log
 import com.example.pokefight.domain.BDD.BDDDataSource
 import com.example.pokefight.domain.BDD.entity.UserBDD
 import com.example.pokefight.domain.api.DSRetrofit
 import com.example.pokefight.domain.cache.DSPokemonCache
 import com.example.pokefight.domain.cache.UserCache
+import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.User
 import com.google.firebase.Firebase
@@ -16,13 +18,19 @@ import kotlinx.coroutines.flow.flow
 
 object UserRepository {
 
-    suspend fun userExist(email: String, password: String): User?{
-        return BDDDataSource.UserExistFromEmailAndPassword(email, password)
+    suspend fun userExist(userToken: String): User?{
+        return BDDDataSource.UserExistFromToken(userToken)
     }
 
     suspend fun insertUser(user : User): Boolean{
         var toReturn: Boolean = false
         toReturn = BDDDataSource.insertUser(user)
+        if(toReturn){
+            BDDDataSource.getUserFromEmail(user.Email)?.let{
+                Log.e("uid2", it.UserToken)
+                insertIntoFirestore(it)
+            }
+        }
         return toReturn
     }
 
@@ -84,4 +92,13 @@ object UserRepository {
         }
     }
 
+    suspend fun insertIntoFirestore(user: User){
+        val team = user.userId?.let { BDDDataSource.getTeamFromUserId(it) }
+        val discoveredPokemon = user.userId?.let { BDDDataSource.getDiscoveredPokemonFromUserId(it) }
+        DSFireStore.insertUser(user, team, discoveredPokemon)
+    }
+
+    suspend fun getUserFromFirestore(userToken : String) : User?{
+        return DSFireStore.getUserByToken(userToken)
+    }
 }

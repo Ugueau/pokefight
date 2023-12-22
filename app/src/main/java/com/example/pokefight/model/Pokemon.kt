@@ -149,3 +149,7 @@ fun Pokemon.getRarity() : Rarity{
         Rarity.LEGENDARY
     }
 }
+
+fun Pokemon.stringify() : String{
+    return "${this.name} : ${this.id}"
+}

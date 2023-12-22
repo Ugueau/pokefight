@@ -20,4 +20,7 @@ interface UserDAO {
 
     @Query("Select * from UserBDD where email = :email and password = :password")
     suspend fun findUserFromEmailAndPassword(email: String, password: String): UserBDD?
+
+    @Query("Select * from UserBDD where UserToken = :userToken")
+    suspend fun findUserFromToken(userToken: String): UserBDD?
 }

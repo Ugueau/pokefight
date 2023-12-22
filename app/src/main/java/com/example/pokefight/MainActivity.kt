@@ -13,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.pokefight.databinding.ActivityMainBinding
+import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -73,5 +74,11 @@ class MainActivity : AppCompatActivity(){
                 callback(pokemon)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //Must be called by the last destroyed activity
+        DSFireStore.stopFireStoreConnection()
     }
 }
