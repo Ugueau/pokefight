@@ -1,11 +1,6 @@
 package com.example.pokefight.ui
 
-import android.content.Intent
-import android.provider.ContactsContract.CommonDataKinds.Email
-import android.text.BoringLayout
 import androidx.lifecycle.*
-import com.example.pokefight.MainActivity
-import com.example.pokefight.domain.BDD.BDDDataSource
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.UserRepository
 import com.example.pokefight.model.Pokemon
@@ -15,24 +10,7 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     private var _pokemonLiveData = MutableLiveData<List<Pokemon>>()
 
-    private var _userLiveData = MutableLiveData<User>()
-
     var teamUpdated = MutableLiveData<Boolean>()
-
-    fun userExistLocal(userToken: String): LiveData<User?>{
-        //vérifier que l'utilisateur existe dans la BBD local
-        val liveData = MutableLiveData<User?>()
-        viewModelScope.launch {
-            val user = UserRepository.userExist(userToken)
-            if(user == null){
-                liveData.postValue(UserRepository.getUserFromFirestore(userToken))
-            }else{
-                liveData.postValue(user)
-            }
-        }
-
-        return liveData
-    }
 
     fun connectUser(connectedUser: User){
 
@@ -43,15 +21,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun getConnectedUserFromCache(): User{
-        return UserRepository.getUser()
-    }
-
-    fun insertUser(userToInsert: User): LiveData<Boolean>{
-        val liveData = MutableLiveData<Boolean>()
-
-        viewModelScope.launch { liveData.postValue(UserRepository.insertUser(userToInsert)) }
-
-        return liveData
+        return UserRepository.getConnectedUser()
     }
 
     fun fetchPokemons(fromId: Int = 1, toId: Int = fromId + 10) {
@@ -116,6 +86,49 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             val data = UserRepository.getTeam()
             liveData.postValue(data)
+        }
+        return liveData
+    }
+
+    fun signIn(email: String, password: String): LiveData<User?>{
+        val liveData = MutableLiveData<User?>()
+        viewModelScope.launch {
+            val uid = UserRepository.signIn(email, password)
+            if(uid != null){
+                var user = UserRepository.userExist(uid)
+                if(user == null){
+                    user = UserRepository.fetchUser(uid)
+                }
+                UserRepository.fetchTeam(uid)
+                liveData.postValue(user)
+            }else{
+                liveData.postValue(null)
+            }
+        }
+        return liveData
+    }
+
+    fun createUser(email: String, password: String, nickname : String): LiveData<User?>{
+        val liveData = MutableLiveData<User?>()
+        viewModelScope.launch {
+            val uid = UserRepository.createUser(email, password)
+            if(uid != null){
+                var user = User(
+                    email,
+                    password,
+                    nickname,
+                    0,
+                    0,
+                    uid,
+                    null)
+                if (UserRepository.insertUser(user)){
+                    liveData.postValue(user)
+                }else{
+                    liveData.postValue(null)
+                }
+            }else{
+                liveData.postValue(null)
+            }
         }
         return liveData
     }

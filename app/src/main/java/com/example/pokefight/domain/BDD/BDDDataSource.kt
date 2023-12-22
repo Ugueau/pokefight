@@ -11,15 +11,10 @@ object BDDDataSource {
         lateinit var userCreated: UserBDD
 
         userCreated = user.toEntity()
-        val defaultPokemonIds = listOf<Int>(1,4,7)
-        val defaultTeam = TeamBDD(defaultPokemonIds,user.userId)
         val log = PokefightBDD.getInstance().userDAO().findUserFromEmail(user.Email) == null
         Log.e("bdd", log.toString())
         if (PokefightBDD.getInstance().userDAO().findUserFromEmail(user.Email) == null){
             PokefightBDD.getInstance().userDAO().insertUser(userCreated)
-            PokefightBDD.getInstance().teamDAO().insertTeam(defaultTeam)
-
-
             return true
         }
         else{
@@ -70,8 +65,13 @@ object BDDDataSource {
         return emptyList()
     }
 
-    suspend fun updateTeam(newTeams : List<Int>, userId : Int){
-        val teamBDD = TeamBDD(teams = newTeams,userId)
+    suspend fun updateTeam(newTeam : List<Int>, userId : Int){
+        val teamBDD = TeamBDD(newTeam,userId)
         PokefightBDD.getInstance().teamDAO().updateTeam(teamBDD)
+    }
+
+    suspend fun insertTeam(newTeam : List<Int>, userId : Int){
+        val teamBDD = TeamBDD(newTeam,userId)
+        PokefightBDD.getInstance().teamDAO().insertTeam(teamBDD)
     }
 }

@@ -25,7 +25,7 @@ import kotlin.random.Random
 
 class FragmentCreationCompte : Fragment() {
 
-    private lateinit var createUser : Button
+    private lateinit var createUser: Button
     private lateinit var InputNickname: TextInputLayout
     private lateinit var InputEmail: TextInputLayout
     private lateinit var InputPassword: TextInputLayout
@@ -33,7 +33,7 @@ class FragmentCreationCompte : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     val MainViewModel by viewModels<MainViewModel>()
-    lateinit var vm : MainViewModel
+    lateinit var vm: MainViewModel
 
     companion object {
         fun newInstance() = FragmentCreationCompte()
@@ -68,77 +68,62 @@ class FragmentCreationCompte : Fragment() {
         return view
     }
 
-    fun createUser() : Boolean{
+    fun createUser(): Boolean {
         var succeed = true
-        if (controlChamp()){
-
-            auth.createUserWithEmailAndPassword(InputEmail.editText?.text.toString(), InputPassword.editText?.text.toString())
-                .addOnCompleteListener( activity as AppCompatActivity) { task ->
-                    if (task.isSuccessful) {
-                        val user = auth.currentUser
-                        Toast.makeText(
-                            context,
-                            "${user?.email} connected",
-                            Toast.LENGTH_SHORT,
-                        ).show()
-
-                        val userToConnect = User(
-                            InputEmail.editText?.text.toString(),
-                            InputPassword.editText?.text.toString(),
-                            InputNickname.editText?.text.toString(),
-                            0,
-                            0,
-                            auth.currentUser!!.uid,
-                            null
-                        )
-                        Log.e("uid", auth.currentUser!!.uid)
-                        vm.insertUser(userToConnect).observe(viewLifecycleOwner) {
-                            if (it) {
-                                val fragmentConfirmCreation = FragmentConfirmCreation()
-                                (activity as TunnelConnexionActivity).replaceFragment(
-                                    fragmentConfirmCreation
-                                )
-                            }
-                        }
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Account creation failed.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                        succeed = false
-                    }
+        if (controlChamp()) {
+            vm.createUser(
+                InputEmail.editText?.text.toString(),
+                InputPassword.editText?.text.toString(),
+                InputNickname.editText?.text.toString()
+            ).observe(viewLifecycleOwner) { user ->
+                if (user != null) {
+                    val fragmentConfirmCreation = FragmentConfirmCreation()
+                    (activity as TunnelConnexionActivity).replaceFragment(
+                        fragmentConfirmCreation
+                    )
+                    Toast.makeText(
+                        context,
+                        "${user.Email} created",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Account creation failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    succeed = false
                 }
-        }
-        else{
+            }
+        } else {
             succeed = false
         }
         return succeed
     }
 
-    fun controlChamp(): Boolean{
+    fun controlChamp(): Boolean {
 
-        if(InputEmail.editText?.text.isNullOrEmpty()){
+        if (InputEmail.editText?.text.isNullOrEmpty()) {
             InputEmail.error = "Enter an email"
             return false
         }
 
-        if(InputNickname.editText?.text.isNullOrEmpty()){
+        if (InputNickname.editText?.text.isNullOrEmpty()) {
             InputNickname.error = "Enter a nickname"
             return false
         }
 
-        if(InputPassword.editText?.text.isNullOrEmpty()){
+        if (InputPassword.editText?.text.isNullOrEmpty()) {
             InputPassword.error = "Entrer a password"
             return false
         }
 
-        if(InputConfirmPassword.editText?.text.isNullOrEmpty()){
+        if (InputConfirmPassword.editText?.text.isNullOrEmpty()) {
             InputConfirmPassword.error = "Confirm your password"
             return false
         }
 
-        if (InputConfirmPassword.editText?.text.toString() != InputPassword.editText?.text.toString()){
+        if (InputConfirmPassword.editText?.text.toString() != InputPassword.editText?.text.toString()) {
             InputPassword.error = "Different password"
             InputConfirmPassword.error = "Different password"
             return false

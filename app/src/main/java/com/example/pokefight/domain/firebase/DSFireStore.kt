@@ -19,7 +19,7 @@ object DSFireStore {
         firestore.clearPersistence()
     }
 
-    suspend fun insertUser(user : User, team : List<Int>?, discoveredPokemon : List<Int>?): Boolean {
+    suspend fun insertUser(user : User, discoveredPokemon : List<Int>?): Boolean {
         val newUser = hashMapOf(
             "email" to user.Email,
             "password" to user.Password,
@@ -28,13 +28,9 @@ object DSFireStore {
             "pokedollar" to user.pokedollar
         )
 
-        team?.let { list ->
-            if (team.isNotEmpty()) {
-                list.forEachIndexed { index, item ->
-                    newUser["team_$index"] = item
-                }
-            }
-        }
+        newUser["team_0"] = 1
+        newUser["team_1"] = 4
+        newUser["team_2"] = 7
 
         //TODO ajouter la liste des pokemon découvert
 
@@ -46,7 +42,7 @@ object DSFireStore {
     }
 
     suspend fun getUserByToken(userToken : String): User?{
-        val userDoc = firestore.collection("cities").document(userToken)
+        val userDoc = firestore.collection("users").document(userToken)
         var user : User? = null
         val document = userDoc.get().await()
         if (document != null) {
@@ -59,5 +55,19 @@ object DSFireStore {
                 null)
         }
         return user
+    }
+
+    suspend fun getTeamWithUserToken(userToken : String): List<Int>{
+        val userDoc = firestore.collection("users").document(userToken)
+        val team = mutableListOf<Int>()
+        val document = userDoc.get().await()
+        if (document != null) {
+            for(i in 0..5){
+                document.getLong("team_$i")?.toInt()?.let {
+                    team.add(it)
+                }
+            }
+        }
+        return team
     }
 }
