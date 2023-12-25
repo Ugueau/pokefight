@@ -68,6 +68,7 @@ object UserRepository {
             if (!teamToUpdate.contains(newPokemonId)) {
                 (teamToUpdate as MutableList<Int>).set(oldPokemon, newPokemonId)
                 BDDDataSource.updateTeam(teamToUpdate, user.userId)
+                DSFireStore.insertInTeam(user.UserToken, teamToUpdate)
             }
         }
     }
@@ -80,6 +81,7 @@ object UserRepository {
             if (!teamToUpdate.contains(newPokemonId) && teamToUpdate.size < 6) {
                 teamToUpdate.add(newPokemonId)
                 BDDDataSource.updateTeam(teamToUpdate, user.userId)
+                DSFireStore.insertInTeam(user.UserToken, teamToUpdate)
             }
         }
     }
@@ -110,8 +112,9 @@ object UserRepository {
     suspend fun fetchUser(userToken: String): User? {
         val user = DSFireStore.getUserByToken(userToken)
         user?.let {
-            insertUser(user)
-            return user
+            if(BDDDataSource.insertUser(user)){
+                return user
+            }
         }
         return null
     }

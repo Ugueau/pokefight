@@ -1,6 +1,5 @@
 package com.example.pokefight.domain.firebase
 
-import android.util.Log
 import com.example.pokefight.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,6 +38,20 @@ object DSFireStore {
              succeed = true
          }
         return succeed
+    }
+
+    suspend fun insertInTeam(userToken: String, newTeam : List<Int>){
+        val teamSize = getTeamWithUserToken(userToken).size
+        if(teamSize < 6){
+            val team = hashMapOf<String, Any>()
+
+            newTeam.forEachIndexed { index, teamValue ->
+                val fieldName = "team_$index"
+                team[fieldName] = teamValue
+            }
+
+            firestore.collection("users").document(userToken).update(team)
+        }
     }
 
     suspend fun getUserByToken(userToken : String): User?{

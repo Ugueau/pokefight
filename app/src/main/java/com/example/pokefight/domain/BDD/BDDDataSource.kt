@@ -39,7 +39,7 @@ object BDDDataSource {
 
     suspend fun UserExistFromToken(userToken:String): User?{
 
-        var connectedUser = PokefightBDD.getInstance().userDAO().findUserFromToken(userToken)
+        val connectedUser = PokefightBDD.getInstance().userDAO().findUserFromToken(userToken)
 
         if (connectedUser == null){
             return null

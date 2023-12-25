@@ -56,7 +56,6 @@ class EquipeFragment : Fragment() {
                 addPokemonButton.visibility = View.GONE
             }
             teamAdapter.setPokemonList(_teamList)
-            team.adapter = teamAdapter
             teamAdapter.notifyDataSetChanged()
         }
 
@@ -68,7 +67,6 @@ class EquipeFragment : Fragment() {
                 }
 
                 teamAdapter.setPokemonList(_teamList)
-                team.adapter = teamAdapter
                 teamAdapter.notifyDataSetChanged()
             }
         }

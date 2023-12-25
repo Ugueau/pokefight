@@ -132,5 +132,4 @@ class MainViewModel : ViewModel() {
         }
         return liveData
     }
-
 }
