@@ -1,13 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.settings.SettingsFragment">
+    tools:context=".ui.settings.SettingsFragment" >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/primary_container"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/settings_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/inverse_primary_container"
+            android:padding="10dp"
+            android:paddingStart="16dp"
+            android:text="TextView"
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/settings_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/inverse_primary_container"
+            android:text="TextView"
+            android:padding="10dp"
+            android:paddingStart="16dp"
+            android:textColor="?attr/colorOnPrimaryContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settings_nickname" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:weightSum="5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settings_email">
+
+            <Button
+                android:id="@+id/settings_modify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/full_button"
+                android:fontFamily="@font/montserrat_regular"
+                android:layout_marginStart="32dp"
+                android:text="Modify"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/settings_buttons"
+                app:layout_constraintTop_toTopOf="@+id/settings_buttons"
+                app:layout_constraintBottom_toBottomOf="@+id/settings_buttons"/>
+
+            <Button
+                android:id="@+id/settings_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/outlined_button"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="Delete"
+                android:layout_marginEnd="32dp"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="@+id/settings_buttons"
+                app:layout_constraintBottom_toBottomOf="@+id/settings_buttons"
+                app:layout_constraintEnd_toEndOf="@+id/settings_buttons"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

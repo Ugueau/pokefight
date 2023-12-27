@@ -1,21 +1,18 @@
 package com.example.pokefight.ui.settings
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import com.example.pokefight.R
+import com.example.pokefight.ui.MainViewModel
 
 class SettingsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = SettingsFragment()
-    }
-
-    private lateinit var viewModel: SettingsViewModel
-
+    val mainViewModel by activityViewModels<MainViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -23,10 +20,16 @@ class SettingsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val user = mainViewModel.getConnectedUser()
+
+        val nickname = view.findViewById<TextView>(R.id.settings_nickname)
+        nickname.text = user.Nickname
+        val email = view.findViewById<TextView>(R.id.settings_email)
+        email.text = user.Email
     }
+
 
 }

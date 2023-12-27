@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.example.pokefight.VIewModel.UserViewModel
 import com.example.pokefight.databinding.FragmentHomeBinding
 import com.example.pokefight.ui.MainViewModel
 
@@ -46,7 +45,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         TextViewTrophy = binding.TextViewTrophy
-        TextViewTrophy.text = MainViewModel.getConnectedUserFromCache().Trophy.toString()
+        TextViewTrophy.text = MainViewModel.getConnectedUser().Trophy.toString()
 
     }
 

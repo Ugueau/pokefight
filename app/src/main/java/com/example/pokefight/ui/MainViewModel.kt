@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun getConnectedUserFromCache(): User{
+    fun getConnectedUser(): User{
         return UserRepository.getConnectedUser()
     }
 
