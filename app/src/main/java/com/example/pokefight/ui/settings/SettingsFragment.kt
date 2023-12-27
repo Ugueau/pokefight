@@ -5,10 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.findFragment
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.pokedex.PopupPokemonDetail
 
 class SettingsFragment : Fragment() {
 
@@ -23,12 +27,23 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val user = mainViewModel.getConnectedUser()
+        var user = mainViewModel.getConnectedUser()
 
         val nickname = view.findViewById<TextView>(R.id.settings_nickname)
         nickname.text = user.Nickname
         val email = view.findViewById<TextView>(R.id.settings_email)
         email.text = user.Email
+        val modifyButton = view.findViewById<Button>(R.id.settings_modify)
+        modifyButton.setOnClickListener {
+            val popupModifySettings = PopupModifySettings()
+            popupModifySettings.show((activity as AppCompatActivity).supportFragmentManager, "popupModifySettings")
+        }
+
+        mainViewModel.userUpdated.observe(viewLifecycleOwner){
+            user = mainViewModel.getConnectedUser()
+            nickname.text = user.Nickname
+            email.text = user.Email
+        }
     }
 
 

@@ -106,4 +106,15 @@ object DSFireStore {
         }
         return discovered
     }
+
+    suspend fun updateUser(user : User){
+        val userUpdate = hashMapOf<String,Any?>(
+            "email" to user.Email,
+            "password" to user.Password,
+            "nickname" to user.Nickname,
+            "trophy" to user.Trophy,
+            "pokedollar" to user.pokedollar
+        )
+        firestore.collection("users").document(user.UserToken).update(userUpdate)
+    }
 }

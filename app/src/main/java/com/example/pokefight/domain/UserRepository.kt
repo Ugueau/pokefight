@@ -25,6 +25,15 @@ object UserRepository {
         return toReturn
     }
 
+    suspend fun updateUser(user : User){
+        user.userId?.let {
+            BDDDataSource.updateUser(user, it)
+            DSFireStore.updateUser(user)
+            deconnectUser()
+            connectUser(user)
+        }
+    }
+
     fun getConnectedUser(): User {
         var connectedUser = UserCache.getUser()
 
@@ -37,6 +46,10 @@ object UserRepository {
 
     suspend fun connectUser(connectedUser: User) {
         UserCache.addToCache(connectedUser)
+    }
+
+    suspend fun deconnectUser(){
+        UserCache.clear()
     }
 
     suspend fun getDiscoveredPokemon(): List<Int> {

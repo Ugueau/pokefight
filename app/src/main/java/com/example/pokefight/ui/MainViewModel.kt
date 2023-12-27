@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     val teamUpdated = MutableLiveData<Boolean>()
+    val userUpdated = MutableLiveData<Boolean>()
 
     fun connectUser(connectedUser: User){
 
@@ -136,5 +137,12 @@ class MainViewModel : ViewModel() {
             liveData.postValue(data)
         }
         return liveData
+    }
+
+    fun updateUser(newUser : User){
+        viewModelScope.launch {
+            UserRepository.updateUser(newUser)
+            userUpdated.postValue(true)
+        }
     }
 }
