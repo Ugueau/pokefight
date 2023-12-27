@@ -10,12 +10,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.domain.PokemonRepository
-import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
 import com.example.pokefight.ui.pokedex.PokedexAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class PopupTeamChoice(var pokemonPosToChange : Int) : BottomSheetDialogFragment() {
+class PopupTeamChoice(var pokemonPosToChange: Int) : BottomSheetDialogFragment() {
     private var isLoading = true
 
     val mainViewModel by activityViewModels<MainViewModel>()
@@ -29,65 +28,61 @@ class PopupTeamChoice(var pokemonPosToChange : Int) : BottomSheetDialogFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-            val recyclerView: RecyclerView = requireView().findViewById(R.id.recycler_pokedex)
+        val recyclerView: RecyclerView = requireView().findViewById(R.id.recycler_pokedex)
 
-            val recyclerViewLayoutManager = GridLayoutManager(context, 3)
-            recyclerView.layoutManager = recyclerViewLayoutManager
+        val recyclerViewLayoutManager = GridLayoutManager(context, 3)
+        recyclerView.layoutManager = recyclerViewLayoutManager
 
-            val recyclerViewAdapter = PokedexAdapter(
-                requireContext(),
-                emptyList(),
-                (activity as AppCompatActivity).supportFragmentManager
-            )
-            recyclerViewAdapter.setToTeamChoiceMode(){pokemonId->
-                selectedPokemon(pokemonId)
+        val recyclerViewAdapter = PokedexAdapter(
+            requireContext(),
+            emptyList(),
+            (activity as AppCompatActivity).supportFragmentManager
+        )
+        recyclerViewAdapter.setToTeamChoiceMode() { pokemonId ->
+            selectedPokemon(pokemonId)
+        }
+        recyclerView.adapter = recyclerViewAdapter
+
+        isLoading = true
+        mainViewModel.getDiscoveredPokemons()
+            .observe(viewLifecycleOwner) {
+                isLoading = false
+                recyclerViewAdapter.updatePokemonList(it.toList())
+                recyclerViewAdapter.notifyDataSetChanged()
             }
-            recyclerView.adapter = recyclerViewAdapter
-//
-            isLoading = true
-            mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
-                .observe(viewLifecycleOwner) {
-                    isLoading = false
-                    recyclerViewAdapter.updatePokemonList(it.toList())
-                    recyclerViewAdapter.notifyDataSetChanged()
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val visibleItemCount = recyclerViewLayoutManager.childCount
+                val totalItemCount = recyclerViewLayoutManager.itemCount
+                val firstVisibleItemPosition =
+                    recyclerViewLayoutManager.findFirstVisibleItemPosition()
+
+                // Check end of the list reached
+                if (totalItemCount < PokemonRepository.MAX_ID && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && !isLoading) {
+                    // Load more data
+                    isLoading = true
+                    mainViewModel.getDiscoveredPokemons()
+                        .observe(viewLifecycleOwner) {
+                            isLoading = false
+                            recyclerViewAdapter.updatePokemonList(it.toList())
+                            recyclerViewAdapter.notifyDataSetChanged()
+                        }
                 }
 
-            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            }
+        })
 
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-
-                    val visibleItemCount = recyclerViewLayoutManager.childCount
-                    val totalItemCount = recyclerViewLayoutManager.itemCount
-                    val firstVisibleItemPosition =
-                        recyclerViewLayoutManager.findFirstVisibleItemPosition()
-
-                    // Check end of the list reached
-                    if (totalItemCount < PokemonRepository.MAX_ID && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && !isLoading) {
-                        // Load more data
-                        isLoading = true
-                        mainViewModel.getPokemonList(
-                            1,
-                            PokemonRepository.getLoadedPokemonAmount() + 9
-                        )
-                            .observe(viewLifecycleOwner) {
-                                isLoading = false
-                                recyclerViewAdapter.updatePokemonList(it.toList())
-                                recyclerViewAdapter.notifyDataSetChanged()
-                            }
-                    }
-
-                }
-            })
-
-            //Useful for optimization
-            recyclerView.setHasFixedSize(true)
+        //Useful for optimization
+        recyclerView.setHasFixedSize(true)
     }
 
-    fun selectedPokemon(pokemonId : Int){
-        if (pokemonPosToChange == -1){
+    fun selectedPokemon(pokemonId: Int) {
+        if (pokemonPosToChange == -1) {
             mainViewModel.addPokemonToTeam(pokemonId)
-        }else {
+        } else {
             mainViewModel.setChosenPokemon(pokemonId, pokemonPosToChange)
         }
         dismiss()
