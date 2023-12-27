@@ -1,10 +1,12 @@
 package com.example.pokefight.ui
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.UserRepository
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.User
+import com.example.pokefight.model.stringify
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -135,7 +137,11 @@ class MainViewModel : ViewModel() {
         val liveData = MutableLiveData<List<Pokemon>>()
         viewModelScope.launch {
             val dp = UserRepository.getDiscoveredPokemon()
+            Log.e("dpi",dp.toString())
             val data = PokemonRepository.getPokemons(dp)
+            var log = ""
+            data.forEach{pok -> log += pok.stringify()}
+            Log.e("dp2", log)
             liveData.postValue(data)
         }
         return liveData

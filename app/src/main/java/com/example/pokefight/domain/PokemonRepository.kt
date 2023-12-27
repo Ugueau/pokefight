@@ -88,6 +88,7 @@ object PokemonRepository {
             val data = fetchPokemons(missingPokemons)
             data.collect {
                 for (id in pokemonToGet) {
+                    Log.e("repo", "prepare to get $id")
                     DSPokemonCache.getPokemon(id)?.let { returnedList.add(it) }
                 }
             }

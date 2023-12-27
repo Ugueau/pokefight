@@ -1,6 +1,7 @@
 package com.example.pokefight.ui.equipe
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.domain.PokemonRepository
+import com.example.pokefight.model.stringify
 import com.example.pokefight.ui.MainViewModel
 import com.example.pokefight.ui.pokedex.PokedexAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -46,6 +48,9 @@ class PopupTeamChoice(var pokemonPosToChange: Int) : BottomSheetDialogFragment()
         isLoading = true
         mainViewModel.getDiscoveredPokemons()
             .observe(viewLifecycleOwner) {
+                var log = ""
+                it.forEach{pok -> log += pok.stringify()}
+                Log.e("dp", log)
                 isLoading = false
                 recyclerViewAdapter.updatePokemonList(it.toList())
                 recyclerViewAdapter.notifyDataSetChanged()

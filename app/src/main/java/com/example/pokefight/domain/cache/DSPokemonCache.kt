@@ -33,8 +33,10 @@ object DSPokemonCache {
 
     fun getPokemon(id :Int): Pokemon?{
         try {
-            if (pokemonList.find { it.id == id } != null) {
-                return pokemonList[id - 1]
+            pokemonList.forEach {
+                if (it.id == id){
+                    return it
+                }
             }
         }catch(_:IndexOutOfBoundsException){
             return null
