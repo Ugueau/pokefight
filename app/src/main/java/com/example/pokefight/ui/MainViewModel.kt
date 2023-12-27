@@ -78,10 +78,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             val uid = UserRepository.signIn(email, password)
             if(uid != null){
-                var user = UserRepository.userExist(uid)
-                if(user == null){
-                    user = UserRepository.fetchUser(uid)
-                }
+                val user = UserRepository.fetchUser(uid)
                 UserRepository.fetchTeam(uid)
                 liveData.postValue(user)
             }else{
