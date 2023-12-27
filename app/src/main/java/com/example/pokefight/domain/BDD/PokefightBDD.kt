@@ -11,7 +11,7 @@ import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
 import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
 
-@Database(entities = [ UserBDD::class, DiscoveredPokemonBDD::class, TeamBDD::class ], version = 5)
+@Database(entities = [ UserBDD::class, DiscoveredPokemonBDD::class, TeamBDD::class ], version = 6)
 @TypeConverters(Converters::class)
 abstract class PokefightBDD: RoomDatabase() {
 

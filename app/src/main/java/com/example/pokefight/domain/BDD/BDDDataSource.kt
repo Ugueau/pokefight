@@ -1,6 +1,7 @@
 package com.example.pokefight.domain.BDD
 
 import android.util.Log
+import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
 import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
 import com.example.pokefight.model.User
@@ -73,5 +74,15 @@ object BDDDataSource {
     suspend fun insertTeam(newTeam : List<Int>, userId : Int){
         val teamBDD = TeamBDD(newTeam,userId)
         PokefightBDD.getInstance().teamDAO().insertTeam(teamBDD)
+    }
+
+    suspend fun updateDiscoveredPokemons(discoveredPokemons : List<Int>, userId : Int){
+        val discoveredPokemonBDD = DiscoveredPokemonBDD(discoveredPokemons, userId)
+        PokefightBDD.getInstance().discoveredPokemonDAO().updateDiscoveredPokemon(discoveredPokemonBDD)
+    }
+
+    suspend fun insertDiscoveredPokemons(discoveredPokemons : List<Int>, userId : Int){
+        val discoveredPokemonBDD = DiscoveredPokemonBDD(discoveredPokemons,userId)
+        PokefightBDD.getInstance().discoveredPokemonDAO().insertDiscoveredPokemon(discoveredPokemonBDD)
     }
 }

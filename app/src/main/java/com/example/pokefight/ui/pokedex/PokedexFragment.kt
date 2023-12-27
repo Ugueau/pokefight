@@ -42,12 +42,15 @@ class PokedexFragment : Fragment() {
         recyclerView.adapter = recyclerViewAdapter
 
         isLoading = true
-        mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
-            .observe(viewLifecycleOwner) {
-                isLoading = false
-                recyclerViewAdapter.updatePokemonList(it.toList())
-                recyclerViewAdapter.notifyDataSetChanged()
-            }
+        mainViewModel.getDiscoveredPokemonsIds().observe(viewLifecycleOwner) { dp ->
+            mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
+                .observe(viewLifecycleOwner) {
+                    recyclerViewAdapter.updateDiscoveredPokemon(dp)
+                    recyclerViewAdapter.updatePokemonList(it.toList())
+                    recyclerViewAdapter.notifyDataSetChanged()
+                    isLoading = false
+                }
+        }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 

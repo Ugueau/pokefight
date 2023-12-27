@@ -8,9 +8,7 @@ import com.example.pokefight.model.User
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    private var _pokemonLiveData = MutableLiveData<List<Pokemon>>()
-
-    var teamUpdated = MutableLiveData<Boolean>()
+    val teamUpdated = MutableLiveData<Boolean>()
 
     fun connectUser(connectedUser: User){
 
@@ -24,21 +22,6 @@ class MainViewModel : ViewModel() {
         return UserRepository.getConnectedUser()
     }
 
-    fun fetchPokemons(fromId: Int = 1, toId: Int = fromId + 10) {
-        viewModelScope.launch {
-            if (fromId <= PokemonRepository.MAX_ID) {
-                val checkedToId :Int = if(toId > PokemonRepository.MAX_ID){
-                    PokemonRepository.MAX_ID
-                }else{
-                    toId
-                }
-                val data = PokemonRepository.fetchPokemons(fromId, checkedToId)
-                data.collect {
-                    _pokemonLiveData.postValue(it)
-                }
-            }
-        }
-    }
 
     fun getPokemonList(fromId: Int = 1, toId: Int = fromId + 10): LiveData<List<Pokemon>> {
         val liveData = MutableLiveData<List<Pokemon>>()
@@ -113,7 +96,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             val uid = UserRepository.createUser(email, password)
             if(uid != null){
-                var user = User(
+                val user = User(
                     email,
                     password,
                     nickname,
@@ -129,6 +112,31 @@ class MainViewModel : ViewModel() {
             }else{
                 liveData.postValue(null)
             }
+        }
+        return liveData
+    }
+
+    fun addToDiscoveredPokemon(pokemonId: Int){
+        viewModelScope.launch {
+            UserRepository.addDiscoveredPokemon(pokemonId)
+        }
+    }
+
+    fun getDiscoveredPokemonsIds() : LiveData<List<Int>>{
+        val liveData = MutableLiveData<List<Int>>()
+        viewModelScope.launch {
+            val data = UserRepository.getDiscoveredPokemon()
+            liveData.postValue(data)
+        }
+        return liveData
+    }
+
+    fun getDiscoveredPokemons() : LiveData<List<Pokemon>>{
+        val liveData = MutableLiveData<List<Pokemon>>()
+        viewModelScope.launch {
+            val dp = UserRepository.getDiscoveredPokemon()
+            val data = PokemonRepository.getPokemons(dp)
+            liveData.postValue(data)
         }
         return liveData
     }

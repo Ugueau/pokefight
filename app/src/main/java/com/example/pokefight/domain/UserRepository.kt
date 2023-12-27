@@ -87,21 +87,22 @@ object UserRepository {
     }
 
     suspend fun insertIntoFirestore(user: User) {
-        val discoveredPokemon =
-            user.userId?.let { BDDDataSource.getDiscoveredPokemonFromUserId(it) }
-        DSFireStore.insertUser(user, discoveredPokemon)
+        DSFireStore.insertUser(user)
     }
 
     suspend fun fetchTeam(userToken: String): List<Int>? {
         val user = BDDDataSource.UserExistFromToken(userToken)
         if(user?.userId != null) {
+            val discoveredPokemon = DSFireStore.getDiscoveredPokemonFromUserToken(user.UserToken)
             val oldTeam = BDDDataSource.getTeamFromUserId(user.userId)
-            val newTeam = DSFireStore.getTeamWithUserToken(userToken)
+            val newTeam = DSFireStore.getTeamFromUserToken(userToken)
             if (newTeam.size < 6) {
                 if (oldTeam.isEmpty()) {
                     BDDDataSource.insertTeam(newTeam, user.userId)
+                    BDDDataSource.insertDiscoveredPokemons(discoveredPokemon, user.userId)
                 } else {
                     BDDDataSource.updateTeam(newTeam, user.userId)
+                    BDDDataSource.updateDiscoveredPokemons(discoveredPokemon, user.userId)
                 }
                 return newTeam
             }
@@ -125,5 +126,18 @@ object UserRepository {
 
     suspend fun createUser(email: String, password: String): String? {
         return DSFireAuth.createUserWithEmailAndPassword(email, password)
+    }
+
+    suspend fun addDiscoveredPokemon(newPokemonId : Int){
+        val user = getConnectedUser()
+        if (user.userId != null) {
+            var alreadyDiscovered = BDDDataSource.getDiscoveredPokemonFromUserId(user.userId)
+            alreadyDiscovered = alreadyDiscovered.toMutableList()
+            if (!alreadyDiscovered.contains(newPokemonId)) {
+                alreadyDiscovered.add(newPokemonId)
+                BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
+                DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
+            }
+        }
     }
 }
