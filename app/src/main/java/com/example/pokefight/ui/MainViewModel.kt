@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     val teamUpdated = MutableLiveData<Boolean>()
+    val userUpdated = MutableLiveData<Boolean>()
 
     fun connectUser(connectedUser: User){
 
@@ -20,7 +21,7 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun getConnectedUserFromCache(): User{
+    fun getConnectedUser(): User{
         return UserRepository.getConnectedUser()
     }
 
@@ -80,10 +81,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             val uid = UserRepository.signIn(email, password)
             if(uid != null){
-                var user = UserRepository.userExist(uid)
-                if(user == null){
-                    user = UserRepository.fetchUser(uid)
-                }
+                val user = UserRepository.fetchUser(uid)
                 UserRepository.fetchTeam(uid)
                 liveData.postValue(user)
             }else{
@@ -145,5 +143,12 @@ class MainViewModel : ViewModel() {
             liveData.postValue(data)
         }
         return liveData
+    }
+
+    fun updateUser(newUser : User){
+        viewModelScope.launch {
+            UserRepository.updateUser(newUser)
+            userUpdated.postValue(true)
+        }
     }
 }

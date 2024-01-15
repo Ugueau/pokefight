@@ -12,8 +12,6 @@ object BDDDataSource {
         lateinit var userCreated: UserBDD
 
         userCreated = user.toEntity()
-        val log = PokefightBDD.getInstance().userDAO().findUserFromEmail(user.Email) == null
-        Log.e("bdd", log.toString())
         if (PokefightBDD.getInstance().userDAO().findUserFromEmail(user.Email) == null){
             PokefightBDD.getInstance().userDAO().insertUser(userCreated)
             return true
@@ -22,6 +20,11 @@ object BDDDataSource {
             return false
         }
 
+    }
+
+    suspend fun updateUser(user : User, userId : Int){
+        //val userBDD = UserBDD(user.Email, user.Nickname,user.Trophy,user.pokedollar,user.UserToken,user.Password)
+        PokefightBDD.getInstance().userDAO().forceUpdateUser(user.Email, user.Nickname,user.Trophy,user.pokedollar,user.UserToken,user.Password,userId)
     }
 
     suspend fun getUserFromEmail(email: String):User?{

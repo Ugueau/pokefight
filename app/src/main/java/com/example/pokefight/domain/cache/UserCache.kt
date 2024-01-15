@@ -20,4 +20,8 @@ object UserCache {
         }
         return null
     }
+
+    fun clear(){
+        user = null
+    }
 }

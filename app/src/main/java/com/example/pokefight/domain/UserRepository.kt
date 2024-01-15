@@ -25,6 +25,15 @@ object UserRepository {
         return toReturn
     }
 
+    suspend fun updateUser(user : User){
+        user.userId?.let {
+            BDDDataSource.updateUser(user, it)
+            DSFireStore.updateUser(user)
+            deconnectUser()
+            connectUser(user)
+        }
+    }
+
     fun getConnectedUser(): User {
         var connectedUser = UserCache.getUser()
 
@@ -37,6 +46,10 @@ object UserRepository {
 
     suspend fun connectUser(connectedUser: User) {
         UserCache.addToCache(connectedUser)
+    }
+
+    suspend fun deconnectUser(){
+        UserCache.clear()
     }
 
     suspend fun getDiscoveredPokemon(): List<Int> {
@@ -92,7 +105,7 @@ object UserRepository {
 
     suspend fun fetchTeam(userToken: String): List<Int>? {
         val user = BDDDataSource.UserExistFromToken(userToken)
-        if(user?.userId != null) {
+        if (user?.userId != null) {
             val discoveredPokemon = DSFireStore.getDiscoveredPokemonFromUserToken(user.UserToken)
             val oldTeam = BDDDataSource.getTeamFromUserId(user.userId)
             val newTeam = DSFireStore.getTeamFromUserToken(userToken)
@@ -111,10 +124,20 @@ object UserRepository {
     }
 
     suspend fun fetchUser(userToken: String): User? {
-        val user = DSFireStore.getUserByToken(userToken)
-        user?.let {
-            if(BDDDataSource.insertUser(user)){
-                return user
+        val user = BDDDataSource.UserExistFromToken(userToken)
+        val userData = DSFireStore.getUserByToken(userToken)
+        if (user?.userId != null) {
+            if (userData != null) {
+                BDDDataSource.updateUser(userData, user.userId)
+                BDDDataSource.UserExistFromToken(userToken)?.let {
+                    return it
+                }
+            }
+        } else {
+            if (userData != null && BDDDataSource.insertUser(userData)) {
+                BDDDataSource.UserExistFromToken(userToken)?.let {
+                    return it
+                }
             }
         }
         return null
@@ -128,7 +151,7 @@ object UserRepository {
         return DSFireAuth.createUserWithEmailAndPassword(email, password)
     }
 
-    suspend fun addDiscoveredPokemon(newPokemonId : Int){
+    suspend fun addDiscoveredPokemon(newPokemonId: Int) {
         val user = getConnectedUser()
         if (user.userId != null) {
             var alreadyDiscovered = BDDDataSource.getDiscoveredPokemonFromUserId(user.userId)

@@ -4,7 +4,10 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
+import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
+import com.example.pokefight.model.User
 
 @Dao
 interface UserDAO {
@@ -24,4 +27,10 @@ interface UserDAO {
 
     @Query("Select * from UserBDD where UserToken = :userToken")
     suspend fun findUserFromToken(userToken: String): UserBDD?
+
+    @Query("UPDATE UserBDD SET Email = :email, Nickname = :nickname, trophy = :trophy, pokedollar = :pokedollar, UserToken = :userToken, Password = :password WHERE idUser = :userId")
+    suspend fun forceUpdateUser(email : String, nickname : String, trophy : Int, pokedollar : Int, userToken : String, password : String, userId : Int)
+
+    @Update
+    suspend fun updateUser(userBDD: UserBDD)
 }
