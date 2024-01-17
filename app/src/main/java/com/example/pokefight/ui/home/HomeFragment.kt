@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentHomeBinding
+import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.ui.MainViewModel
 
 class HomeFragment : Fragment() {
@@ -19,7 +22,7 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    val MainViewModel by activityViewModels<MainViewModel>()
+    val mainViewModel by activityViewModels<MainViewModel>()
     lateinit var vm : MainViewModel
     private lateinit var TextViewTrophy : TextView
     private lateinit var FightButton : Button
@@ -45,7 +48,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         TextViewTrophy = binding.TextViewTrophy
-        TextViewTrophy.text = MainViewModel.getConnectedUser().Trophy.toString()
+        TextViewTrophy.text = mainViewModel.getConnectedUser().Trophy.toString()
 
     }
 

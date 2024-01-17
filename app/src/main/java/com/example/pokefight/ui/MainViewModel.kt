@@ -3,7 +3,9 @@ package com.example.pokefight.ui
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
+import com.example.pokefight.domain.SwapRepository
 import com.example.pokefight.domain.UserRepository
+import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.User
 import com.example.pokefight.model.stringify
@@ -150,5 +152,30 @@ class MainViewModel : ViewModel() {
             UserRepository.updateUser(newUser)
             userUpdated.postValue(true)
         }
+    }
+
+    fun createNewSwap(creatorId : String, targetId : String) : LiveData<Boolean>{
+        val liveData = MutableLiveData<Boolean>()
+        viewModelScope.launch {
+            val success = SwapRepository.createNewSwap(targetId)
+            if(success) {
+                listenOnCurrentSwap { field, value ->
+                    //Here put the callback to call when a pokemonId changed in the current swap
+                    Log.e("RealTimeListener", "${field} : ${value.toString()}")
+                }
+            }
+            liveData.postValue(success)
+        }
+        return liveData
+    }
+
+    fun sendPokemonToSwap(pokemonId : Int){
+        viewModelScope.launch {
+            SwapRepository.setPokemonToSwap(pokemonId)
+        }
+    }
+
+    private fun listenOnCurrentSwap(callback : (String, Int) -> Unit){
+        SwapRepository.listenSwap(callback)
     }
 }
