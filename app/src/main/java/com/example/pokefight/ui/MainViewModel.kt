@@ -5,10 +5,10 @@ import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.SwapRepository
 import com.example.pokefight.domain.UserRepository
-import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.User
 import com.example.pokefight.model.stringify
+import com.example.pokefight.ui.swap.SwapFragment
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -154,7 +154,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun createNewSwap(creatorId : String, targetId : String) : LiveData<Boolean>{
+    fun createNewSwap(targetId : String) : LiveData<Boolean>{
         val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val success = SwapRepository.createNewSwap(targetId)
@@ -176,6 +176,6 @@ class MainViewModel : ViewModel() {
     }
 
     private fun listenOnCurrentSwap(callback : (String, Int) -> Unit){
-        SwapRepository.listenSwap(callback)
+        SwapRepository.listenOnCurrentSwap(callback)
     }
 }

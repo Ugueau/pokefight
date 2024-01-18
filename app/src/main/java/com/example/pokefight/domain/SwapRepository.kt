@@ -22,7 +22,7 @@ object SwapRepository {
         currentSwap = ""
     }
 
-    fun listenSwap(callback : (field :String, value : Int) -> Unit){
+    fun listenOnCurrentSwap(callback : (field :String, value : Int) -> Unit){
         DSRealTimeDatabase.listenOn(currentSwap,UserRepository.getConnectedUser().UserToken,callback)
     }
 }

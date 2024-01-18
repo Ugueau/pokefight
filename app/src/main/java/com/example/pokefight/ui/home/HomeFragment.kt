@@ -50,6 +50,14 @@ class HomeFragment : Fragment() {
         TextViewTrophy = binding.TextViewTrophy
         TextViewTrophy.text = mainViewModel.getConnectedUser().Trophy.toString()
 
+        val btn = view.findViewById<Button>(R.id.FightButton)
+        btn.setOnClickListener {
+            mainViewModel.createNewSwap("example")
+        }
+        val btn2 = view.findViewById<Button>(R.id.Swap)
+        btn2.setOnClickListener {
+            mainViewModel.sendPokemonToSwap(142)
+        }
     }
 
     override fun onDestroyView() {
