@@ -2,6 +2,7 @@ package com.example.pokefight.ui.boutique
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,15 +10,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
 
-class PopupConfirmAchat(val key : String, val layout: ConstraintLayout, val callback : () -> Unit) : DialogFragment() {
+class PopupConfirmAchat(val key : String, val callback : () -> Unit) : DialogFragment() {
 
     val MainViewModel by viewModels<MainViewModel>()
     lateinit var vm : MainViewModel
@@ -49,7 +53,20 @@ class PopupConfirmAchat(val key : String, val layout: ConstraintLayout, val call
 
         var layoutItemAchete : ConstraintLayout = view.findViewById(R.id.layoutItemAchete)
 
-        layoutItemAchete.addView(layout)
+        when (key){
+            "COMMON" ->
+
+            "UNCOMMON" ->
+
+            "RARE" ->
+
+            "POKEBALL" ->
+
+            "SUPERBALL" ->
+
+            "HYPERBALL" ->
+
+        }
     }
 
 }

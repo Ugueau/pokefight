@@ -3,12 +3,20 @@ package com.example.pokefight.domain.BDD
 import android.content.Context
 import androidx.room.*
 import com.example.pokefight.domain.BDD.DAO.UserDAO
+import com.example.pokefight.domain.BDD.DAO.DiscoveredPokemonDAO
+import com.example.pokefight.domain.BDD.Converters
+import com.example.pokefight.domain.BDD.DAO.TeamDAO
+import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
+import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
 
-@Database(entities = [ UserBDD::class ], version = 1)
+@Database(entities = [ UserBDD::class, DiscoveredPokemonBDD::class, TeamBDD::class ], version = 6)
+@TypeConverters(Converters::class)
 abstract class PokefightBDD: RoomDatabase() {
 
     abstract fun userDAO(): UserDAO
+    abstract fun discoveredPokemonDAO(): DiscoveredPokemonDAO
+    abstract fun teamDAO(): TeamDAO
 
     companion object{
 
@@ -18,6 +26,7 @@ abstract class PokefightBDD: RoomDatabase() {
             instance = Room.databaseBuilder(
                 context, PokefightBDD::class.java, "PokefightBDD"
             )
+                .fallbackToDestructiveMigration()
                 .build()
         }
 

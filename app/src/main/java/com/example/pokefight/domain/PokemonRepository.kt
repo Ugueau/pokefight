@@ -67,6 +67,36 @@ object PokemonRepository {
         return returnedList
     }
 
+    suspend fun getPokemons(pokemonList : List<Int>) : List<Pokemon>{
+        DSPokemonCache.sortCache()
+        val pokemonToGet = pokemonList.sorted()
+        val returnedList = mutableListOf<Pokemon>()
+        val missingPokemons = ArrayList<Int>()
+
+        for (id in pokemonToGet) {
+            if (!DSPokemonCache.isAlreadyLoaded(id)) {
+                missingPokemons.add(id)
+            }
+        }
+
+        if (missingPokemons.isEmpty()) {
+            for (id in pokemonToGet) {
+                DSPokemonCache.getPokemon(id)?.let { returnedList.add(it) }
+            }
+
+        } else {
+            val data = fetchPokemons(missingPokemons)
+            data.collect {
+                for (id in pokemonToGet) {
+                    Log.e("repo", "prepare to get $id")
+                    DSPokemonCache.getPokemon(id)?.let { returnedList.add(it) }
+                }
+            }
+        }
+
+        return returnedList
+    }
+
     suspend fun getPokemonById(id: Int): Pokemon? {
         DSPokemonCache.sortCache()
 

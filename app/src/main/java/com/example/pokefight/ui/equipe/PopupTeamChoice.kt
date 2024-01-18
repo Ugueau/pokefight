@@ -1,57 +1,60 @@
-package com.example.pokefight.ui.pokedex
+package com.example.pokefight.ui.equipe
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
-import com.example.pokefight.databinding.FragmentPokedexBinding
 import com.example.pokefight.domain.PokemonRepository
+import com.example.pokefight.model.stringify
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.pokedex.PokedexAdapter
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class PokedexFragment : Fragment() {
-
-    private var _binding: FragmentPokedexBinding? = null
-    val mainViewModel by activityViewModels<MainViewModel>()
-
-    private val binding get() = _binding!!
+class PopupTeamChoice(var pokemonPosToChange: Int) : BottomSheetDialogFragment() {
     private var isLoading = true
 
+    val mainViewModel by activityViewModels<MainViewModel>()
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentPokedexBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+    ): View? {
+        return inflater.inflate(R.layout.fragment_popup_team_choice, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_pokedex)
+        val recyclerView: RecyclerView = requireView().findViewById(R.id.recycler_pokedex)
+
         val recyclerViewLayoutManager = GridLayoutManager(context, 3)
-        val recyclerViewAdapter = PokedexAdapter(requireContext(), emptyList(), (activity as AppCompatActivity).supportFragmentManager)
         recyclerView.layoutManager = recyclerViewLayoutManager
+
+        val recyclerViewAdapter = PokedexAdapter(
+            requireContext(),
+            emptyList(),
+            (activity as AppCompatActivity).supportFragmentManager
+        )
+        recyclerViewAdapter.setToTeamChoiceMode() { pokemonId ->
+            selectedPokemon(pokemonId)
+        }
         recyclerView.adapter = recyclerViewAdapter
 
         isLoading = true
-        mainViewModel.getDiscoveredPokemonsIds().observe(viewLifecycleOwner) { dp ->
-            mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
-                .observe(viewLifecycleOwner) {
-                    recyclerViewAdapter.updateDiscoveredPokemon(dp)
-                    recyclerViewAdapter.updatePokemonList(it.toList())
-                    recyclerViewAdapter.notifyDataSetChanged()
-                    isLoading = false
-                }
-        }
-
+        mainViewModel.getDiscoveredPokemons()
+            .observe(viewLifecycleOwner) {
+                var log = ""
+                it.forEach{pok -> log += pok.stringify()}
+                Log.e("dp", log)
+                isLoading = false
+                recyclerViewAdapter.updatePokemonList(it.toList())
+                recyclerViewAdapter.notifyDataSetChanged()
+            }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -66,7 +69,7 @@ class PokedexFragment : Fragment() {
                 if (totalItemCount < PokemonRepository.MAX_ID && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && !isLoading) {
                     // Load more data
                     isLoading = true
-                    mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 9)
+                    mainViewModel.getDiscoveredPokemons()
                         .observe(viewLifecycleOwner) {
                             isLoading = false
                             recyclerViewAdapter.updatePokemonList(it.toList())
@@ -81,8 +84,13 @@ class PokedexFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    fun selectedPokemon(pokemonId: Int) {
+        if (pokemonPosToChange == -1) {
+            mainViewModel.addPokemonToTeam(pokemonId)
+        } else {
+            mainViewModel.setChosenPokemon(pokemonId, pokemonPosToChange)
+        }
+        dismiss()
     }
+
 }

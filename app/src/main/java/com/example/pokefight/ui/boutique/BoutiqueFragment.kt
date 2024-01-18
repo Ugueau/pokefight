@@ -71,7 +71,7 @@ class BoutiqueFragment : Fragment() {
 
         //insert du solde de l'utilisateur
         tvSoldeUser = view.findViewById(R.id.soldeUser)
-        tvSoldeUser.text = vm.getConnectedUserFromCache().pokedollar.toString()
+        tvSoldeUser.text = vm.getConnectedUser().pokedollar.toString()
 
         //création de la popup pour acheter des pokedollard
         layoutPokedollar = view.findViewById(R.id.layoutPokedollar)
@@ -137,11 +137,11 @@ class BoutiqueFragment : Fragment() {
     }
 
     private fun showPopupConfirmAchat( key : String, layout: ConstraintLayout){
-        val popupConfirmAchat = PopupConfirmAchat(key, layout){reloadSolde()}
+        val popupConfirmAchat = PopupConfirmAchat(key){reloadSolde()}
         popupConfirmAchat.show((activity as AppCompatActivity).supportFragmentManager, "popupConfirmAchat")
     }
 
     fun reloadSolde(){
-        tvSoldeUser.text = vm.getConnectedUserFromCache().pokedollar.toString()
+        tvSoldeUser.text = vm.getConnectedUser().pokedollar.toString()
     }
 }

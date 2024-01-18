@@ -1,6 +1,8 @@
 package com.example.pokefight.domain.cache
 
 import com.example.pokefight.model.Pokemon
+import java.lang.Exception
+import java.lang.IndexOutOfBoundsException
 
 object DSPokemonCache {
     private var pokemonList = ArrayList<Pokemon>()
@@ -30,8 +32,14 @@ object DSPokemonCache {
     }
 
     fun getPokemon(id :Int): Pokemon?{
-        if(pokemonList.find { it.id == id } != null){
-            return pokemonList[id]
+        try {
+            pokemonList.forEach {
+                if (it.id == id){
+                    return it
+                }
+            }
+        }catch(_:IndexOutOfBoundsException){
+            return null
         }
         return null
     }

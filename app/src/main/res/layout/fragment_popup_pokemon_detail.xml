@@ -48,9 +48,9 @@
         <TextView
             android:id="@+id/pokedex_detail_type1"
             android:layout_width="90dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:gravity="center"
             android:text="TextView"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
@@ -58,22 +58,23 @@
         <TextView
             android:id="@+id/pokedex_detail_type2"
             android:layout_width="90dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:gravity="center"
             android:text="TextView"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="8"
 
+        android:weightSum="8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,8 +100,8 @@
                 android:id="@+id/sword_sprite"
                 android:layout_width="30dp"
                 android:layout_height="20dp"
-                android:src="@drawable/sword_svgrepo_com"
-                android:contentDescription="sword" />
+                android:contentDescription="sword"
+                android:src="@drawable/sword_svgrepo_com" />
 
             <TextView
                 android:id="@+id/pokedex_detail_attack"
@@ -142,5 +143,31 @@
         app:cornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pokemonElement">
+
+        <ImageView
+            android:id="@+id/team_star3"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:src="@drawable/star_svgrepo_com" />
+
+        <TextView
+            android:id="@+id/pokedex_rarity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="TextView" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
