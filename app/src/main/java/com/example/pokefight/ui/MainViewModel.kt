@@ -6,6 +6,7 @@ import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.SwapRepository
 import com.example.pokefight.domain.UserRepository
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.model.User
 import com.example.pokefight.model.stringify
 import com.example.pokefight.ui.swap.SwapFragment
@@ -177,5 +178,13 @@ class MainViewModel : ViewModel() {
 
     private fun listenOnCurrentSwap(callback : (String, Int) -> Unit){
         SwapRepository.listenOnCurrentSwap(callback)
+    }
+
+    fun setNotificationListener(callback: (RealTimeDatabaseEvent) -> Unit){
+        viewModelScope.launch {
+            UserRepository.setNotificationListener { event ->
+                callback(event)
+            }
+        }
     }
 }

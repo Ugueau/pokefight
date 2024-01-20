@@ -23,6 +23,6 @@ object SwapRepository {
     }
 
     fun listenOnCurrentSwap(callback : (field :String, value : Int) -> Unit){
-        DSRealTimeDatabase.listenOn(currentSwap,UserRepository.getConnectedUser().UserToken,callback)
+        DSRealTimeDatabase.setListenerOnSwap(currentSwap,UserRepository.getConnectedUser().UserToken,callback)
     }
 }

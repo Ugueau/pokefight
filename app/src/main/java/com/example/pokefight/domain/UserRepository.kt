@@ -5,7 +5,9 @@ import com.example.pokefight.domain.BDD.BDDDataSource
 import com.example.pokefight.domain.cache.UserCache
 import com.example.pokefight.domain.firebase.DSFireAuth
 import com.example.pokefight.domain.firebase.DSFireStore
+import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.model.User
 
 object UserRepository {
@@ -20,6 +22,7 @@ object UserRepository {
         if (toReturn) {
             BDDDataSource.UserExistFromToken(user.UserToken)?.let {
                 insertIntoFirestore(it)
+                DSRealTimeDatabase.insertUserInRealTimeDatabase(user.UserToken)
             }
         }
         return toReturn
@@ -162,5 +165,9 @@ object UserRepository {
                 DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
             }
         }
+    }
+
+    suspend fun setNotificationListener(callback : (RealTimeDatabaseEvent) -> Unit){
+        DSRealTimeDatabase.setNotificationListener(UserRepository.getConnectedUser().UserToken, callback)
     }
 }

@@ -2,6 +2,7 @@ package com.example.pokefight
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -15,7 +16,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.pokefight.databinding.ActivityMainBinding
 import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.swap.SwapFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(){
@@ -56,6 +59,14 @@ class MainActivity : AppCompatActivity(){
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        mainViewModel.setNotificationListener { event ->
+            Log.e("eventRTDB","oui")
+            when(event){
+                is RealTimeDatabaseEvent.SWAP_RESPONSE -> 0 //POPUP response
+                is RealTimeDatabaseEvent.SWAP_DEMAND -> Toast.makeText(baseContext,event.userToken,Toast.LENGTH_SHORT).show() //POPUP demand
+            }
+        }
 
     }
 

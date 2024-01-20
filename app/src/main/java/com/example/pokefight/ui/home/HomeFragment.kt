@@ -10,10 +10,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentHomeBinding
 import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.ui.MainViewModel
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -53,6 +55,7 @@ class HomeFragment : Fragment() {
         val btn = view.findViewById<Button>(R.id.FightButton)
         btn.setOnClickListener {
             mainViewModel.createNewSwap("example")
+
         }
         val btn2 = view.findViewById<Button>(R.id.Swap)
         btn2.setOnClickListener {
