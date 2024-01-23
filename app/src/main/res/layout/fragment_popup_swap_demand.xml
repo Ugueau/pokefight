@@ -11,7 +11,7 @@
     android:paddingEnd="16dp">
 
     <Button
-        android:id="@+id/close_popup"
+        android:id="@+id/close_popupSwap"
         android:layout_width="32dp"
         android:layout_height="44dp"
         android:padding="0dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/swapPopup_targetName"
+        android:id="@+id/swapPopup_creatorName"
         android:layout_width="150dp"
         android:gravity="center"
         android:textStyle="bold"
@@ -33,5 +33,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/swapAccept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accept"
+        android:background="@drawable/full_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/swapPopup_creatorName"
+        />
+
+    <Button
+        android:id="@+id/swapDeny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Deny"
+        android:background="@drawable/outlined_button"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/swapAccept"
+        app:layout_constraintTop_toBottomOf="@+id/swapPopup_creatorName"
+        android:layout_margin="16dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,6 +30,11 @@ object DSRealTimeDatabase {
             success = false
         }.await()
 
+        //Send swap notif to target
+        realtime.child("users").child(targetToken).child("swap").child("fromUser").setValue(creatorToken).addOnFailureListener {
+            success = false
+        }.await()
+
         return success
     }
 
@@ -43,8 +48,10 @@ object DSRealTimeDatabase {
         realtime.child("swap").child(swapName).child(pokemonFrom).setValue(pokemonId).await()
     }
 
-    suspend fun endSwap(swapName : String){
+    suspend fun endSwap(swapName : String, userToken : String){
         realtime.child("swap").child(swapName).child("isFinished").setValue(true).await()
+        realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("").await()
+        realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").await()
     }
 
 
@@ -99,7 +106,7 @@ object DSRealTimeDatabase {
         }.await()
     }
 
-    suspend fun setNotificationListener(userToken : String, callback: (RealTimeDatabaseEvent) -> Unit){
+    fun setNotificationListener(userToken : String, callback: (RealTimeDatabaseEvent) -> Unit){
         val postListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 //Don't needed
@@ -109,15 +116,17 @@ object DSRealTimeDatabase {
                 snapshot.child("fromUser").key?.let { field ->
                     snapshot.child("fromUser").getValue<String>()?.let { value ->
                         callback(RealTimeDatabaseEvent.SWAP_DEMAND(value))
+                        return
                     }
                 }
                 snapshot.child("hasAccepted").key?.let { field ->
-                    snapshot.child("fromUser").getValue<String>()?.let{value ->
+                    snapshot.child("hasAccepted").getValue<String>()?.let{value ->
                         if(value == "accepted"){
                             callback(RealTimeDatabaseEvent.SWAP_RESPONSE(true))
                         }else{
                             callback(RealTimeDatabaseEvent.SWAP_RESPONSE(false))
                         }
+                        return
                     }
                 }
             }
@@ -137,5 +146,13 @@ object DSRealTimeDatabase {
 
         }
         realtime.child("users").child(userToken).addChildEventListener(postListener)
+    }
+
+    suspend fun sendSwapAccept(creatorToken : String) {
+        realtime.child("users").child(creatorToken).child("swap").child("hasAccepted").setValue("accepted").await()
+    }
+
+    suspend fun sendSwapDeny(creatorToken : String){
+        realtime.child("users").child(creatorToken).child("swap").child("hasAccepted").setValue("denied").await()
     }
 }

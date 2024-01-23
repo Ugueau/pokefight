@@ -170,4 +170,8 @@ object UserRepository {
     suspend fun setNotificationListener(callback : (RealTimeDatabaseEvent) -> Unit){
         DSRealTimeDatabase.setNotificationListener(UserRepository.getConnectedUser().UserToken, callback)
     }
+
+    suspend fun getNameOf(userToken : String):String?{
+        return DSFireStore.getUserByToken(userToken)?.Nickname
+    }
 }

@@ -9,7 +9,6 @@ import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.model.User
 import com.example.pokefight.model.stringify
-import com.example.pokefight.ui.swap.SwapFragment
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -183,8 +182,47 @@ class MainViewModel : ViewModel() {
     fun setNotificationListener(callback: (RealTimeDatabaseEvent) -> Unit){
         viewModelScope.launch {
             UserRepository.setNotificationListener { event ->
+                if(event is RealTimeDatabaseEvent.SWAP_DEMAND && event.userToken.isNotEmpty()){
+                    SwapRepository.setCurrentSwapName("${event.userToken}_${UserRepository.getConnectedUser().UserToken}")
+                }else if(event is RealTimeDatabaseEvent.SWAP_RESPONSE){
+                    if (!event.response){
+                        viewModelScope.launch {
+                            SwapRepository.endSwap()
+                        }
+                    }
+                }
                 callback(event)
             }
+        }
+    }
+
+    fun getNameOf(userToken : String) : LiveData<String>{
+        val liveData = MutableLiveData<String>()
+        viewModelScope.launch {
+            val data = UserRepository.getNameOf(userToken)
+            if(data == null){
+                liveData.postValue("")
+            }
+            data?.let {
+                liveData.postValue(it)
+            }
+        }
+        return liveData
+    }
+
+    fun sendSwapResponse(response : Boolean){
+        viewModelScope.launch {
+            if(response){
+                SwapRepository.sendSwapAccept()
+            }else{
+                SwapRepository.sendSwapDeny()
+            }
+        }
+    }
+
+    fun endSwap(){
+        viewModelScope.launch {
+            SwapRepository.endSwap()
         }
     }
 }

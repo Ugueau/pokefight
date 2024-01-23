@@ -1,8 +1,8 @@
 package com.example.pokefight
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -18,7 +18,8 @@ import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
-import com.example.pokefight.ui.swap.SwapFragment
+import com.example.pokefight.ui.swap.PopupSwapDemand
+import com.example.pokefight.ui.swap.SwapActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(){
@@ -60,14 +61,7 @@ class MainActivity : AppCompatActivity(){
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        mainViewModel.setNotificationListener { event ->
-            Log.e("eventRTDB","oui")
-            when(event){
-                is RealTimeDatabaseEvent.SWAP_RESPONSE -> 0 //POPUP response
-                is RealTimeDatabaseEvent.SWAP_DEMAND -> Toast.makeText(baseContext,event.userToken,Toast.LENGTH_SHORT).show() //POPUP demand
-            }
-        }
-
+        activeNotifications()
     }
 
     fun getPokemons(fromId : Int = 1, toId : Int = fromId+10, callback : (List<Pokemon>) -> Unit){
@@ -91,5 +85,25 @@ class MainActivity : AppCompatActivity(){
         super.onDestroy()
         //Must be called by the last destroyed activity
         DSFireStore.stopFireStoreConnection()
+    }
+
+    fun activeNotifications(){
+        mainViewModel.setNotificationListener { event ->
+            when(event){
+                is RealTimeDatabaseEvent.SWAP_RESPONSE -> {
+                    findNavController(R.id.nav_host_fragment_activity_main).
+                    val intent = Intent(this, SwapActivity::class.java)
+                    startActivity(intent)
+                }
+                is RealTimeDatabaseEvent.SWAP_DEMAND -> {
+                    mainViewModel.getNameOf(event.userToken).observe(this){creatorName ->
+                        if(creatorName.isNotEmpty()) {
+                            val popupSwapDemand = PopupSwapDemand(creatorName)
+                            popupSwapDemand.show(supportFragmentManager, "popupSwapDemand")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
