@@ -115,18 +115,18 @@ object DSRealTimeDatabase {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 snapshot.child("fromUser").key?.let { field ->
                     snapshot.child("fromUser").getValue<String>()?.let { value ->
-                        callback(RealTimeDatabaseEvent.SWAP_DEMAND(value))
-                        return
+                        if(value != "" ) {
+                            callback(RealTimeDatabaseEvent.SWAP_DEMAND(value))
+                        }
                     }
                 }
                 snapshot.child("hasAccepted").key?.let { field ->
                     snapshot.child("hasAccepted").getValue<String>()?.let{value ->
                         if(value == "accepted"){
                             callback(RealTimeDatabaseEvent.SWAP_RESPONSE(true))
-                        }else{
+                        }else if(value == "denied"){
                             callback(RealTimeDatabaseEvent.SWAP_RESPONSE(false))
                         }
-                        return
                     }
                 }
             }

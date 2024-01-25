@@ -91,7 +91,6 @@ class MainActivity : AppCompatActivity(){
         mainViewModel.setNotificationListener { event ->
             when(event){
                 is RealTimeDatabaseEvent.SWAP_RESPONSE -> {
-                    findNavController(R.id.nav_host_fragment_activity_main).
                     val intent = Intent(this, SwapActivity::class.java)
                     startActivity(intent)
                 }
