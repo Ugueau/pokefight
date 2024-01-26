@@ -91,8 +91,10 @@ class MainActivity : AppCompatActivity(){
         mainViewModel.setNotificationListener { event ->
             when(event){
                 is RealTimeDatabaseEvent.SWAP_RESPONSE -> {
-                    val intent = Intent(this, SwapActivity::class.java)
-                    startActivity(intent)
+                    if(event.response){
+                        val intent = Intent(this, SwapActivity::class.java)
+                        startActivity(intent)
+                    }
                 }
                 is RealTimeDatabaseEvent.SWAP_DEMAND -> {
                     mainViewModel.getNameOf(event.userToken).observe(this){creatorName ->
