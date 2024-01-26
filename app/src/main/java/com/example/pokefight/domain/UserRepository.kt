@@ -48,6 +48,17 @@ object UserRepository {
         UserCache.addToCache(connectedUser)
     }
 
+    suspend fun updateUserSolde(value: Int) {
+
+        UserCache.updateUserSolde(value)
+
+        val user = this.getConnectedUser()
+
+        BDDDataSource.updateUsersolde(user.pokedollar, user.Email, user.Password)
+
+        //todo a faire quand firebase sera prêt
+    }
+
     suspend fun deconnectUser(){
         UserCache.clear()
     }

@@ -53,6 +53,10 @@ object BDDDataSource {
         }
     }
 
+    suspend fun updateUsersolde(value: Int, email: String, password: String) {
+        PokefightBDD.getInstance().userDAO().updateSoldeUser(value, email, password)
+    }
+
     suspend fun getDiscoveredPokemonFromUserId(userId : Int): List<Int>{
         val discoveredPokemons = PokefightBDD.getInstance().discoveredPokemonDAO().findDiscoveredPokemonFromUserId(userId)?.discovered
         discoveredPokemons?.let {
