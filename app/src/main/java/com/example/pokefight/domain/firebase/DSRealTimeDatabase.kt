@@ -1,13 +1,12 @@
 package com.example.pokefight.domain.firebase
 
 import android.util.Log
-import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 import kotlinx.coroutines.tasks.await
@@ -31,6 +30,11 @@ object DSRealTimeDatabase {
             success = false
         }.await()
 
+        //Send swap notif to target
+        realtime.child("users").child(targetToken).child("swap").child("fromUser").setValue(creatorToken).addOnFailureListener {
+            success = false
+        }.await()
+
         return success
     }
 
@@ -44,12 +48,14 @@ object DSRealTimeDatabase {
         realtime.child("swap").child(swapName).child(pokemonFrom).setValue(pokemonId).await()
     }
 
-    suspend fun endSwap(swapName : String){
+    suspend fun endSwap(swapName : String, userToken : String){
         realtime.child("swap").child(swapName).child("isFinished").setValue(true).await()
+        realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("").await()
+        realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").await()
     }
 
 
-    fun listenOn(swapName: String, userToken : String, callback: (String,Int) -> Unit){
+    fun setListenerOnSwap(swapName: String, userToken : String, callback: (String, Int) -> Unit){
         val postListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 //Don't needed
@@ -86,5 +92,67 @@ object DSRealTimeDatabase {
 
         }
         realtime.child("swap").child(swapName).addChildEventListener(postListener)
+    }
+
+    suspend fun insertUserInRealTimeDatabase(userToken : String){
+        realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").addOnFailureListener {
+            Log.e("non", "crashed")
+        }.await()
+        realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("").addOnFailureListener {
+            Log.e("non", "crashed")
+        }.await()
+        realtime.child("users").child(userToken).child("friend").setValue("").addOnFailureListener {
+            Log.e("non", "crashed")
+        }.await()
+    }
+
+    fun setNotificationListener(userToken : String, callback: (RealTimeDatabaseEvent) -> Unit){
+        val postListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                //Don't needed
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                snapshot.child("fromUser").key?.let { field ->
+                    snapshot.child("fromUser").getValue<String>()?.let { value ->
+                        if(value != "" ) {
+                            callback(RealTimeDatabaseEvent.SWAP_DEMAND(value))
+                        }
+                    }
+                }
+                snapshot.child("hasAccepted").key?.let { field ->
+                    snapshot.child("hasAccepted").getValue<String>()?.let{value ->
+                        if(value == "accepted"){
+                            callback(RealTimeDatabaseEvent.SWAP_RESPONSE(true))
+                        }else if(value == "denied"){
+                            callback(RealTimeDatabaseEvent.SWAP_RESPONSE(false))
+                        }
+                    }
+                }
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                //Don't needed
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                //Don't needed
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        }
+        realtime.child("users").child(userToken).addChildEventListener(postListener)
+    }
+
+    suspend fun sendSwapAccept(creatorToken : String) {
+        realtime.child("users").child(creatorToken).child("swap").child("hasAccepted").setValue("accepted").await()
+    }
+
+    suspend fun sendSwapDeny(creatorToken : String){
+        realtime.child("users").child(creatorToken).child("swap").child("hasAccepted").setValue("denied").await()
     }
 }

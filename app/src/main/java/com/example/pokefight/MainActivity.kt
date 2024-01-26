@@ -1,5 +1,6 @@
 package com.example.pokefight
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -15,7 +16,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.pokefight.databinding.ActivityMainBinding
 import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.swap.PopupSwapDemand
+import com.example.pokefight.ui.swap.SwapActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(){
@@ -57,8 +61,7 @@ class MainActivity : AppCompatActivity(){
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
-
+        activeNotifications()
     }
 
     fun getPokemons(fromId : Int = 1, toId : Int = fromId+10, callback : (List<Pokemon>) -> Unit){
@@ -82,5 +85,24 @@ class MainActivity : AppCompatActivity(){
         super.onDestroy()
         //Must be called by the last destroyed activity
         DSFireStore.stopFireStoreConnection()
+    }
+
+    fun activeNotifications(){
+        mainViewModel.setNotificationListener { event ->
+            when(event){
+                is RealTimeDatabaseEvent.SWAP_RESPONSE -> {
+                    val intent = Intent(this, SwapActivity::class.java)
+                    startActivity(intent)
+                }
+                is RealTimeDatabaseEvent.SWAP_DEMAND -> {
+                    mainViewModel.getNameOf(event.userToken).observe(this){creatorName ->
+                        if(creatorName.isNotEmpty()) {
+                            val popupSwapDemand = PopupSwapDemand(creatorName)
+                            popupSwapDemand.show(supportFragmentManager, "popupSwapDemand")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
