@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817952660877",
+    "project_id": "pokefight-36871",
+    "storage_bucket": "pokefight-36871.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817952660877:android:4bfb46734808ca941671c4",
+        "android_client_info": {
+          "package_name": "com.example.pokefight"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlUULgnEAjwnZMAPt7VYyYU1wnJWhVp2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

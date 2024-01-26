@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/primary_container"
+    android:padding="4dp"
+    android:layout_margin="4dp"
+    android:id="@+id/pokedex_pokemon">
+
+
+    <ImageView
+        android:id="@+id/pokedex_pokemon_sprite"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:scaleX="3"
+        android:scaleY="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/pokedex_pokemon_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center"
+        android:text="@string/pokemon"
+        android:textColor="?attr/colorOnPrimaryContainer"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pokedex_pokemon_sprite" />
+
+    <TextView
+        android:id="@+id/pokedex_pokemon_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_pokemon_id"
+        app:layout_constraintBottom_toTopOf="@+id/pokedex_pokemon_name"
+        app:layout_constraintStart_toEndOf="@+id/pokedex_pokemon_sprite" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
