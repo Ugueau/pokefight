@@ -26,4 +26,8 @@ data class User (
          )
          return UserEntity
      }
+
+     fun updateSoldeUser(value: Int){
+         this.pokedollar += value
+     }
 }

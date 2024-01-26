@@ -24,4 +24,12 @@
     <string name="pokemon">Pokémon</string>
     <string name="fight">FIGHT !</string>
     <string name="default_pokemon_id">#000</string>
+    <string name="Offre1">500</string>
+    <string name="prixOffre1">5,00</string>
+    <string name="prixOffre2">10,00</string>
+    <string name="offre2">1000</string>
+    <string name="enter_a_code">Enter a code</string>
+    <string name="purchase">Purchase</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>
