@@ -18,11 +18,24 @@ object SwapRepository {
     }
 
     suspend fun endSwap(){
-        DSRealTimeDatabase.endSwap(currentSwap)
+        DSRealTimeDatabase.endSwap(currentSwap, UserRepository.getConnectedUser().UserToken)
         currentSwap = ""
     }
 
     fun listenOnCurrentSwap(callback : (field :String, value : Int) -> Unit){
-        DSRealTimeDatabase.listenOn(currentSwap,UserRepository.getConnectedUser().UserToken,callback)
+        DSRealTimeDatabase.setListenerOnSwap(currentSwap,UserRepository.getConnectedUser().UserToken,callback)
+    }
+
+    fun setCurrentSwapName(newCurrentSwap : String){
+        currentSwap = newCurrentSwap
+    }
+    suspend fun sendSwapAccept(){
+        val creatorToken = currentSwap.split("_")[0]
+        DSRealTimeDatabase.sendSwapAccept(creatorToken)
+    }
+
+    suspend fun sendSwapDeny(){
+        val creatorToken = currentSwap.split("_")[0]
+        DSRealTimeDatabase.sendSwapDeny(creatorToken)
     }
 }
