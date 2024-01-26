@@ -196,7 +196,7 @@ class BoutiqueFragment : Fragment() {
                 uncommon = it
                 val imageUrlUncommon = uncommon.sprites.frontDefault
                 Picasso.get().load(imageUrlUncommon).into(SpritePokemon2)
-                NomPokemon1.text = uncommon.name
+                NomPokemon2.text = uncommon.name
             }
         }
     }
@@ -211,7 +211,7 @@ class BoutiqueFragment : Fragment() {
                 rare = it
                 val imageUrlRare = rare.sprites.frontDefault
                 Picasso.get().load(imageUrlRare).into(SpritePokemon3)
-                NomPokemon1.text = rare.name
+                NomPokemon3.text = rare.name
             }
         }
     }
@@ -236,7 +236,7 @@ class BoutiqueFragment : Fragment() {
         }
 
         //uncommon
-        vm.generatePokemonCommonBoutique().observe(viewLifecycleOwner){ it ->
+        vm.generatePokemonUncommonBoutique().observe(viewLifecycleOwner){ it ->
             if (it == null){
                 Log.e("PokemonError", "Pokemon not found or unauthorized")
             }
@@ -248,7 +248,7 @@ class BoutiqueFragment : Fragment() {
         }
 
         //rare
-        vm.generatePokemonCommonBoutique().observe(viewLifecycleOwner){ it ->
+        vm.generatePokemonRareBoutique().observe(viewLifecycleOwner){ it ->
             if (it == null){
                 Log.e("PokemonError", "Pokemon not found or unauthorized")
             }
