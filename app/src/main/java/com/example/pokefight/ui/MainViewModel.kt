@@ -1,11 +1,13 @@
 package com.example.pokefight.ui
 
+import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.UserRepository
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.User
+import com.example.pokefight.model.getRarity
 import com.example.pokefight.model.stringify
 import kotlinx.coroutines.launch
 
@@ -58,7 +60,7 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    public val prix_boutique = mutableMapOf<String, Int>(
+    val prix_boutique = mutableMapOf<String, Int>(
         "COMMON" to 50,
         "UNCOMMON" to 150,
         "RARE" to 300,
@@ -66,6 +68,102 @@ class MainViewModel : ViewModel() {
         "SUPERBALL" to 250,
         "HYPERBALL" to 500
     )
+
+    var pokemon_boutique = mutableMapOf<String, Int>()
+
+    fun generatePokemonCommonBoutique():MutableLiveData<Pokemon?>{
+
+        val common = MutableLiveData<Pokemon?>()
+
+        var iter = true;
+
+        viewModelScope.launch{
+
+            // loop to get the common pokemon
+            while(iter){
+                val random = java.util.Random()
+                val randomNumber = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+                val data = PokemonRepository.getPokemonById(randomNumber)
+
+                if (data != null) {
+                    if (data.getRarity().name == "COMMON"){
+                        iter = false;
+
+                        common.postValue(data)
+                    }
+                }
+            }
+        }
+        return common
+    }
+
+    fun generatePokemonUncommonBoutique():MutableLiveData<Pokemon?>{
+        val uncommon = MutableLiveData<Pokemon?>()
+
+        var iter = true;
+
+        viewModelScope.launch{
+
+            // loop to get the uncommon pokemon
+            while(iter){
+                val random = java.util.Random()
+                val randomNumber = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+                val data = PokemonRepository.getPokemonById(randomNumber)
+
+                if (data != null) {
+                    if (data.getRarity().name == "UNCOMMON"){
+                        iter = false;
+
+                        uncommon.postValue(data)
+                    }
+                }
+            }
+        }
+        return uncommon
+    }
+
+    fun generatePokemonRareBoutique():MutableLiveData<Pokemon?>{
+        val rare = MutableLiveData<Pokemon?>()
+
+        var iter = true;
+
+        viewModelScope.launch{
+
+            // loop to get the rare pokemon
+            while(iter){
+                val random = java.util.Random()
+                val randomNumber = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+                val data = PokemonRepository.getPokemonById(randomNumber)
+
+                if (data != null) {
+                    if (data.getRarity().name == "RARE"){
+                        iter = false;
+
+                        rare.postValue(data)
+                    }
+                }
+            }
+        }
+        return rare
+    }
+
+    fun SetBoutiquePokemonComon(common : Int){
+        this.pokemon_boutique.remove("COMMON")
+        this.pokemon_boutique.put("COMMON", common)
+    }
+
+    fun SetBoutiquePokemonUncomon(uncommon : Int){
+        this.pokemon_boutique.remove("UNCOMMON")
+        this.pokemon_boutique.put("UNCOMMON", uncommon)
+    }
+
+    fun SetBoutiquePokemonRare(rare : Int){
+        this.pokemon_boutique.remove("RARE")
+        this.pokemon_boutique.put("RARE", rare)
+    }
 
 
     fun setChosenPokemon(pokemonId : Int, pokemonPosToChange : Int){
@@ -165,29 +263,5 @@ class MainViewModel : ViewModel() {
             UserRepository.updateUser(newUser)
             userUpdated.postValue(true)
         }
-    }
-
-    public var pokemon_boutique = mutableMapOf<String, Int>()
-
-    fun generatePokemonBoutique(){
-
-        val liveData = MutableLiveData<Pokemon?>()
-
-        val iter = true;
-
-        viewModelScope.launch{
-
-        // loop to get the common pokemon
-            while(iter){
-                val random = java.util.Random()
-                val randomNumber = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
-
-                val data = PokemonRepository.getPokemonById(randomNumber)
-
-                liveData.postValue(data)
-            }
-
-        }
-
     }
 }
