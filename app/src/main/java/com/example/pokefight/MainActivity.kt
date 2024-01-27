@@ -97,12 +97,17 @@ class MainActivity : AppCompatActivity(){
                     }
                 }
                 is RealTimeDatabaseEvent.SWAP_DEMAND -> {
-                    mainViewModel.getNameOf(event.userToken).observe(this){creatorName ->
-                        if(creatorName.isNotEmpty()) {
-                            val popupSwapDemand = PopupSwapDemand(creatorName)
-                            popupSwapDemand.show(supportFragmentManager, "popupSwapDemand")
+                    if(event.userToken != "") {
+                        mainViewModel.getNameOf(event.userToken).observe(this) { creatorName ->
+                            if (creatorName.isNotEmpty()) {
+                                val popupSwapDemand = PopupSwapDemand(creatorName)
+                                popupSwapDemand.show(supportFragmentManager, "popupSwapDemand")
+                            }
                         }
                     }
+                }
+                else -> {
+                    //Do nothing
                 }
             }
         }

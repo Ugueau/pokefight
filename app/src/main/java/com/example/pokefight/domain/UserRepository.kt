@@ -178,7 +178,7 @@ object UserRepository {
         }
     }
 
-    suspend fun setNotificationListener(callback : (RealTimeDatabaseEvent) -> Unit){
+    fun setNotificationListener(callback : (RealTimeDatabaseEvent) -> Unit){
         DSRealTimeDatabase.setNotificationListener(UserRepository.getConnectedUser().UserToken, callback)
     }
 

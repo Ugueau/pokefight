@@ -1,6 +1,7 @@
 package com.example.pokefight.domain.firebase
 
 import android.util.Log
+import com.example.pokefight.domain.SwapRepository
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
@@ -48,14 +49,22 @@ object DSRealTimeDatabase {
         realtime.child("swap").child(swapName).child(pokemonFrom).setValue(pokemonId).await()
     }
 
-    suspend fun endSwap(swapName : String, userToken : String){
-        realtime.child("swap").child(swapName).child("isFinished").setValue(true).await()
-        realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("").await()
-        realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").await()
+    suspend fun closeSwap(swapName : String, userToken: String) : Boolean{
+        var success = true
+        realtime.child("swap").child(swapName).removeValue().addOnFailureListener{
+            success = false
+        }.await()
+        realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").addOnFailureListener {
+            success = false
+        }
+        realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("").addOnFailureListener {
+            success = false
+        }.await()
+        return success
     }
 
 
-    fun setListenerOnSwap(swapName: String, userToken : String, callback: (String, Int) -> Unit){
+    fun setListenerOnSwap(swapName: String, swaperToken : String, callback: (RealTimeDatabaseEvent) -> Unit){
         val postListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 //Don't needed
@@ -63,22 +72,16 @@ object DSRealTimeDatabase {
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 snapshot.key?.let {field ->
-                    if(field.contains("creator")){
-                        snapshot.getValue<Int>()?.let{value ->
-                            callback(field, value)
+                    if(field.contains(swaperToken)){
+                        snapshot.getValue<Int>()?.let{pokemonId ->
+                            callback(RealTimeDatabaseEvent.SWAP_POKEMON_CHANGED(pokemonId))
                         }
-                    }else if(field.contains("target")){
-                        snapshot.getValue<Int>()?.let{value ->
-                            callback(field, value)
-                        }
-                    }else{
-                        callback("error", -1)
                     }
                 }
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                //Don't needed
+
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -115,7 +118,7 @@ object DSRealTimeDatabase {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 snapshot.child("fromUser").key?.let { field ->
                     snapshot.child("fromUser").getValue<String>()?.let { value ->
-                        if(value != "" ) {
+                        if(value.isNotEmpty()) {
                             callback(RealTimeDatabaseEvent.SWAP_DEMAND(value))
                         }
                     }
@@ -153,6 +156,8 @@ object DSRealTimeDatabase {
     }
 
     suspend fun sendSwapDeny(creatorToken : String){
-        realtime.child("users").child(creatorToken).child("swap").child("hasAccepted").setValue("denied").await()
+        if(creatorToken.isNotEmpty()){
+            realtime.child("users").child(creatorToken).child("swap").child("hasAccepted").setValue("denied").await()
+        }
     }
 }

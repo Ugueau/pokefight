@@ -17,6 +17,7 @@ import com.example.pokefight.ui.MainViewModel
 class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
 
     val mainViewModel by activityViewModels<MainViewModel>()
+    var hasClicked = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,19 +40,31 @@ class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
         val closeBtn = view.findViewById<Button>(R.id.close_popupSwap)
 
         acceptBtn.setOnClickListener{
-            mainViewModel.sendSwapResponse(true)
+            hasClicked = true
             dismiss()
+            mainViewModel.sendSwapResponse(true)
         }
 
         denyBtn.setOnClickListener{
+            hasClicked = true
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwap()
             dismiss()
         }
 
         closeBtn.setOnClickListener{
+            hasClicked = true
+            mainViewModel.sendSwapResponse(false)
+            mainViewModel.endSwap()
             dismiss()
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if(!hasClicked){
+            mainViewModel.sendSwapResponse(false)
+            mainViewModel.endSwap()
+        }
+    }
 }

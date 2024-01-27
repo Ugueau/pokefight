@@ -1,6 +1,5 @@
 package com.example.pokefight.ui
 
-import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
@@ -9,7 +8,6 @@ import com.example.pokefight.domain.UserRepository
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.model.User
-import com.example.pokefight.ui.swap.SwapFragment
 import com.example.pokefight.model.getRarity
 import com.example.pokefight.model.stringify
 import kotlinx.coroutines.launch
@@ -18,7 +16,7 @@ class MainViewModel : ViewModel() {
     val teamUpdated = MutableLiveData<Boolean>()
     val userUpdated = MutableLiveData<Boolean>()
 
-    fun connectUser(connectedUser: User){
+    fun connectUser(connectedUser: User) {
 
         viewModelScope.launch {
             UserRepository.connectUser(connectedUser)
@@ -26,12 +24,13 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun updateUserSolde(value: Int){
+    fun updateUserSolde(value: Int) {
         viewModelScope.launch {
             UserRepository.updateUserSolde(value)
         }
     }
-    fun getConnectedUser(): User{
+
+    fun getConnectedUser(): User {
         return UserRepository.getConnectedUser()
     }
 
@@ -39,9 +38,9 @@ class MainViewModel : ViewModel() {
     fun getPokemonList(fromId: Int = 1, toId: Int = fromId + 10): LiveData<List<Pokemon>> {
         val liveData = MutableLiveData<List<Pokemon>>()
         if (fromId <= PokemonRepository.MAX_ID) {
-            val checkedToId :Int = if(toId > PokemonRepository.MAX_ID){
+            val checkedToId: Int = if (toId > PokemonRepository.MAX_ID) {
                 PokemonRepository.MAX_ID
-            }else{
+            } else {
                 toId
             }
             viewModelScope.launch {
@@ -74,23 +73,24 @@ class MainViewModel : ViewModel() {
 
     var pokemon_boutique = mutableMapOf<String, Int>()
 
-    fun generatePokemonCommonBoutique():MutableLiveData<Pokemon?>{
+    fun generatePokemonCommonBoutique(): MutableLiveData<Pokemon?> {
 
         val common = MutableLiveData<Pokemon?>()
 
         var iter = true;
 
-        viewModelScope.launch{
+        viewModelScope.launch {
 
             // loop to get the common pokemon
-            while(iter){
+            while (iter) {
                 val random = java.util.Random()
-                val randomNumber = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+                val randomNumber =
+                    random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
                 val data = PokemonRepository.getPokemonById(randomNumber)
 
                 if (data != null) {
-                    if (data.getRarity().name == "COMMON"){
+                    if (data.getRarity().name == "COMMON") {
                         iter = false;
 
                         common.postValue(data)
@@ -101,22 +101,23 @@ class MainViewModel : ViewModel() {
         return common
     }
 
-    fun generatePokemonUncommonBoutique():MutableLiveData<Pokemon?>{
+    fun generatePokemonUncommonBoutique(): MutableLiveData<Pokemon?> {
         val uncommon = MutableLiveData<Pokemon?>()
 
         var iter = true;
 
-        viewModelScope.launch{
+        viewModelScope.launch {
 
             // loop to get the uncommon pokemon
-            while(iter){
+            while (iter) {
                 val random = java.util.Random()
-                val randomNumber = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+                val randomNumber =
+                    random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
                 val data = PokemonRepository.getPokemonById(randomNumber)
 
                 if (data != null) {
-                    if (data.getRarity().name == "UNCOMMON"){
+                    if (data.getRarity().name == "UNCOMMON") {
                         iter = false;
 
                         uncommon.postValue(data)
@@ -127,22 +128,23 @@ class MainViewModel : ViewModel() {
         return uncommon
     }
 
-    fun generatePokemonRareBoutique():MutableLiveData<Pokemon?>{
+    fun generatePokemonRareBoutique(): MutableLiveData<Pokemon?> {
         val rare = MutableLiveData<Pokemon?>()
 
         var iter = true;
 
-        viewModelScope.launch{
+        viewModelScope.launch {
 
             // loop to get the rare pokemon
-            while(iter){
+            while (iter) {
                 val random = java.util.Random()
-                val randomNumber = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+                val randomNumber =
+                    random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
                 val data = PokemonRepository.getPokemonById(randomNumber)
 
                 if (data != null) {
-                    if (data.getRarity().name == "RARE"){
+                    if (data.getRarity().name == "RARE") {
                         iter = false;
 
                         rare.postValue(data)
@@ -153,31 +155,31 @@ class MainViewModel : ViewModel() {
         return rare
     }
 
-    fun SetBoutiquePokemonComon(common : Int){
+    fun SetBoutiquePokemonComon(common: Int) {
         this.pokemon_boutique.remove("COMMON")
         this.pokemon_boutique.put("COMMON", common)
     }
 
-    fun SetBoutiquePokemonUncomon(uncommon : Int){
+    fun SetBoutiquePokemonUncomon(uncommon: Int) {
         this.pokemon_boutique.remove("UNCOMMON")
         this.pokemon_boutique.put("UNCOMMON", uncommon)
     }
 
-    fun SetBoutiquePokemonRare(rare : Int){
+    fun SetBoutiquePokemonRare(rare: Int) {
         this.pokemon_boutique.remove("RARE")
         this.pokemon_boutique.put("RARE", rare)
     }
 
 
-    fun setChosenPokemon(pokemonId : Int, pokemonPosToChange : Int){
-        viewModelScope.launch{
-            UserRepository.updateTeam(pokemonId,pokemonPosToChange)
+    fun setChosenPokemon(pokemonId: Int, pokemonPosToChange: Int) {
+        viewModelScope.launch {
+            UserRepository.updateTeam(pokemonId, pokemonPosToChange)
             teamUpdated.postValue(true)
         }
     }
 
-    fun addPokemonToTeam(pokemonId : Int){
-        viewModelScope.launch{
+    fun addPokemonToTeam(pokemonId: Int) {
+        viewModelScope.launch {
             UserRepository.insertInTeam(pokemonId)
             teamUpdated.postValue(true)
         }
@@ -192,26 +194,26 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun signIn(email: String, password: String): LiveData<User?>{
+    fun signIn(email: String, password: String): LiveData<User?> {
         val liveData = MutableLiveData<User?>()
         viewModelScope.launch {
             val uid = UserRepository.signIn(email, password)
-            if(uid != null){
+            if (uid != null) {
                 val user = UserRepository.fetchUser(uid)
                 UserRepository.fetchTeam(uid)
                 liveData.postValue(user)
-            }else{
+            } else {
                 liveData.postValue(null)
             }
         }
         return liveData
     }
 
-    fun createUser(email: String, password: String, nickname : String): LiveData<User?>{
+    fun createUser(email: String, password: String, nickname: String): LiveData<User?> {
         val liveData = MutableLiveData<User?>()
         viewModelScope.launch {
             val uid = UserRepository.createUser(email, password)
-            if(uid != null){
+            if (uid != null) {
                 val user = User(
                     email,
                     password,
@@ -219,26 +221,27 @@ class MainViewModel : ViewModel() {
                     0,
                     0,
                     uid,
-                    null)
-                if (UserRepository.insertUser(user)){
+                    null
+                )
+                if (UserRepository.insertUser(user)) {
                     liveData.postValue(user)
-                }else{
+                } else {
                     liveData.postValue(null)
                 }
-            }else{
+            } else {
                 liveData.postValue(null)
             }
         }
         return liveData
     }
 
-    fun addToDiscoveredPokemon(pokemonId: Int){
+    fun addToDiscoveredPokemon(pokemonId: Int) {
         viewModelScope.launch {
             UserRepository.addDiscoveredPokemon(pokemonId)
         }
     }
 
-    fun getDiscoveredPokemonsIds() : LiveData<List<Int>>{
+    fun getDiscoveredPokemonsIds(): LiveData<List<Int>> {
         val liveData = MutableLiveData<List<Int>>()
         viewModelScope.launch {
             val data = UserRepository.getDiscoveredPokemon()
@@ -247,74 +250,73 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun getDiscoveredPokemons() : LiveData<List<Pokemon>>{
+    fun getDiscoveredPokemons(): LiveData<List<Pokemon>> {
         val liveData = MutableLiveData<List<Pokemon>>()
         viewModelScope.launch {
             val dp = UserRepository.getDiscoveredPokemon()
-            Log.e("dpi",dp.toString())
+            Log.e("dpi", dp.toString())
             val data = PokemonRepository.getPokemons(dp)
             var log = ""
-            data.forEach{pok -> log += pok.stringify()}
+            data.forEach { pok -> log += pok.stringify() }
             Log.e("dp2", log)
             liveData.postValue(data)
         }
         return liveData
     }
 
-    fun updateUser(newUser : User){
+    fun updateUser(newUser: User) {
         viewModelScope.launch {
             UserRepository.updateUser(newUser)
             userUpdated.postValue(true)
         }
     }
 
-    fun createNewSwap(targetId : String) : LiveData<Boolean>{
+    fun createNewSwap(targetId: String): LiveData<Boolean> {
         val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val success = SwapRepository.createNewSwap(targetId)
-            if(success) {
-                listenOnCurrentSwap { field, value ->
-                    //Here put the callback to call when a pokemonId changed in the current swap
-                    Log.e("RealTimeListener", "${field} : ${value.toString()}")
-                }
-            }
             liveData.postValue(success)
         }
         return liveData
     }
 
-    fun sendPokemonToSwap(pokemonId : Int){
+    fun sendPokemonToSwap(pokemonId: Int) {
         viewModelScope.launch {
             SwapRepository.setPokemonToSwap(pokemonId)
         }
     }
 
-    private fun listenOnCurrentSwap(callback : (String, Int) -> Unit){
-        SwapRepository.listenOnCurrentSwap(callback)
-    }
-
-    fun setNotificationListener(callback: (RealTimeDatabaseEvent) -> Unit){
-        viewModelScope.launch {
-            UserRepository.setNotificationListener { event ->
-                if(event is RealTimeDatabaseEvent.SWAP_DEMAND && event.userToken.isNotEmpty()){
-                    SwapRepository.setCurrentSwapName("${event.userToken}_${UserRepository.getConnectedUser().UserToken}")
-                }else if(event is RealTimeDatabaseEvent.SWAP_RESPONSE){
-                    if (!event.response){
-                        viewModelScope.launch {
-                            SwapRepository.endSwap()
-                        }
-                    }
+    fun listenOnCurrentSwap(callback: (pokemon : Pokemon) -> Unit) {
+        SwapRepository.listenOnCurrentSwap{event ->
+            if(event is RealTimeDatabaseEvent.SWAP_POKEMON_CHANGED) {
+                viewModelScope.launch {
+                    val pokemon = PokemonRepository.getPokemonById(event.pokemonId)
+                    pokemon?.let(callback)
                 }
-                callback(event)
             }
         }
     }
 
-    fun getNameOf(userToken : String) : LiveData<String>{
+    fun setNotificationListener(callback: (RealTimeDatabaseEvent) -> Unit) {
+        UserRepository.setNotificationListener { event ->
+            if (event is RealTimeDatabaseEvent.SWAP_DEMAND && event.userToken.isNotEmpty()) {
+                SwapRepository.setCurrentSwapName("${event.userToken}_${UserRepository.getConnectedUser().UserToken}")
+            } else if (event is RealTimeDatabaseEvent.SWAP_RESPONSE) {
+                if (!event.response) {
+                    viewModelScope.launch {
+                        SwapRepository.endSwap()
+                    }
+                }
+            }
+            callback(event)
+        }
+    }
+
+    fun getNameOf(userToken: String): LiveData<String> {
         val liveData = MutableLiveData<String>()
         viewModelScope.launch {
             val data = UserRepository.getNameOf(userToken)
-            if(data == null){
+            if (data == null) {
                 liveData.postValue("")
             }
             data?.let {
@@ -324,19 +326,36 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun sendSwapResponse(response : Boolean){
+    fun sendSwapResponse(response: Boolean) {
         viewModelScope.launch {
-            if(response){
+            if (response) {
                 SwapRepository.sendSwapAccept()
-            }else{
+            } else {
                 SwapRepository.sendSwapDeny()
             }
         }
     }
 
-    fun endSwap(){
+    fun endSwap() : LiveData<Boolean> {
+        val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
-            SwapRepository.endSwap()
+            val data = SwapRepository.endSwap()
+            liveData.postValue(data)
         }
+        return liveData
+    }
+
+    fun getSwaperName(): LiveData<String> {
+        val liveData = MutableLiveData<String>()
+        viewModelScope.launch {
+            val data = UserRepository.getNameOf(SwapRepository.getSwaperToken())
+            if (data == null) {
+                liveData.postValue("")
+            }
+            data?.let {
+                liveData.postValue(it)
+            }
+        }
+        return liveData
     }
 }
