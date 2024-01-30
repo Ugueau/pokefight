@@ -1,7 +1,8 @@
 package com.example.pokefight.ui.swap
 
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,17 +11,29 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.pokefight.R
-import com.example.pokefight.domain.SwapRepository
-import com.example.pokefight.domain.UserRepository
 import com.example.pokefight.ui.MainViewModel
 
 class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
 
-    val mainViewModel by activityViewModels<MainViewModel>()
-    var hasClicked = false
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val mainViewModel by activityViewModels<MainViewModel>()
+    private var hasClicked = false
+    private var hasAccepted = false
 
+
+    interface OnAcceptedListenner {
+        fun onDialogAcceptedSwap()
+    }
+
+    private var onAcceptedSListenner: OnAcceptedListenner? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        try {
+            onAcceptedSListenner = context as OnAcceptedListenner
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$context must implement OnDialogDismissListener")
+        }
     }
 
     override fun onCreateView(
@@ -41,8 +54,9 @@ class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
 
         acceptBtn.setOnClickListener{
             hasClicked = true
-            dismiss()
             mainViewModel.sendSwapResponse(true)
+            hasAccepted = true
+            dismiss()
         }
 
         denyBtn.setOnClickListener{
@@ -65,6 +79,13 @@ class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
         if(!hasClicked){
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwap()
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if(hasAccepted){
+            onAcceptedSListenner?.onDialogAcceptedSwap()
         }
     }
 }

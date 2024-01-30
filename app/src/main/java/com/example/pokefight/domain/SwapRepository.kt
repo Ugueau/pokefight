@@ -34,7 +34,6 @@ object SwapRepository {
     suspend fun sendSwapAccept(){
         val creatorToken = currentSwap.split("_")[0]
         DSRealTimeDatabase.sendSwapAccept(creatorToken)
-        DSRealTimeDatabase.sendSwapAccept(UserRepository.getConnectedUser().UserToken)
     }
 
     suspend fun sendSwapDeny(){

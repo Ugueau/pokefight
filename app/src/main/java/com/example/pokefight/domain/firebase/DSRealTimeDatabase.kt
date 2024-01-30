@@ -32,6 +32,7 @@ object DSRealTimeDatabase {
         }.await()
 
         //Send swap notif to target
+        Log.e("tes sur ?", "oui")
         realtime.child("users").child(targetToken).child("swap").child("fromUser").setValue(creatorToken).addOnFailureListener {
             success = false
         }.await()
@@ -119,6 +120,7 @@ object DSRealTimeDatabase {
                 snapshot.child("fromUser").key?.let { field ->
                     snapshot.child("fromUser").getValue<String>()?.let { value ->
                         if(value.isNotEmpty()) {
+                            Log.e("fromUser", value)
                             callback(RealTimeDatabaseEvent.SWAP_DEMAND(value))
                         }
                     }
@@ -126,9 +128,11 @@ object DSRealTimeDatabase {
                 snapshot.child("hasAccepted").key?.let { field ->
                     snapshot.child("hasAccepted").getValue<String>()?.let{value ->
                         if(value == "accepted"){
+                            Log.e("hasaccepted", value)
                             callback(RealTimeDatabaseEvent.SWAP_RESPONSE(true))
                         }else if(value == "denied"){
                             callback(RealTimeDatabaseEvent.SWAP_RESPONSE(false))
+                            Log.e("hasaccepted", value)
                         }
                     }
                 }

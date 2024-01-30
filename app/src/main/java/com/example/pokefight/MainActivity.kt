@@ -22,7 +22,7 @@ import com.example.pokefight.ui.swap.PopupSwapDemand
 import com.example.pokefight.ui.swap.SwapActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), PopupSwapDemand.OnAcceptedListenner{
 
     private lateinit var binding: ActivityMainBinding
     val mainViewModel by viewModels<MainViewModel>()
@@ -111,5 +111,10 @@ class MainActivity : AppCompatActivity(){
                 }
             }
         }
+    }
+
+    override fun onDialogAcceptedSwap() {
+        val intent = Intent(this, SwapActivity::class.java)
+        startActivity(intent)
     }
 }
