@@ -80,7 +80,8 @@ class LoginActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT,
                     ).show()
 
-                    mainViewModel.connectUser(it);
+                    mainViewModel.connectUser(it)
+                    mainViewModel.endSwapDemand()
 
                     mainActivity = Intent(this, MainActivity::class.java)
                     startActivity(mainActivity)

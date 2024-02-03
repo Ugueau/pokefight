@@ -189,18 +189,4 @@ object DSRealTimeDatabase {
             realtime.child("swap").child(swapName).child("hasValidated").setValue(nbOfValidation + 1)
         }.await()
     }
-
-    suspend fun getSwapedPokemonFrom(swapName : String, userToken: String) : Int {
-        var pokemonId = -1
-        if(swapName.split("_")[0] == userToken){
-            realtime.child("swap").child(swapName).child("creator_${userToken}").get().addOnSuccessListener {
-                pokemonId = (it.value as Long).toInt()
-            }.await()
-        }else{
-            realtime.child("swap").child(swapName).child("target_${userToken}").get().addOnSuccessListener {
-                pokemonId = (it.value as Long).toInt()
-            }.await()
-        }
-        return pokemonId
-    }
 }

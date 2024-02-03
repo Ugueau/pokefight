@@ -373,9 +373,12 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun swapPokemons() {
+    fun swapPokemons(pokemonId1 : Int, pokemonId2 : Int) : LiveData<Boolean> {
+        val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
-            SwapRepository.swapPokemons()
+            val data = SwapRepository.swapPokemons(pokemonId1, pokemonId2)
+            liveData.postValue(data)
         }
+        return liveData
     }
 }

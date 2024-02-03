@@ -118,20 +118,45 @@ object DSFireStore {
         firestore.collection("users").document(user.UserToken).update(userUpdate).await()
     }
 
-    suspend fun swapPokemon(pokemon1 : Int, pokemon2 : Int, userToken1 : String, userToken2 : String) {
-        val discoveredFromUser1 = mutableListOf<Int>()
-        val document1 = firestore.collection("users").document(userToken1).get().await()
-        if (document1 != null) {
-            (document1.get("discovered") as? List<Int>)?.let {
-                discoveredFromUser1.addAll(it)
+    suspend fun swapPokemon(pokemon1 : Int, pokemon2 : Int, userToken1 : String, userToken2 : String) : Boolean {
+        var success = true
+        val tmp1 = mutableListOf<Int>()
+        firestore.collection("users").document(userToken1).get().addOnSuccessListener {doc ->
+            if (doc != null) {
+                (doc.get("discovered") as? List<Int>)?.let {dpList ->
+                    dpList.forEach {
+                        tmp1.add(it)
+                    }
+                }
             }
+        }.addOnFailureListener {
+            Log.e("swapPokemon Failed", it.message.toString())
+            success = false
+        }.await()
+
+
+        val tmp2 = mutableListOf<Int>()
+        firestore.collection("users").document(userToken2).get().addOnSuccessListener {doc ->
+            if (doc != null) {
+                (doc.get("discovered") as? List<Int>)?.let {dpList ->
+                    dpList.forEach {
+                        tmp2.add(it)
+                    }
+                }
+            }
+        }.addOnFailureListener {
+            Log.e("swapPokemon Failed", it.message.toString())
+            success = false
+        }.await()
+
+
+        val discoveredFromUser1 = mutableListOf<Int>()
+        if (tmp1.isNotEmpty()){
+            discoveredFromUser1.addAll(tmp1 as List<Int>)
         }
         val discoveredFromUser2 = mutableListOf<Int>()
-        val document2 = firestore.collection("users").document(userToken2).get().await()
-        if (document2 != null) {
-            (document2.get("discovered") as? List<Int>)?.let {
-                discoveredFromUser2.addAll(it)
-            }
+        if (tmp2.isNotEmpty()){
+            discoveredFromUser2.addAll(tmp2 as List<Int>)
         }
 
         discoveredFromUser1.remove(pokemon1)
@@ -144,10 +169,15 @@ object DSFireStore {
             discoveredFromUser2.add(pokemon1)
         }
 
-        Log.e("updateDP", "discoveredFromUser1 : $discoveredFromUser1 <- $pokemon1")
-        Log.e("updateDP", "discoveredFromUser2 : $discoveredFromUser2 <- $pokemon2 ")
+        firestore.collection("users").document(userToken1).update("discovered", discoveredFromUser1.toList()).addOnFailureListener {
+            Log.e("swapPokemon Failed", it.message.toString())
+            success = false
+        }
+        firestore.collection("users").document(userToken2).update("discovered", discoveredFromUser2.toList()).addOnFailureListener {
+            Log.e("swapPokemon Failed", it.message.toString())
+            success = false
+        }
 
-        firestore.collection("users").document(userToken1).update("discovered", discoveredFromUser1.toList())
-        firestore.collection("users").document(userToken2).update("discovered", discoveredFromUser2.toList())
+        return success
     }
 }

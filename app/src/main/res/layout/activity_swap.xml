@@ -5,19 +5,20 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     tools:context=".ui.swap.SwapActivity" >
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleX="1.4"
-        android:scaleY="1.4"
-        android:src="@mipmap/swap_bckg_foreground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView5"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:scaleX="1.4"-->
+<!--        android:scaleY="1.4"-->
+<!--        android:src="@mipmap/swap_bckg_foreground"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <TextView
         android:id="@+id/swap_userName2"
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
+        android:textColor="?attr/colorOnSurface"
         android:text="TextView"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -35,29 +37,30 @@
         android:id="@+id/swap_pokemon1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="110dp"
-        android:layout_marginBottom="200dp"
+        android:padding="16dp"
         android:scaleX="5"
         android:scaleY="5"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/swap_buttons"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars"/>
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
         android:id="@+id/swap_pokemon2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="100dp"
+
         android:padding="16dp"
         android:scaleX="5"
         android:scaleY="5"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/swap_userName2"
         tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
+        android:id="@+id/swap_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -87,29 +90,61 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/swap_pokemonName1"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
         android:layout_marginTop="24dp"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/swap_pokemon1"
-        app:layout_constraintStart_toStartOf="@+id/swap_pokemon1"
-        app:layout_constraintTop_toBottomOf="@+id/swap_pokemon1"
-        android:textColor="@color/md_theme_light_onPrimary" />
-
-    <TextView
-        android:id="@+id/swap_pokemonName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:layout_marginTop="24dp"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="@+id/swap_pokemon2"
         app:layout_constraintStart_toStartOf="@+id/swap_pokemon2"
-        app:layout_constraintTop_toBottomOf="@+id/swap_pokemon2"
-        android:textColor="@color/md_theme_light_onPrimary"/>
+        app:layout_constraintTop_toBottomOf="@+id/swap_pokemon2">
+
+        <TextView
+            android:id="@+id/swap_pokemonId2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_margin="8dp"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/swap_pokemonName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text=""
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/swap_pokemon1"
+        app:layout_constraintStart_toStartOf="@+id/swap_pokemon1"
+        app:layout_constraintEnd_toEndOf="@+id/swap_pokemon1">
+
+        <TextView
+            android:id="@+id/swap_pokemonId1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_margin="8dp"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/swap_pokemonName1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text=""
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

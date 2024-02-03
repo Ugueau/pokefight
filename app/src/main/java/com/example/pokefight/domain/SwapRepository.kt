@@ -1,5 +1,6 @@
 package com.example.pokefight.domain
 
+import android.util.Log
 import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.RealTimeDatabaseEvent
@@ -60,13 +61,13 @@ object SwapRepository {
         }
     }
 
-    suspend fun swapPokemons(){
+    suspend fun swapPokemons(pokemonId1 : Int, pokemonId2 : Int) : Boolean{
+        var success = false
         if(currentSwap.split("_")[0] == UserRepository.getConnectedUser().UserToken){
-            val pokemon1 = DSRealTimeDatabase.getSwapedPokemonFrom(currentSwap,currentSwap.split("_")[0])
-            val pokemon2 = DSRealTimeDatabase.getSwapedPokemonFrom(currentSwap,currentSwap.split("_")[1])
-            DSFireStore.swapPokemon(pokemon1,pokemon2,currentSwap.split("_")[0],currentSwap.split("_")[1])
+            success = DSFireStore.swapPokemon(pokemonId1,pokemonId2,currentSwap.split("_")[0],currentSwap.split("_")[1])
             DSRealTimeDatabase.closeSwap(currentSwap)
         }
         clearSwapDemand()
+        return success
     }
 }
