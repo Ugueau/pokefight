@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
         }
         val btn2 = view.findViewById<Button>(R.id.Swap)
         btn2.setOnClickListener {
-            mainViewModel.sendPokemonToSwap(142)
+            mainViewModel.validateSwap()
         }
     }
 

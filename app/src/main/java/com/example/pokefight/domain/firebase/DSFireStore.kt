@@ -115,6 +115,39 @@ object DSFireStore {
             "trophy" to user.Trophy,
             "pokedollar" to user.pokedollar
         )
-        firestore.collection("users").document(user.UserToken).update(userUpdate)
+        firestore.collection("users").document(user.UserToken).update(userUpdate).await()
+    }
+
+    suspend fun swapPokemon(pokemon1 : Int, pokemon2 : Int, userToken1 : String, userToken2 : String) {
+        val discoveredFromUser1 = mutableListOf<Int>()
+        val document1 = firestore.collection("users").document(userToken1).get().await()
+        if (document1 != null) {
+            (document1.get("discovered") as? List<Int>)?.let {
+                discoveredFromUser1.addAll(it)
+            }
+        }
+        val discoveredFromUser2 = mutableListOf<Int>()
+        val document2 = firestore.collection("users").document(userToken2).get().await()
+        if (document2 != null) {
+            (document2.get("discovered") as? List<Int>)?.let {
+                discoveredFromUser2.addAll(it)
+            }
+        }
+
+        discoveredFromUser1.remove(pokemon1)
+        if(!discoveredFromUser1.toList().contains(pokemon2)) {
+            discoveredFromUser1.add(pokemon2)
+        }
+
+        discoveredFromUser2.remove(pokemon2)
+        if(!discoveredFromUser2.toList().contains(pokemon1)) {
+            discoveredFromUser2.add(pokemon1)
+        }
+
+        Log.e("updateDP", "discoveredFromUser1 : $discoveredFromUser1 <- $pokemon1")
+        Log.e("updateDP", "discoveredFromUser2 : $discoveredFromUser2 <- $pokemon2 ")
+
+        firestore.collection("users").document(userToken1).update("discovered", discoveredFromUser1.toList())
+        firestore.collection("users").document(userToken2).update("discovered", discoveredFromUser2.toList())
     }
 }

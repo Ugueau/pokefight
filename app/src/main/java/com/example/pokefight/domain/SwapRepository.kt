@@ -1,5 +1,6 @@
 package com.example.pokefight.domain
 
+import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.RealTimeDatabaseEvent
 
@@ -18,8 +19,8 @@ object SwapRepository {
         DSRealTimeDatabase.setPokemonToSwap(currentSwap, UserRepository.getConnectedUser().UserToken, pokemonId)
     }
 
-    suspend fun endSwap() : Boolean{
-        val succeeded = DSRealTimeDatabase.closeSwap(currentSwap, UserRepository.getConnectedUser().UserToken)
+    suspend fun clearSwapDemand() : Boolean{
+        val succeeded = DSRealTimeDatabase.clearSwapDemand(UserRepository.getConnectedUser().UserToken)
         currentSwap = ""
         return succeeded
     }
@@ -51,5 +52,21 @@ object SwapRepository {
         }else{
             return ""
         }
+    }
+
+    suspend fun validateSwap() {
+        if(currentSwap.isNotEmpty()) {
+            DSRealTimeDatabase.validateSwap(currentSwap)
+        }
+    }
+
+    suspend fun swapPokemons(){
+        if(currentSwap.split("_")[0] == UserRepository.getConnectedUser().UserToken){
+            val pokemon1 = DSRealTimeDatabase.getSwapedPokemonFrom(currentSwap,currentSwap.split("_")[0])
+            val pokemon2 = DSRealTimeDatabase.getSwapedPokemonFrom(currentSwap,currentSwap.split("_")[1])
+            DSFireStore.swapPokemon(pokemon1,pokemon2,currentSwap.split("_")[0],currentSwap.split("_")[1])
+            DSRealTimeDatabase.closeSwap(currentSwap)
+        }
+        clearSwapDemand()
     }
 }

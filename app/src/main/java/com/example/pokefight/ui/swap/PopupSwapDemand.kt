@@ -28,11 +28,10 @@ class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
         try {
             onAcceptedSListenner = context as OnAcceptedListenner
         } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnDialogDismissListener")
+            throw ClassCastException("$context must implement OnAcceptedListenner")
         }
     }
 
@@ -46,7 +45,7 @@ class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val creatorDemand = view.findViewById<TextView>(R.id.swapPopup_creatorName)
+        val creatorDemand = view.findViewById<TextView>(R.id.swapPopup_text)
         creatorDemand.text = "$swapCreatorName ask you a swap"
         val acceptBtn = view.findViewById<Button>(R.id.swapAccept)
         val denyBtn = view.findViewById<Button>(R.id.swapDeny)
@@ -62,14 +61,14 @@ class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
         denyBtn.setOnClickListener{
             hasClicked = true
             mainViewModel.sendSwapResponse(false)
-            mainViewModel.endSwap()
+            mainViewModel.endSwapDemand()
             dismiss()
         }
 
         closeBtn.setOnClickListener{
             hasClicked = true
             mainViewModel.sendSwapResponse(false)
-            mainViewModel.endSwap()
+            mainViewModel.endSwapDemand()
             dismiss()
         }
     }
@@ -78,7 +77,7 @@ class PopupSwapDemand(val swapCreatorName : String) : DialogFragment() {
         super.onDestroy()
         if(!hasClicked){
             mainViewModel.sendSwapResponse(false)
-            mainViewModel.endSwap()
+            mainViewModel.endSwapDemand()
         }
     }
 

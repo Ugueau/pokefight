@@ -1,6 +1,5 @@
 package com.example.pokefight.ui
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.SwapRepository
@@ -15,6 +14,8 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     val teamUpdated = MutableLiveData<Boolean>()
     val userUpdated = MutableLiveData<Boolean>()
+    val pokemonSelected = MutableLiveData<Int>()
+    val nbOfValidation = MutableLiveData<Int>()
 
     fun connectUser(connectedUser: User) {
 
@@ -254,11 +255,9 @@ class MainViewModel : ViewModel() {
         val liveData = MutableLiveData<List<Pokemon>>()
         viewModelScope.launch {
             val dp = UserRepository.getDiscoveredPokemon()
-            Log.e("dpi", dp.toString())
             val data = PokemonRepository.getPokemons(dp)
             var log = ""
             data.forEach { pok -> log += pok.stringify() }
-            Log.e("dp2", log)
             liveData.postValue(data)
         }
         return liveData
@@ -291,8 +290,13 @@ class MainViewModel : ViewModel() {
             if(event is RealTimeDatabaseEvent.SWAP_POKEMON_CHANGED) {
                 viewModelScope.launch {
                     val pokemon = PokemonRepository.getPokemonById(event.pokemonId)
-                    pokemon?.let(callback)
+                    pokemon?.let{
+                        callback(it)
+                    }
                 }
+            }
+            if(event is RealTimeDatabaseEvent.SWAP_VALIDATE) {
+                nbOfValidation.postValue(event.nbOfValidation)
             }
         }
     }
@@ -304,7 +308,7 @@ class MainViewModel : ViewModel() {
             } else if (event is RealTimeDatabaseEvent.SWAP_RESPONSE) {
                 if (!event.response) {
                     viewModelScope.launch {
-                        SwapRepository.endSwap()
+                        SwapRepository.clearSwapDemand()
                     }
                 }
             }
@@ -336,10 +340,10 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun endSwap() : LiveData<Boolean> {
+    fun endSwapDemand() : LiveData<Boolean> {
         val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
-            val data = SwapRepository.endSwap()
+            val data = SwapRepository.clearSwapDemand()
             liveData.postValue(data)
         }
         return liveData
@@ -357,5 +361,21 @@ class MainViewModel : ViewModel() {
             }
         }
         return liveData
+    }
+
+    fun setPokemonSelectedForSwap(pokemonId : Int) {
+        pokemonSelected.postValue(pokemonId)
+    }
+
+    fun validateSwap(){
+        viewModelScope.launch {
+            SwapRepository.validateSwap()
+        }
+    }
+
+    fun swapPokemons() {
+        viewModelScope.launch {
+            SwapRepository.swapPokemons()
+        }
     }
 }

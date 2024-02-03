@@ -1,7 +1,6 @@
 package com.example.pokefight.ui.equipe
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import com.example.pokefight.databinding.FragmentEquipeBinding
 import com.example.pokefight.ui.MainViewModel
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pokefight.model.Pokemon
-import com.example.pokefight.model.stringify
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class EquipeFragment : Fragment() {

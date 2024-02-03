@@ -35,23 +35,27 @@
         android:id="@+id/swap_pokemon1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="75dp"
-        android:layout_marginBottom="180dp"
-        android:scaleX="10"
-        android:scaleY="10"
+        android:layout_marginStart="110dp"
+        android:layout_marginBottom="200dp"
+        android:scaleX="5"
+        android:scaleY="5"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:srcCompat="@tools:sample/avatars"/>
 
     <ImageView
         android:id="@+id/swap_pokemon2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="65dp"
-        android:layout_marginTop="10dp"
-        android:scaleX="10"
-        android:scaleY="10"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="100dp"
+        android:padding="16dp"
+        android:scaleX="5"
+        android:scaleY="5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swap_userName2"/>
+        app:layout_constraintTop_toBottomOf="@+id/swap_userName2"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,4 +86,30 @@
             android:layout_margin="16dp"
             android:layout_weight="1"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/swap_pokemonName1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="24dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/swap_pokemon1"
+        app:layout_constraintStart_toStartOf="@+id/swap_pokemon1"
+        app:layout_constraintTop_toBottomOf="@+id/swap_pokemon1"
+        android:textColor="@color/md_theme_light_onPrimary" />
+
+    <TextView
+        android:id="@+id/swap_pokemonName2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="24dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/swap_pokemon2"
+        app:layout_constraintStart_toStartOf="@+id/swap_pokemon2"
+        app:layout_constraintTop_toBottomOf="@+id/swap_pokemon2"
+        android:textColor="@color/md_theme_light_onPrimary"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

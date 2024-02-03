@@ -27,12 +27,11 @@ object DSRealTimeDatabase {
         realtime.child("swap").child("${creatorToken}_${targetToken}").child("target_$targetToken").setValue(-1).addOnFailureListener {
             success = false
         }.await()
-        realtime.child("swap").child("${creatorToken}_${targetToken}").child("isFinished").setValue(false).addOnFailureListener {
+        realtime.child("swap").child("${creatorToken}_${targetToken}").child("hasValidated").setValue(0).addOnFailureListener {
             success = false
         }.await()
 
         //Send swap notif to target
-        Log.e("tes sur ?", "oui")
         realtime.child("users").child(targetToken).child("swap").child("fromUser").setValue(creatorToken).addOnFailureListener {
             success = false
         }.await()
@@ -50,11 +49,16 @@ object DSRealTimeDatabase {
         realtime.child("swap").child(swapName).child(pokemonFrom).setValue(pokemonId).await()
     }
 
-    suspend fun closeSwap(swapName : String, userToken: String) : Boolean{
+    suspend fun closeSwap(swapName : String) : Boolean{
         var success = true
         realtime.child("swap").child(swapName).removeValue().addOnFailureListener{
             success = false
         }.await()
+        return success
+    }
+
+    suspend fun clearSwapDemand(userToken: String) : Boolean {
+        var success = true
         realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").addOnFailureListener {
             success = false
         }
@@ -76,6 +80,11 @@ object DSRealTimeDatabase {
                     if(field.contains(swaperToken)){
                         snapshot.getValue<Int>()?.let{pokemonId ->
                             callback(RealTimeDatabaseEvent.SWAP_POKEMON_CHANGED(pokemonId))
+                        }
+                    }
+                    if(field == "hasValidated"){
+                        snapshot.getValue<Int>()?.let{nbOfValidation ->
+                            callback(RealTimeDatabaseEvent.SWAP_VALIDATE(nbOfValidation))
                         }
                     }
                 }
@@ -120,7 +129,6 @@ object DSRealTimeDatabase {
                 snapshot.child("fromUser").key?.let { field ->
                     snapshot.child("fromUser").getValue<String>()?.let { value ->
                         if(value.isNotEmpty()) {
-                            Log.e("fromUser", value)
                             callback(RealTimeDatabaseEvent.SWAP_DEMAND(value))
                         }
                     }
@@ -128,11 +136,9 @@ object DSRealTimeDatabase {
                 snapshot.child("hasAccepted").key?.let { field ->
                     snapshot.child("hasAccepted").getValue<String>()?.let{value ->
                         if(value == "accepted"){
-                            Log.e("hasaccepted", value)
                             callback(RealTimeDatabaseEvent.SWAP_RESPONSE(true))
                         }else if(value == "denied"){
                             callback(RealTimeDatabaseEvent.SWAP_RESPONSE(false))
-                            Log.e("hasaccepted", value)
                         }
                     }
                 }
@@ -163,5 +169,38 @@ object DSRealTimeDatabase {
         if(creatorToken.isNotEmpty()){
             realtime.child("users").child(creatorToken).child("swap").child("hasAccepted").setValue("denied").await()
         }
+    }
+
+    suspend fun validateSwap(swapName: String){
+        realtime.child("swap").child(swapName).child("hasValidated").get().addOnSuccessListener {
+            val nbOfValidation = it.value as Long
+            if(nbOfValidation.toInt() == 1){
+                val creatorToken = swapName.split("_")[0]
+                val targetToken = swapName.split("_")[1]
+                realtime.child("swap").child(swapName).child("creator_${creatorToken}").get().addOnSuccessListener {p1 ->
+                    val pokemon1 = p1.value as Long
+                    realtime.child("swap").child(swapName).child("target_${targetToken}").get().addOnSuccessListener {p2 ->
+                        val pokemon2 = p2.value as Long
+                        realtime.child("swap").child(swapName).child("creator_${creatorToken}").setValue(pokemon2)
+                        realtime.child("swap").child(swapName).child("target_${targetToken}").setValue(pokemon1)
+                    }
+                }
+            }
+            realtime.child("swap").child(swapName).child("hasValidated").setValue(nbOfValidation + 1)
+        }.await()
+    }
+
+    suspend fun getSwapedPokemonFrom(swapName : String, userToken: String) : Int {
+        var pokemonId = -1
+        if(swapName.split("_")[0] == userToken){
+            realtime.child("swap").child(swapName).child("creator_${userToken}").get().addOnSuccessListener {
+                pokemonId = (it.value as Long).toInt()
+            }.await()
+        }else{
+            realtime.child("swap").child(swapName).child("target_${userToken}").get().addOnSuccessListener {
+                pokemonId = (it.value as Long).toInt()
+            }.await()
+        }
+        return pokemonId
     }
 }
