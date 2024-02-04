@@ -77,6 +77,7 @@ class SwapActivity : AppCompatActivity(){
                 if(pokemonId1 != -1 && pokemonId2 != -1) {
                     mainViewModel.swapPokemons(pokemonId1, pokemonId2).observe(this){success ->
                         if(success){
+
                             Toast.makeText(baseContext, "Swap successfully ended", Toast.LENGTH_SHORT)
                                 .show()
                         }else{

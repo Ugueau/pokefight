@@ -62,11 +62,23 @@ object SwapRepository {
     }
 
     suspend fun swapPokemons(pokemonId1 : Int, pokemonId2 : Int) : Boolean{
-        var success = false
-        if(currentSwap.split("_")[0] == UserRepository.getConnectedUser().UserToken){
-            success = DSFireStore.swapPokemon(pokemonId1,pokemonId2,currentSwap.split("_")[0],currentSwap.split("_")[1])
-            DSRealTimeDatabase.closeSwap(currentSwap)
+        var success = true
+
+        val teams = UserRepository.getTeam()
+        teams.forEach {pokemon ->
+            if(pokemon.id == pokemonId1){
+                UserRepository.removeFromTeam(pokemonId1)
+            }
         }
+
+        UserRepository.addDiscoveredPokemon(pokemonId2)
+        UserRepository.removeDiscoveredPokemon(pokemonId1)
+
+        //Only the creator of the swap delete it
+        if(currentSwap.split("_")[0] == UserRepository.getConnectedUser().UserToken){
+            success = success && DSRealTimeDatabase.closeSwap(currentSwap)
+        }
+
         clearSwapDemand()
         return success
     }

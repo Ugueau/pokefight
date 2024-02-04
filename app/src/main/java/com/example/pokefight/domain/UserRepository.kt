@@ -178,11 +178,35 @@ object UserRepository {
         }
     }
 
+    suspend fun removeDiscoveredPokemon(pokemonId : Int) {
+        val user = getConnectedUser()
+        if (user.userId != null) {
+            var alreadyDiscovered = BDDDataSource.getDiscoveredPokemonFromUserId(user.userId)
+            alreadyDiscovered = alreadyDiscovered.toMutableList()
+            alreadyDiscovered.remove(pokemonId)
+            BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
+            DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
+        }
+    }
+
     fun setNotificationListener(callback : (RealTimeDatabaseEvent) -> Unit){
         DSRealTimeDatabase.setNotificationListener(UserRepository.getConnectedUser().UserToken, callback)
     }
 
-    suspend fun getNameOf(userToken : String):String?{
+    suspend fun getNameOf(userToken : String):String? {
         return DSFireStore.getUserByToken(userToken)?.Nickname
     }
+
+    suspend fun removeFromTeam(pokemonToRemove : Int) {
+        val user = getConnectedUser()
+        val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) } as MutableList<Int>
+        teamToUpdate?.let {
+            if (!teamToUpdate.contains(pokemonToRemove)) {
+                teamToUpdate.remove(pokemonToRemove)
+                BDDDataSource.updateTeam(teamToUpdate, user.userId)
+                DSFireStore.insertInTeam(user.UserToken, teamToUpdate)
+            }
+        }
+    }
+
 }
