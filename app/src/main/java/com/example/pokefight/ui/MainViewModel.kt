@@ -238,7 +238,8 @@ class MainViewModel : ViewModel() {
 
     fun addToDiscoveredPokemon(pokemonId: Int) {
         viewModelScope.launch {
-            UserRepository.addDiscoveredPokemon(pokemonId)
+            val newDP = listOf<Int>(pokemonId)
+            UserRepository.addDiscoveredPokemon(newDP)
         }
     }
 

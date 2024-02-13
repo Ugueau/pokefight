@@ -165,16 +165,18 @@ object UserRepository {
         return DSFireAuth.createUserWithEmailAndPassword(email, password)
     }
 
-    suspend fun addDiscoveredPokemon(newPokemonId: Int) {
+    suspend fun addDiscoveredPokemon(newPokemonId: List<Int>) {
         val user = getConnectedUser()
         if (user.userId != null) {
             var alreadyDiscovered = BDDDataSource.getDiscoveredPokemonFromUserId(user.userId)
             alreadyDiscovered = alreadyDiscovered.toMutableList()
-            if (!alreadyDiscovered.contains(newPokemonId)) {
-                alreadyDiscovered.add(newPokemonId)
-                BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
-                DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
+            newPokemonId.forEach { pokemonId ->
+                if (!alreadyDiscovered.contains(pokemonId)) {
+                    alreadyDiscovered.add(pokemonId)
+                }
             }
+            BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
+            DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
         }
     }
 

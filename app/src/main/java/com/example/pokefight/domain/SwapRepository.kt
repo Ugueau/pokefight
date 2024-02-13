@@ -81,8 +81,8 @@ object SwapRepository {
                 UserRepository.removeFromTeam(pokemonId1)
             }
         }
-
-        UserRepository.addDiscoveredPokemon(pokemonId2)
+        val newDP = listOf<Int>(pokemonId2)
+        UserRepository.addDiscoveredPokemon(newDP)
         UserRepository.removeDiscoveredPokemon(pokemonId1)
 
 
