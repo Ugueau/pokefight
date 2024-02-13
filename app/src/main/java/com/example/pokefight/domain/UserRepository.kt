@@ -88,12 +88,12 @@ object UserRepository {
         return emptyList()
     }
 
-    suspend fun updateTeam(newPokemonId: Int, oldPokemon: Int) {
+    suspend fun updateTeam(newPokemonId: Int, oldPokemonIndex: Int) {
         val user = getConnectedUser()
         val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) }
         teamToUpdate?.let {
-            if (!teamToUpdate.contains(newPokemonId)) {
-                (teamToUpdate as MutableList<Int>).set(oldPokemon, newPokemonId)
+            if (!teamToUpdate.contains(newPokemonId) && teamToUpdate.size <= 6) {
+                (teamToUpdate as MutableList<Int>).set(oldPokemonIndex, newPokemonId)
                 BDDDataSource.updateTeam(teamToUpdate, user.userId)
                 DSFireStore.insertInTeam(user.UserToken, teamToUpdate)
             }
@@ -202,12 +202,9 @@ object UserRepository {
     suspend fun removeFromTeam(pokemonToRemove : Int) {
         val user = getConnectedUser()
         val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) } as MutableList<Int>
-        Log.e("removeTeam", teamToUpdate.toString())
         teamToUpdate.let {
             if (teamToUpdate.contains(pokemonToRemove)) {
-                Log.e("removeTeam", pokemonToRemove.toString())
-                val rm = teamToUpdate.remove(pokemonToRemove)
-                Log.e("removeTeam", "succeed : ${rm.toString()}")
+                teamToUpdate.remove(pokemonToRemove)
                 BDDDataSource.updateTeam(teamToUpdate, user.userId)
                 DSFireStore.insertInTeam(user.UserToken, teamToUpdate)
             }

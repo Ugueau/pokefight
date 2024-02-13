@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
                 is RealTimeDatabaseEvent.SWAP_DEMAND -> {
                     if (event.userToken != "") {
                         if (currentPopup == null) {
-                            Log.e("demand", event.userToken)
                             mainViewModel.getNameOf(event.userToken).observe(this) { creatorName ->
                                 if (creatorName.isNotEmpty() && currentPopup == null) {
                                     currentPopup = PopupSwapDemand(creatorName)
