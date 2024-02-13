@@ -1,5 +1,6 @@
 package com.example.pokefight.ui
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.SwapRepository
@@ -10,12 +11,14 @@ import com.example.pokefight.model.User
 import com.example.pokefight.model.getRarity
 import com.example.pokefight.model.stringify
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class MainViewModel : ViewModel() {
     val teamUpdated = MutableLiveData<Boolean>()
     val userUpdated = MutableLiveData<Boolean>()
     val pokemonSelected = MutableLiveData<Int>()
     val nbOfValidation = MutableLiveData<Int>()
+    val logout = MutableLiveData<Boolean>()
 
     fun connectUser(connectedUser: User) {
 
@@ -199,11 +202,16 @@ class MainViewModel : ViewModel() {
         val liveData = MutableLiveData<User?>()
         viewModelScope.launch {
             val uid = UserRepository.signIn(email, password)
+            Log.e("signIn", "oui")
             if (uid != null) {
+                Log.e("signIn", "oui2")
                 val user = UserRepository.fetchUser(uid)
+                Log.e("signIn", "oui3")
                 UserRepository.fetchTeam(uid)
+
                 liveData.postValue(user)
             } else {
+                Log.e("signIn", "non")
                 liveData.postValue(null)
             }
         }
@@ -381,5 +389,10 @@ class MainViewModel : ViewModel() {
             liveData.postValue(data)
         }
         return liveData
+    }
+
+    fun logout() {
+        UserRepository.logout()
+        logout.postValue(true)
     }
 }

@@ -29,4 +29,9 @@ object DSFireAuth {
             return null
         }
     }
+
+    fun logout() {
+        val auth = Firebase.auth
+        auth.signOut()
+    }
 }

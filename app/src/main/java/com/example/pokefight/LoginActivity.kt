@@ -1,14 +1,19 @@
 package com.example.pokefight
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -59,7 +64,6 @@ class LoginActivity : AppCompatActivity() {
 
         newUser.setOnClickListener { click -> this.tunnelConnexion() }
     }
-
     fun Connexion() {
 
         //gestion de la connexion du User par defaut
@@ -73,6 +77,7 @@ class LoginActivity : AppCompatActivity() {
 
         } else {
             mainViewModel.signIn(email.text.toString(), password.text.toString()).observe(this) {
+                Log.e("Connexion", "oui")
                 if (it != null) {
                     Toast.makeText(
                         baseContext,
@@ -81,11 +86,11 @@ class LoginActivity : AppCompatActivity() {
                     ).show()
 
                     mainViewModel.connectUser(it)
-                    mainViewModel.endSwapDemand()
-
-                    mainActivity = Intent(this, MainActivity::class.java)
-                    startActivity(mainActivity)
-                    finish()
+                    mainViewModel.endSwapDemand().observe(this){
+                        mainActivity = Intent(this, MainActivity::class.java)
+                        startActivity(mainActivity)
+                        finish()
+                    }
                 } else {
                     Toast.makeText(
                         baseContext,

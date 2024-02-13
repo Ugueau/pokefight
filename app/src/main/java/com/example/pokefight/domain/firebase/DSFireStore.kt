@@ -52,9 +52,12 @@ object DSFireStore {
     }
 
     suspend fun getUserByToken(userToken: String): User? {
+        Log.e("getUserByToken", "$userToken , oui")
         val userDoc = firestore.collection("users").document(userToken)
         var user: User? = null
-        val document = userDoc.get().await()
+        Log.e("getUserByToken", "oui2")
+        val document = userDoc.get().addOnFailureListener { Log.e("getUserByToken", "non") }.await()
+        Log.e("getUserByToken", "oui3")
         if (document != null) {
             user = User(
                 document.getString("email") ?: "",

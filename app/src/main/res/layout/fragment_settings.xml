@@ -10,13 +10,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/primary_container"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/settings_logout">
 
         <TextView
             android:id="@+id/settings_nickname"
@@ -39,9 +39,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:background="@drawable/inverse_primary_container"
-            android:text="TextView"
             android:padding="16dp"
             android:paddingStart="16dp"
+            android:text="TextView"
             android:textColor="?attr/colorOnPrimaryContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,9 +51,9 @@
             android:id="@+id/settings_buttons"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_margin="16dp"
             android:orientation="horizontal"
-            android:layout_gravity="center"
             android:weightSum="5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,28 +64,41 @@
                 android:id="@+id/settings_modify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:background="@drawable/full_button"
                 android:fontFamily="@font/montserrat_regular"
-                android:layout_marginStart="32dp"
                 android:text="Modify"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/settings_buttons"
                 app:layout_constraintStart_toStartOf="@+id/settings_buttons"
-                app:layout_constraintTop_toTopOf="@+id/settings_buttons"
-                app:layout_constraintBottom_toBottomOf="@+id/settings_buttons"/>
+                app:layout_constraintTop_toTopOf="@+id/settings_buttons" />
 
             <Button
                 android:id="@+id/settings_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
                 android:background="@drawable/outlined_button"
                 android:fontFamily="@font/montserrat_regular"
                 android:text="Delete"
-                android:layout_marginEnd="32dp"
                 android:textColor="?attr/colorPrimary"
                 android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="@+id/settings_buttons"
                 app:layout_constraintBottom_toBottomOf="@+id/settings_buttons"
-                app:layout_constraintEnd_toEndOf="@+id/settings_buttons"/>
+                app:layout_constraintEnd_toEndOf="@+id/settings_buttons"
+                app:layout_constraintTop_toTopOf="@+id/settings_buttons" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/settings_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Logout"
+        android:textStyle="bold"
+        android:background="@drawable/full_button"
+        android:fontFamily="@font/montserrat_regular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

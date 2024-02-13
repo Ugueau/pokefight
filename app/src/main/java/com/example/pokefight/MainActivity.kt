@@ -70,6 +70,14 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
         navView.setupWithNavController(navController)
 
         activeNotifications()
+
+        mainViewModel.logout.observe(this){
+            if(it) {
+                val i = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(i)
+                finish()
+            }
+        }
     }
 
     fun getPokemons(fromId: Int = 1, toId: Int = fromId + 10, callback: (List<Pokemon>) -> Unit) {
@@ -86,12 +94,6 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
                 callback(pokemon)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        //Must be called by the last destroyed activity
-        DSFireStore.stopFireStoreConnection()
     }
 
     fun activeNotifications() {

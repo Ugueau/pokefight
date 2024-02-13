@@ -38,6 +38,10 @@ class SettingsFragment : Fragment() {
             val popupModifySettings = PopupModifySettings()
             popupModifySettings.show((activity as AppCompatActivity).supportFragmentManager, "popupModifySettings")
         }
+        val logoutBtn = view.findViewById<Button>(R.id.settings_logout)
+        logoutBtn.setOnClickListener{
+            mainViewModel.logout()
+        }
 
         mainViewModel.userUpdated.observe(viewLifecycleOwner){
             user = mainViewModel.getConnectedUser()
