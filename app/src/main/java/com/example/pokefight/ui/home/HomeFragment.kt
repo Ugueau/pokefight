@@ -55,11 +55,6 @@ class HomeFragment : Fragment() {
         val btn = view.findViewById<Button>(R.id.FightButton)
         btn.setOnClickListener {
             mainViewModel.createNewSwap("JU6DqXTpHEbo20TxLcwFdEH3FBO2")
-
-        }
-        val btn2 = view.findViewById<Button>(R.id.Swap)
-        btn2.setOnClickListener {
-            mainViewModel.validateSwap()
         }
     }
 

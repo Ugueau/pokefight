@@ -95,10 +95,19 @@ class SwapActivity : AppCompatActivity(){
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onBackPressed() {
         if(!isSwapFinished){
             mainViewModel.endSwapDemand()
+            isSwapFinished = true
         }
+        super.onBackPressed()
+    }
+    override fun onDestroy() {
+        if(!isSwapFinished){
+            mainViewModel.endSwapDemand().observe(this){
+                isSwapFinished = it
+            }
+        }
+        super.onDestroy()
     }
 }

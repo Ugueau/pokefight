@@ -201,7 +201,7 @@ object UserRepository {
         val user = getConnectedUser()
         val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) } as MutableList<Int>
         teamToUpdate?.let {
-            if (!teamToUpdate.contains(pokemonToRemove)) {
+            if (teamToUpdate.contains(pokemonToRemove)) {
                 teamToUpdate.remove(pokemonToRemove)
                 BDDDataSource.updateTeam(teamToUpdate, user.userId)
                 DSFireStore.insertInTeam(user.UserToken, teamToUpdate)

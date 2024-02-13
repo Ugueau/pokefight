@@ -21,6 +21,10 @@ object SwapRepository {
     }
 
     suspend fun clearSwapDemand() : Boolean{
+        //Only the creator of the swap delete it
+        if(currentSwap.isNotEmpty() && currentSwap.split("_")[0] == UserRepository.getConnectedUser().UserToken){
+            DSRealTimeDatabase.closeSwap(currentSwap)
+        }
         val succeeded = DSRealTimeDatabase.clearSwapDemand(UserRepository.getConnectedUser().UserToken)
         currentSwap = ""
         return succeeded
@@ -34,13 +38,20 @@ object SwapRepository {
         currentSwap = newCurrentSwap
     }
     suspend fun sendSwapAccept(){
-        val creatorToken = currentSwap.split("_")[0]
-        DSRealTimeDatabase.sendSwapAccept(creatorToken)
+        if(currentSwap.isNotEmpty()) {
+            val creatorToken = currentSwap.split("_")[0]
+            DSRealTimeDatabase.sendSwapAccept(creatorToken)
+        }
     }
 
     suspend fun sendSwapDeny(){
-        val creatorToken = currentSwap.split("_")[0]
-        DSRealTimeDatabase.sendSwapDeny(creatorToken)
+        if(currentSwap.isNotEmpty()) {
+            val tmp = currentSwap
+            val creatorToken = tmp.split("_")[0]
+            DSRealTimeDatabase.sendSwapDeny(creatorToken)
+            val targetToken = tmp.split("_")[1]
+            DSRealTimeDatabase.sendSwapDeny(targetToken)
+        }
     }
 
     fun getSwaperToken() : String{
@@ -74,10 +85,6 @@ object SwapRepository {
         UserRepository.addDiscoveredPokemon(pokemonId2)
         UserRepository.removeDiscoveredPokemon(pokemonId1)
 
-        //Only the creator of the swap delete it
-        if(currentSwap.split("_")[0] == UserRepository.getConnectedUser().UserToken){
-            success = success && DSRealTimeDatabase.closeSwap(currentSwap)
-        }
 
         clearSwapDemand()
         return success

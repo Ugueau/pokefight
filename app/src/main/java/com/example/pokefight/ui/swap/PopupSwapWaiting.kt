@@ -1,10 +1,9 @@
 package com.example.pokefight.ui.swap
 
-import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,29 +15,11 @@ import androidx.fragment.app.activityViewModels
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
 
-class PopupSwapDemand(private val swaperName : String) : DialogFragment() {
+class PopupSwapWaiting (private val swaperToken : String): DialogFragment() {
 
     private val mainViewModel by activityViewModels<MainViewModel>()
     private var hasClicked = false
-    private var hasAccepted = false
-
-
-    interface OnDialogDestroyListenner {
-        fun onDialogAcceptedSwap()
-        fun onDialogDismiss()
-    }
-
-    private var onDestroyListenner: OnDialogDestroyListenner? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            onDestroyListenner = context as OnDialogDestroyListenner
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnAcceptedListenner")
-        }
-    }
-
+    private var response = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,20 +35,18 @@ class PopupSwapDemand(private val swaperName : String) : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        super.onViewCreated(view, savedInstanceState)
         val creatorDemand = view.findViewById<TextView>(R.id.swapPopup_text)
         val acceptBtn = view.findViewById<Button>(R.id.swapAccept)
         val denyBtn = view.findViewById<Button>(R.id.swapDeny)
         val closeBtn = view.findViewById<Button>(R.id.close_popupSwap)
 
-        acceptBtn.setOnClickListener{
-            hasClicked = true
-            mainViewModel.sendSwapResponse(true)
-            hasAccepted = true
-            dismiss()
+        mainViewModel.getNameOf(swaperToken).observe(this) { name ->
+            acceptBtn.isEnabled = false
+            acceptBtn.visibility = View.INVISIBLE
+            creatorDemand.text = "Waiting for $name"
         }
-
-        creatorDemand.text = "$swaperName ask you a swap"
-
 
         denyBtn.setOnClickListener{
             hasClicked = true
@@ -84,19 +63,15 @@ class PopupSwapDemand(private val swaperName : String) : DialogFragment() {
         }
     }
 
+    fun stopWaiting(response : Boolean) {
+        this.response = response
+        dismiss()
+    }
     override fun onDestroy() {
         super.onDestroy()
-        if(!hasClicked){
+        if(!hasClicked && !response){
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwapDemand()
-        }
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        onDestroyListenner?.onDialogDismiss()
-        if(hasAccepted){
-            onDestroyListenner?.onDialogAcceptedSwap()
         }
     }
 }
