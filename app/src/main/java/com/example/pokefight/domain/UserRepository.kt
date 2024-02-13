@@ -202,9 +202,12 @@ object UserRepository {
     suspend fun removeFromTeam(pokemonToRemove : Int) {
         val user = getConnectedUser()
         val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) } as MutableList<Int>
-        teamToUpdate?.let {
+        Log.e("removeTeam", teamToUpdate.toString())
+        teamToUpdate.let {
             if (teamToUpdate.contains(pokemonToRemove)) {
-                teamToUpdate.remove(pokemonToRemove)
+                Log.e("removeTeam", pokemonToRemove.toString())
+                val rm = teamToUpdate.remove(pokemonToRemove)
+                Log.e("removeTeam", "succeed : ${rm.toString()}")
                 BDDDataSource.updateTeam(teamToUpdate, user.userId)
                 DSFireStore.insertInTeam(user.UserToken, teamToUpdate)
             }
