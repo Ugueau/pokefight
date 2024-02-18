@@ -402,7 +402,7 @@ class MainViewModel : ViewModel() {
         val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val data = ConnectionManager.checkInternetConnection(context)
-            Log.e("checkNetwork", "Network access state : ${data.toString()}")
+            Log.e("checkNetwork", "Network access state : ${data.toString()} ")
             liveData.postValue(data)
         }
         return liveData
