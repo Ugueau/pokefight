@@ -1,5 +1,6 @@
 package com.example.pokefight.ui.pokedex
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentPokedexBinding
 import com.example.pokefight.domain.PokemonRepository
+import com.example.pokefight.domain.api.ConnectionManager
+import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
 
 class PokedexFragment : Fragment() {
@@ -41,6 +44,15 @@ class PokedexFragment : Fragment() {
         recyclerView.layoutManager = recyclerViewLayoutManager
         recyclerView.adapter = recyclerViewAdapter
 
+
+        mainViewModel.checkNetworkConnection(requireContext()).observe(viewLifecycleOwner){isConnected ->
+            if(!isConnected){
+                val i = Intent(requireContext(), ErrorActivity::class.java)
+                startActivity(i)
+                activity?.finish()
+            }
+        }
+
         isLoading = true
         mainViewModel.getDiscoveredPokemonsIds().observe(viewLifecycleOwner) { dp ->
             mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
@@ -62,6 +74,13 @@ class PokedexFragment : Fragment() {
                 val firstVisibleItemPosition =
                     recyclerViewLayoutManager.findFirstVisibleItemPosition()
 
+                mainViewModel.checkNetworkConnection(requireContext()).observe(viewLifecycleOwner){isConnected ->
+                    if(!isConnected){
+                        val i = Intent(requireContext(), ErrorActivity::class.java)
+                        startActivity(i)
+                        activity?.finish()
+                    }
+                }
                 // Check end of the list reached
                 if (totalItemCount < PokemonRepository.MAX_ID && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && !isLoading) {
                     // Load more data

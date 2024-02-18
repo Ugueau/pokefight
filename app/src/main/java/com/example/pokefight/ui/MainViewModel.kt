@@ -1,10 +1,13 @@
 package com.example.pokefight.ui
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.SwapRepository
 import com.example.pokefight.domain.UserRepository
+import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.model.User
@@ -202,16 +205,11 @@ class MainViewModel : ViewModel() {
         val liveData = MutableLiveData<User?>()
         viewModelScope.launch {
             val uid = UserRepository.signIn(email, password)
-            Log.e("signIn", "oui")
             if (uid != null) {
-                Log.e("signIn", "oui2")
                 val user = UserRepository.fetchUser(uid)
-                Log.e("signIn", "oui3")
                 UserRepository.fetchTeam(uid)
-
                 liveData.postValue(user)
             } else {
-                Log.e("signIn", "non")
                 liveData.postValue(null)
             }
         }
@@ -395,4 +393,19 @@ class MainViewModel : ViewModel() {
         UserRepository.logout()
         logout.postValue(true)
     }
+
+    fun connectionLost() {
+        UserRepository.deconnectUser()
+    }
+
+    fun checkNetworkConnection(context : Context) : LiveData<Boolean> {
+        val liveData = MutableLiveData<Boolean>()
+        viewModelScope.launch {
+            val data = ConnectionManager.checkInternetConnection(context)
+            Log.e("checkNetwork", "Network access state : ${data.toString()}")
+            liveData.postValue(data)
+        }
+        return liveData
+    }
+
 }

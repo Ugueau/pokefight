@@ -2,6 +2,7 @@ package com.example.pokefight.domain.firebase
 
 import android.util.Log
 import com.example.pokefight.domain.SwapRepository
+import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
@@ -15,7 +16,6 @@ import kotlinx.coroutines.tasks.await
 object DSRealTimeDatabase {
     private lateinit var realtime: DatabaseReference
     fun startRealTimeConnection() {
-        //TODO connection checking
         realtime =
             Firebase.database("https://pokefight-36871-default-rtdb.europe-west1.firebasedatabase.app").reference
     }
@@ -121,18 +121,18 @@ object DSRealTimeDatabase {
     suspend fun insertUserInRealTimeDatabase(userToken: String) {
         realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("")
             .addOnFailureListener {
-                Log.e("non", "crashed")
+                Log.e("insertUserInRealTimeDatabase", "crashed")
             }.await()
         realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("")
             .addOnFailureListener {
-                Log.e("non", "crashed")
+                Log.e("insertUserInRealTimeDatabase", "failed")
             }.await()
         realtime.child("users").child(userToken).child("friend").setValue("").addOnFailureListener {
-            Log.e("non", "crashed")
+            Log.e("insertUserInRealTimeDatabase", "failed")
         }.await()
         realtime.child("users").child(userToken).child("esp32_swap").setValue("")
             .addOnFailureListener {
-                Log.e("non", "crashed")
+                Log.e("insertUserInRealTimeDatabase", "failed")
             }.await()
     }
 

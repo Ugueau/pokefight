@@ -13,10 +13,14 @@ import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.domain.firebase.DSFireStore
+import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class LoginActivity : AppCompatActivity() {
@@ -60,9 +64,29 @@ class LoginActivity : AppCompatActivity() {
         password = this.findViewById(R.id.InputPassword)
         passwordLayout = this.findViewById(R.id.layoutPassword)
 
-        connexion.setOnClickListener { click -> this.Connexion() }
+        connexion.setOnClickListener { click ->
+            mainViewModel.checkNetworkConnection(this).observe(this){isConnected ->
+                if(isConnected){
+                    this.Connexion()
+                }else {
+                    val i = Intent(applicationContext, ErrorActivity::class.java)
+                    startActivity(i)
+                    finish()
+                }
+            }
+        }
 
-        newUser.setOnClickListener { click -> this.tunnelConnexion() }
+        newUser.setOnClickListener { click ->
+            mainViewModel.checkNetworkConnection(this).observe(this){isConnected ->
+                if(isConnected){
+                    this.tunnelConnexion()
+                }else {
+                    val i = Intent(applicationContext, ErrorActivity::class.java)
+                    startActivity(i)
+                    finish()
+                }
+            }
+        }
     }
     fun Connexion() {
 
@@ -77,7 +101,6 @@ class LoginActivity : AppCompatActivity() {
 
         } else {
             mainViewModel.signIn(email.text.toString(), password.text.toString()).observe(this) {
-                Log.e("Connexion", "oui")
                 if (it != null) {
                     Toast.makeText(
                         baseContext,

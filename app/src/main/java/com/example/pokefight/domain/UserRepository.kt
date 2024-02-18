@@ -62,7 +62,7 @@ object UserRepository {
         //todo a faire quand firebase sera prêt
     }
 
-    private fun deconnectUser(){
+    fun deconnectUser(){
         UserCache.clear()
     }
 
@@ -138,11 +138,8 @@ object UserRepository {
     }
 
     suspend fun fetchUser(userToken: String): User? {
-        Log.e("fetchUser", "oui")
         val user = BDDDataSource.UserExistFromToken(userToken)
-        Log.e("fetchUser", "oui2")
         val userData = DSFireStore.getUserByToken(userToken)
-        Log.e("fetchUser", "oui3")
         if (user?.userId != null) {
             if (userData != null) {
                 BDDDataSource.updateUser(userData, user.userId)

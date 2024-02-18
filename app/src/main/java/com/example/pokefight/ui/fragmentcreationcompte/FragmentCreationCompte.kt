@@ -1,5 +1,6 @@
 package com.example.pokefight.ui.fragmentcreationcompte
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,8 +15,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.R
 import com.example.pokefight.TunnelConnexionActivity
 import com.example.pokefight.VIewModel.UserViewModel
+import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.model.User
+import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.settings.PopupModifySettings
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -54,7 +58,17 @@ class FragmentCreationCompte : Fragment() {
         val view = inflater.inflate(R.layout.fragment_creation_compte, container, false)
 
         createUser = view.findViewById(R.id.CreateUser)
-        createUser.setOnClickListener { click -> this.createUser() }
+        createUser.setOnClickListener { click ->
+            MainViewModel.checkNetworkConnection(requireContext()).observe(viewLifecycleOwner){isConnected ->
+                if(isConnected){
+                    this.createUser()
+                }else {
+                    val i = Intent(requireContext(), ErrorActivity::class.java)
+                    startActivity(i)
+                    activity?.finish()
+                }
+            }
+        }
 
         InputNickname = view.findViewById(R.id.InputCreateNickname)
 
