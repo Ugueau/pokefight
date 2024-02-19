@@ -28,39 +28,27 @@ object DSFireStore {
             "pokedollar" to user.pokedollar
         )
 
-        newUser["team_0"] = 1
-        newUser["team_1"] = 4
-        newUser["team_2"] = 7
-
-        //TODO ajouter la liste des pokemon découvert
-
         var succeed = false
         firestore.collection("users").document(user.UserToken).set(newUser).addOnSuccessListener {
             firestore.collection("users").document(user.UserToken)
                 .update("discovered", listOf(1, 4, 7)).addOnSuccessListener {
                 succeed = true
             }
-        }
+            firestore.collection("users").document(user.UserToken)
+                .update("team", listOf(1, 4, 7)).addOnSuccessListener {
+                    succeed = true
+            }
+        }.await()
 
         return succeed
     }
 
     suspend fun insertInTeam(userToken: String, newTeam: List<Int>) {
-        val teamSize = getTeamFromUserToken(userToken).size
-        if (teamSize < 6) {
-            val team = hashMapOf<String, Any>()
-
-            newTeam.forEachIndexed { index, teamValue ->
-                val fieldName = "team_$index"
-                team[fieldName] = teamValue
-            }
-
-            firestore.collection("users").document(userToken).update(team)
-        }
+        firestore.collection("users").document(userToken).update("team",newTeam).await()
     }
 
     suspend fun insertInDiscoveredPokemon(userToken: String, newDiscoveredList: List<Int>) {
-            firestore.collection("users").document(userToken).update("discovered",newDiscoveredList).await()
+        firestore.collection("users").document(userToken).update("discovered",newDiscoveredList).await()
     }
 
     suspend fun getUserByToken(userToken: String): User? {
@@ -86,10 +74,8 @@ object DSFireStore {
         val team = mutableListOf<Int>()
         val document = userDoc.get().await()
         if (document != null) {
-            for (i in 0..5) {
-                document.getLong("team_$i")?.toInt()?.let {
-                    team.add(it)
-                }
+            (document.get("team") as? List<Int>)?.let {
+                team.addAll(it)
             }
         }
         return team
@@ -115,6 +101,8 @@ object DSFireStore {
             "trophy" to user.Trophy,
             "pokedollar" to user.pokedollar
         )
-        firestore.collection("users").document(user.UserToken).update(userUpdate)
+        firestore.collection("users").document(user.UserToken).update(userUpdate).await()
     }
+
+
 }

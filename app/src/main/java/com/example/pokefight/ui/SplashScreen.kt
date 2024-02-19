@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pokefight.R
 import com.example.pokefight.LoginActivity
+import com.example.pokefight.domain.api.ConnectionManager
 
 class SplashScreen : AppCompatActivity() {
     val mainViewModel by viewModels<MainViewModel>()
@@ -20,10 +21,18 @@ class SplashScreen : AppCompatActivity() {
         val logo = this.findViewById<ImageView>(R.id.splash_logo)
         applyReboundZoomAnimation(logo,5)
 
-        mainViewModel.getPokemonList(1, 30).observe(this) {
-            val i = Intent(applicationContext, LoginActivity::class.java)
-            startActivity(i)
-            finish()
+        mainViewModel.checkNetworkConnection(this).observe(this){isConnected ->
+            if(isConnected){
+                mainViewModel.getPokemonList(1, 30).observe(this) {
+                    val i = Intent(applicationContext, LoginActivity::class.java)
+                    startActivity(i)
+                    finish()
+                }
+            }else{
+                val i = Intent(applicationContext, ErrorActivity::class.java)
+                startActivity(i)
+                finish()
+            }
         }
     }
 

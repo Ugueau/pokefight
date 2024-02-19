@@ -62,7 +62,7 @@ object UserRepository {
         DSFireStore.updateUser(user)
     }
 
-    suspend fun deconnectUser(){
+    fun deconnectUser(){
         UserCache.clear()
     }
 
@@ -88,12 +88,12 @@ object UserRepository {
         return emptyList()
     }
 
-    suspend fun updateTeam(newPokemonId: Int, oldPokemon: Int) {
+    suspend fun updateTeam(newPokemonId: Int, oldPokemonIndex: Int) {
         val user = getConnectedUser()
         val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) }
         teamToUpdate?.let {
-            if (!teamToUpdate.contains(newPokemonId)) {
-                (teamToUpdate as MutableList<Int>).set(oldPokemon, newPokemonId)
+            if (!teamToUpdate.contains(newPokemonId) && teamToUpdate.size <= 6) {
+                (teamToUpdate as MutableList<Int>).set(oldPokemonIndex, newPokemonId)
                 BDDDataSource.updateTeam(teamToUpdate, user.userId)
                 DSFireStore.insertInTeam(user.UserToken, teamToUpdate)
             }
@@ -165,24 +165,54 @@ object UserRepository {
         return DSFireAuth.createUserWithEmailAndPassword(email, password)
     }
 
-    suspend fun addDiscoveredPokemon(newPokemonId: Int) {
+    suspend fun addDiscoveredPokemon(newPokemonId: List<Int>) {
         val user = getConnectedUser()
         if (user.userId != null) {
             var alreadyDiscovered = BDDDataSource.getDiscoveredPokemonFromUserId(user.userId)
             alreadyDiscovered = alreadyDiscovered.toMutableList()
-            if (!alreadyDiscovered.contains(newPokemonId)) {
-                alreadyDiscovered.add(newPokemonId)
-                BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
-                DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
+            newPokemonId.forEach { pokemonId ->
+                if (!alreadyDiscovered.contains(pokemonId)) {
+                    alreadyDiscovered.add(pokemonId)
+                }
+            }
+            BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
+            DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
+        }
+    }
+
+    suspend fun removeDiscoveredPokemon(pokemonId : Int) {
+        val user = getConnectedUser()
+        if (user.userId != null) {
+            var alreadyDiscovered = BDDDataSource.getDiscoveredPokemonFromUserId(user.userId)
+            alreadyDiscovered = alreadyDiscovered.toMutableList()
+            alreadyDiscovered.remove(pokemonId)
+            BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
+            DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
+        }
+    }
+
+    fun setNotificationListener(callback : (RealTimeDatabaseEvent) -> Unit){
+        DSRealTimeDatabase.setNotificationListener(UserRepository.getConnectedUser().UserToken, callback)
+    }
+
+    suspend fun getNameOf(userToken : String):String? {
+        return DSFireStore.getUserByToken(userToken)?.Nickname
+    }
+
+    suspend fun removeFromTeam(pokemonToRemove : Int) {
+        val user = getConnectedUser()
+        val teamToUpdate = user.userId?.let { BDDDataSource.getTeamFromUserId(it) } as MutableList<Int>
+        teamToUpdate.let {
+            if (teamToUpdate.contains(pokemonToRemove)) {
+                teamToUpdate.remove(pokemonToRemove)
+                BDDDataSource.updateTeam(teamToUpdate, user.userId)
+                DSFireStore.insertInTeam(user.UserToken, teamToUpdate)
             }
         }
     }
 
-    suspend fun setNotificationListener(callback : (RealTimeDatabaseEvent) -> Unit){
-        DSRealTimeDatabase.setNotificationListener(UserRepository.getConnectedUser().UserToken, callback)
-    }
-
-    suspend fun getNameOf(userToken : String):String?{
-        return DSFireStore.getUserByToken(userToken)?.Nickname
+    fun logout() {
+        deconnectUser()
+        DSFireAuth.logout()
     }
 }

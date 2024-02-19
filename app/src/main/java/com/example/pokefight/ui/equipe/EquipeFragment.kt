@@ -1,7 +1,7 @@
 package com.example.pokefight.ui.equipe
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +12,9 @@ import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentEquipeBinding
 import com.example.pokefight.ui.MainViewModel
 import androidx.appcompat.app.AppCompatActivity
+import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.model.Pokemon
-import com.example.pokefight.model.stringify
+import com.example.pokefight.ui.ErrorActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class EquipeFragment : Fragment() {
@@ -39,6 +40,14 @@ class EquipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        mainViewModel.checkNetworkConnection(requireContext()).observe(viewLifecycleOwner){isConnected ->
+            if(!isConnected){
+                val i = Intent(requireContext(), ErrorActivity::class.java)
+                startActivity(i)
+                activity?.finish()
+            }
+        }
 
         val addPokemonButton = view.findViewById<FloatingActionButton>(R.id.addPokemon)
         addPokemonButton.setOnClickListener{

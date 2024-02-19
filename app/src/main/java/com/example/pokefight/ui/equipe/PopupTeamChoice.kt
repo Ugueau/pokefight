@@ -50,7 +50,6 @@ class PopupTeamChoice(var pokemonPosToChange: Int) : BottomSheetDialogFragment()
             .observe(viewLifecycleOwner) {
                 var log = ""
                 it.forEach{pok -> log += pok.stringify()}
-                Log.e("dp", log)
                 isLoading = false
                 recyclerViewAdapter.updatePokemonList(it.toList())
                 recyclerViewAdapter.notifyDataSetChanged()

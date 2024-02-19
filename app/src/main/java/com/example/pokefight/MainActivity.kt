@@ -1,13 +1,16 @@
 package com.example.pokefight
 
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -19,14 +22,17 @@ import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
 import com.example.pokefight.ui.swap.PopupSwapDemand
+import com.example.pokefight.ui.swap.PopupSwapWaiting
 import com.example.pokefight.ui.swap.SwapActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenner {
 
     private lateinit var binding: ActivityMainBinding
     val mainViewModel by viewModels<MainViewModel>()
-    lateinit var vm : MainViewModel
+    lateinit var vm: MainViewModel
+    private var isWaitingForSwapResponse = false
+    private var currentPopup: DialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +52,7 @@ class MainActivity : AppCompatActivity(){
         vm = ViewModelProvider(this).get(MainViewModel::class.java)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
 
         val navView: BottomNavigationView = binding.navView
 
@@ -55,54 +61,96 @@ class MainActivity : AppCompatActivity(){
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_shop, R.id.navigation_equipe, R.id.navigation_pokedex, R.id.navigation_settings
+                R.id.navigation_home,
+                R.id.navigation_shop,
+                R.id.navigation_equipe,
+                R.id.navigation_pokedex,
+                R.id.navigation_settings
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         activeNotifications()
+
+        mainViewModel.logout.observe(this){
+            if(it) {
+                val i = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(i)
+                finish()
+            }
+        }
     }
 
-    fun getPokemons(fromId : Int = 1, toId : Int = fromId+10, callback : (List<Pokemon>) -> Unit){
-        mainViewModel.getPokemonList(fromId,toId).observe(this){ pokemonList ->
+    fun getPokemons(fromId: Int = 1, toId: Int = fromId + 10, callback: (List<Pokemon>) -> Unit) {
+        mainViewModel.getPokemonList(fromId, toId).observe(this) { pokemonList ->
             callback(pokemonList);
         }
     }
 
-    fun getPokemonById(id : Int, callback : (Pokemon) -> Unit){
-        mainViewModel.getPokemonById(id).observe(this){pokemon ->
-            if(pokemon == null){
+    fun getPokemonById(id: Int, callback: (Pokemon) -> Unit) {
+        mainViewModel.getPokemonById(id).observe(this) { pokemon ->
+            if (pokemon == null) {
                 Log.e("PokemonError", "Pokemon not found or unauthorized")
-            }
-            else{
+            } else {
                 callback(pokemon)
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //Must be called by the last destroyed activity
-        DSFireStore.stopFireStoreConnection()
-    }
-
-    fun activeNotifications(){
+    fun activeNotifications() {
         mainViewModel.setNotificationListener { event ->
-            when(event){
+            when (event) {
                 is RealTimeDatabaseEvent.SWAP_RESPONSE -> {
-                    val intent = Intent(this, SwapActivity::class.java)
-                    startActivity(intent)
+                    if (event.response) {
+                        if (isWaitingForSwapResponse) {
+                            (currentPopup as PopupSwapWaiting).stopWaiting(true)
+                            currentPopup = null
+                            isWaitingForSwapResponse = false
+                        }
+                        val intent = Intent(this, SwapActivity::class.java)
+                        startActivity(intent)
+                    }else if (!event.response){
+                        currentPopup?.dismiss()
+                        currentPopup = null
+                    }
                 }
+
                 is RealTimeDatabaseEvent.SWAP_DEMAND -> {
-                    mainViewModel.getNameOf(event.userToken).observe(this){creatorName ->
-                        if(creatorName.isNotEmpty()) {
-                            val popupSwapDemand = PopupSwapDemand(creatorName)
-                            popupSwapDemand.show(supportFragmentManager, "popupSwapDemand")
+                    if (event.userToken != "") {
+                        if (currentPopup == null) {
+                            mainViewModel.getNameOf(event.userToken).observe(this) { creatorName ->
+                                if (creatorName.isNotEmpty() && currentPopup == null) {
+                                    currentPopup = PopupSwapDemand(creatorName)
+                                    currentPopup?.show(supportFragmentManager, "popupSwapDemand")
+                                }
+                            }
                         }
                     }
                 }
+
+                is RealTimeDatabaseEvent.SWAP_CREATE_SWAP -> {
+                    if (event.targetToken != "" && currentPopup == null) {
+                        mainViewModel.createNewSwap(event.targetToken)
+                        isWaitingForSwapResponse = true
+                        currentPopup = PopupSwapWaiting(event.targetToken)
+                        currentPopup?.show(supportFragmentManager, "popupSwapDemand")
+                    }
+                }
+
+                else -> {
+                    //Do nothing
+                }
             }
         }
+    }
+
+    override fun onDialogAcceptedSwap() {
+        val intent = Intent(this, SwapActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun onDialogDismiss() {
+        currentPopup = null
     }
 }

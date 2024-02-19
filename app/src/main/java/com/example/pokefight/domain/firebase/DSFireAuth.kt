@@ -1,5 +1,6 @@
 package com.example.pokefight.domain.firebase
 
+import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -27,6 +28,15 @@ object DSFireAuth {
 
         }catch (e : FirebaseException){
             return null
+        }
+    }
+
+    fun logout() {
+        val auth = Firebase.auth
+        try {
+            auth.signOut()
+        }catch (e : FirebaseException){
+            Log.e("Logout", e.message.toString())
         }
     }
 }

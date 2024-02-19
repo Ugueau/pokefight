@@ -2,6 +2,7 @@ package com.example.pokefight
 
 import android.app.Application
 import com.example.pokefight.domain.BDD.PokefightBDD
+import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.google.firebase.FirebaseApp
