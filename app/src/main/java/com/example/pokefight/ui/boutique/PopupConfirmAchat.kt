@@ -1,35 +1,40 @@
 package com.example.pokefight.ui.boutique
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.media.Image
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Switch
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import com.example.pokefight.DiscoveredPokemonActivity
 import com.example.pokefight.R
+import com.example.pokefight.domain.PokemonRepository
+import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
+import com.squareup.picasso.Picasso
 
-class PopupConfirmAchat(val key : String, val callback : () -> Unit) : DialogFragment() {
+class PopupConfirmAchat(
+    val key : String,
+    val pokemon: Pokemon?,
+    val endPurchase : () -> Unit) : DialogFragment() {
 
     val MainViewModel by viewModels<MainViewModel>()
-    lateinit var vm : MainViewModel
+    lateinit var vm: MainViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
 
         dialog?.let { dialog ->
@@ -42,66 +47,277 @@ class PopupConfirmAchat(val key : String, val callback : () -> Unit) : DialogFra
         return inflater.inflate(R.layout.fragment_popup_confirm_achat, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val close = view.findViewById<Button>(R.id.close_popup3);
         close.setOnClickListener {
-            callback()
             dismiss()
         }
 
-        vm = ViewModelProvider(this).get(MainViewModel::class.java)
+        vm = ViewModelProvider(this)[MainViewModel::class.java]
 
-        var layoutItemAchete : ConstraintLayout = view.findViewById(R.id.layoutItemAchete)
-        var imageProduct : ImageView = view.findViewById(R.id.productImage)
-        var productName : TextView = view.findViewById(R.id.productName)
+        val imageProduct: ImageView = view.findViewById(R.id.productImage)
+        val productName: TextView = view.findViewById(R.id.productName)
 
-        when (key){
-            //"COMMON" ->{
-                // get the pokemon
+        when (key) {
+            "COMMON" -> {
+                if (pokemon != null) {
+                    val imageUrlRare = pokemon.sprites.frontDefault
+                    Picasso.get().load(imageUrlRare).into(imageProduct)
+                    productName.text = pokemon.name
 
+                    imageProduct.scaleX = 2F
+                    imageProduct.scaleY = 2F
+                }
+            }
 
-                //adding the image of the product
+            "UNCOMMON" -> {
+                if (pokemon != null) {
+                    val imageUrlRare = pokemon.sprites.frontDefault
+                    Picasso.get().load(imageUrlRare).into(imageProduct)
+                    productName.text = pokemon.name
 
-                // value the name of the product
-            //}
-            //"UNCOMMON" -> {
-                // get the pokemon
+                    imageProduct.scaleX = 2F
+                    imageProduct.scaleY = 2F
+                }
+            }
 
-                //adding the image of the product
+            "RARE" -> {
+                if (pokemon != null) {
+                    val imageUrlRare = pokemon.sprites.frontDefault
+                    Picasso.get().load(imageUrlRare).into(imageProduct)
+                    productName.text = pokemon.name
 
-                // value the name of the product
-            //}
-            //"RARE" ->{
-                // get the pokemon
-
-                //adding the image of the product
-                // value the name of the product
-            //}
+                    imageProduct.scaleX = 2F
+                    imageProduct.scaleY = 2F
+                }
+            }
 
             "POKEBALL" -> {
                 //adding the image of the product
                 imageProduct.setImageResource(R.mipmap.coffre_pokeball_foreground)
                 // value the name of the product
-                productName.text = "Get 1 random pokemon"
+                productName.text = getString(R.string.get_1_random_pokemon)
             }
 
             "SUPERBALL" -> {
                 //adding the image of the product
                 imageProduct.setImageResource(R.mipmap.coffre_superball_foreground)
                 // value the name of the product
-                productName.text = "Get 2 random pokemons"
+                productName.text = getString(R.string.get_2_random_pokemons)
             }
 
-            "HYPERBALL" ->{
+            "HYPERBALL" -> {
                 //adding the image of the product
                 imageProduct.setImageResource(R.mipmap.coffre_hyperball_foreground)
                 // value the name of the product
-                productName.text = "Get 3 random pokemons"
+                productName.text = getString(R.string.get_3_random_pokemons)
             }
+        }
+
+        //confirm the purchase
+        val confirmButton = view.findViewById<Button>(R.id.confirmButton)
+
+        confirmButton.setOnClickListener { _ ->
+
+            confirmPurchase()
+
+        }
+
+        //cancel the purchase
+        val cancelbutton = view.findViewById<Button>(R.id.cancelbutton)
+        cancelbutton.setOnClickListener { _ ->
+
+            dismiss()
         }
 
     }
 
+    private fun confirmPurchase() {
+
+        //get the price
+        val prix = vm.prix_boutique[key]
+
+        if (prix != null) {
+            // check if the user can purchase the product
+            if (vm.getConnectedUser().pokedollar >= prix) {
+                when (key) {
+                    "COMMON" -> {
+                        caseCommon(-prix)
+                    }
+
+                    "UNCOMMON" -> {
+                        caseUncommon(-prix)
+                    }
+
+                    "RARE" -> {
+                        caseRare(-prix)
+                    }
+
+                    "POKEBALL" -> {
+                        casePokeball(-prix)
+                    }
+
+                    "SUPERBALL" -> {
+                        caseSuperball(-prix)
+                    }
+
+                    "HYPERBALL" -> {
+                        caseHyperball(-prix)
+                    }
+                }
+            } else {
+                Toast.makeText(
+                    context,
+                    "Not enough Pokedollar",
+                    Toast.LENGTH_SHORT,
+                ).show()
+                endPurchase()
+                dismiss()
+            }
+        }
+    }
+
+    private fun caseCommon(prix: Int) {
+        if (pokemon != null) {
+            vm.addToDiscoveredPokemon(pokemon.id)
+            vm.updateUserSolde(prix)
+
+            Toast.makeText(
+                context,
+                "${pokemon.name} successfully purchase",
+                Toast.LENGTH_SHORT,
+            ).show()
+            endPurchase()
+            dismiss()
+        }
+    }
+
+    private fun caseUncommon(prix: Int) {
+        if (pokemon != null) {
+            vm.addToDiscoveredPokemon(pokemon.id)
+            vm.updateUserSolde(prix)
+
+            Toast.makeText(
+                context,
+                "${pokemon.name} successfully purchase",
+                Toast.LENGTH_SHORT,
+            ).show()
+            endPurchase()
+            dismiss()
+        }
+    }
+
+    private fun caseRare(prix: Int) {
+        if (pokemon != null) {
+            vm.addToDiscoveredPokemon(pokemon.id)
+            vm.updateUserSolde(prix)
+
+            Toast.makeText(
+                context,
+                "${pokemon.name} successfully purchase",
+                Toast.LENGTH_SHORT,
+            ).show()
+            endPurchase()
+            dismiss()
+        }
+    }
+
+    private fun casePokeball(prix: Int) {
+        val random = java.util.Random()
+        val randomPokemonId =
+            random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+        vm.addToDiscoveredPokemon(randomPokemonId)
+
+        val intent = Intent(context, DiscoveredPokemonActivity::class.java)
+        intent.putExtra("POKEMON_POKEBALL", randomPokemonId)
+
+        intent.putExtra("PURCHASE" ,"POKEBALL")
+
+        vm.updateUserSolde(prix)
+
+        Toast.makeText(
+            context,
+            "Pokeball chest successfully purchase",
+            Toast.LENGTH_SHORT,
+        ).show()
+
+        endPurchase()
+
+        startActivity(intent)
+    }
+
+    private fun caseSuperball(prix: Int) {
+        val random = java.util.Random()
+        val randomPokemonPokeball =
+            random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+        vm.addToDiscoveredPokemon(randomPokemonPokeball)
+
+        val intent = Intent(context, DiscoveredPokemonActivity::class.java)
+        intent.putExtra("POKEMON_POKEBALL", randomPokemonPokeball)
+
+        val randomPokemonSuperball =
+            random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+        vm.addToDiscoveredPokemon(randomPokemonSuperball)
+
+        intent.putExtra("POKEMON_SUPERBALL", randomPokemonSuperball)
+
+        intent.putExtra("PURCHASE" ,"SUPERBALL")
+
+        vm.updateUserSolde(prix)
+
+        Toast.makeText(
+            context,
+            "Superball chest successfully purchase",
+            Toast.LENGTH_SHORT,
+        ).show()
+
+        endPurchase()
+
+        startActivity(intent)
+    }
+
+    private fun caseHyperball(prix: Int) {
+        val random = java.util.Random()
+        val randomPokemonPokeball =
+            random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+        vm.addToDiscoveredPokemon(randomPokemonPokeball)
+
+        val intent = Intent(context, DiscoveredPokemonActivity::class.java)
+        intent.putExtra("POKEMON_POKEBALL", randomPokemonPokeball)
+
+        val randomPokemonSuperball =
+            random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+        vm.addToDiscoveredPokemon(randomPokemonSuperball)
+
+        intent.putExtra("POKEMON_SUPERBALL", randomPokemonSuperball)
+
+        val randomPokemonHyperball =
+            random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+
+        vm.addToDiscoveredPokemon(randomPokemonHyperball)
+
+        intent.putExtra("POKEMON_HYPERBALL", randomPokemonHyperball)
+
+        intent.putExtra("PURCHASE" ,"HYPERBALL")
+
+        vm.updateUserSolde(prix)
+
+        Toast.makeText(
+            context,
+            "Hyperball chest successfully purchase",
+            Toast.LENGTH_SHORT,
+        ).show()
+
+        endPurchase()
+
+        startActivity(intent)
+    }
 }

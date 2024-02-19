@@ -1,5 +1,4 @@
 package com.example.pokefight.ui.boutique
-
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -10,13 +9,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import com.example.pokefight.R
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
-import com.example.pokefight.ui.pokedex.PopupPokemonDetail
 import com.squareup.picasso.Picasso
 
 class BoutiqueFragment : Fragment() {
@@ -107,26 +106,80 @@ class BoutiqueFragment : Fragment() {
         // première ligne pour l'achat de pokemon
         val layoutCarte1 = (view.findViewById(R.id.layoutCarte1)as ConstraintLayout)
         layoutCarte1.setOnClickListener {
-            showPopupConfirmAchat(
-                vm.prix_boutique.keys.elementAt(0),
-                view.findViewById(R.id.DetailPokemon1)
-            )
+
+            val id = vm.pokemon_boutique["COMMON"]
+
+            if (id != null){
+                lateinit var pokemon: Pokemon
+                vm.getPokemonById(id).observe(viewLifecycleOwner){
+                    if (it != null) {
+                        pokemon = it
+                        showPopupConfirmAchat(
+                            vm.prix_boutique.keys.elementAt(0),
+                            pokemon
+                        )
+                    }
+                }
+
+
+            }
+            else{
+                Toast.makeText(
+                    context,
+                    "Pokemon not allready loaded",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
         }
 
         val layoutCarte2 = (view.findViewById(R.id.layoutCarte2)as ConstraintLayout)
         layoutCarte2.setOnClickListener {
-            showPopupConfirmAchat(
-                vm.prix_boutique.keys.elementAt(1),
-                view.findViewById(R.id.DetailPokemon2)
-            )
+            val id = vm.pokemon_boutique["UNCOMMON"]
+
+            if (id != null){
+                lateinit var pokemon: Pokemon
+                vm.getPokemonById(id).observe(viewLifecycleOwner){
+                    if (it != null) {
+                        pokemon = it
+                        showPopupConfirmAchat(
+                            vm.prix_boutique.keys.elementAt(1),
+                            pokemon
+                        )
+                    }
+                }
+            }
+            else{
+                Toast.makeText(
+                    context,
+                    "Pokemon not allready loaded",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
         }
 
         val layoutCarte3 = (view.findViewById(R.id.layoutCarte3)as ConstraintLayout)
         layoutCarte3.setOnClickListener {
-            showPopupConfirmAchat(
-                vm.prix_boutique.keys.elementAt(2),
-                view.findViewById(R.id.DetailPokemon3)
-            )
+            val id = vm.pokemon_boutique["RARE"]
+
+            if (id != null){
+                lateinit var pokemon: Pokemon
+                vm.getPokemonById(id).observe(viewLifecycleOwner){
+                    if (it != null) {
+                        pokemon = it
+                        showPopupConfirmAchat(
+                            vm.prix_boutique.keys.elementAt(2),
+                            pokemon
+                        )
+                    }
+                }
+            }
+            else{
+                Toast.makeText(
+                    context,
+                    "Pokemon not allready loaded",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
         }
 
         // deuxième ligne pour l'achat de coffre
@@ -134,7 +187,7 @@ class BoutiqueFragment : Fragment() {
         layoutPokeball.setOnClickListener {
             showPopupConfirmAchat(
                 vm.prix_boutique.keys.elementAt(3),
-                view.findViewById(R.id.layoutImagePokeball)
+                null
             )
         }
 
@@ -142,7 +195,7 @@ class BoutiqueFragment : Fragment() {
         layoutSuperball.setOnClickListener {
             showPopupConfirmAchat(
                 vm.prix_boutique.keys.elementAt(4),
-                view.findViewById(R.id.layoutSuperball)
+                null
             )
         }
 
@@ -150,7 +203,7 @@ class BoutiqueFragment : Fragment() {
         layoutHyperball.setOnClickListener {
             showPopupConfirmAchat(
                 vm.prix_boutique.keys.elementAt(5),
-                view.findViewById(R.id.layoutHyperball)
+                null
             )
         }
 
@@ -162,8 +215,12 @@ class BoutiqueFragment : Fragment() {
         popupPokedollar.show((activity as AppCompatActivity).supportFragmentManager, "popupPokedollar")
     }
 
-    private fun showPopupConfirmAchat( key : String, layout: ConstraintLayout){
-        val popupConfirmAchat = PopupConfirmAchat(key){reloadSolde()}
+    private fun showPopupConfirmAchat( key : String, pokemon: Pokemon?){
+        val popupConfirmAchat = PopupConfirmAchat(
+            key,
+            pokemon,
+            endPurchase = ::reloadSolde
+        )
         popupConfirmAchat.show((activity as AppCompatActivity).supportFragmentManager, "popupConfirmAchat")
     }
 
@@ -184,6 +241,7 @@ class BoutiqueFragment : Fragment() {
                 NomPokemon1.text = common.name
             }
         }
+
     }
 
     fun reloadPokemonUncommon(){

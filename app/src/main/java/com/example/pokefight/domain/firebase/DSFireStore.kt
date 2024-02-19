@@ -60,7 +60,7 @@ object DSFireStore {
     }
 
     suspend fun insertInDiscoveredPokemon(userToken: String, newDiscoveredList: List<Int>) {
-            firestore.collection("users").document(userToken).update("discovered",newDiscoveredList)
+            firestore.collection("users").document(userToken).update("discovered",newDiscoveredList).await()
     }
 
     suspend fun getUserByToken(userToken: String): User? {

@@ -207,11 +207,11 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun createUser(email: String, password: String, nickname : String): LiveData<User?>{
+    fun createUser(email: String, password: String, nickname : String): LiveData<User?> {
         val liveData = MutableLiveData<User?>()
         viewModelScope.launch {
             val uid = UserRepository.createUser(email, password)
-            if(uid != null){
+            if (uid != null) {
                 val user = User(
                     email,
                     password,
@@ -219,13 +219,14 @@ class MainViewModel : ViewModel() {
                     0,
                     0,
                     uid,
-                    null)
-                if (UserRepository.insertUser(user)){
+                    null
+                )
+                if (UserRepository.insertUser(user)) {
                     liveData.postValue(user)
-                }else{
+                } else {
                     liveData.postValue(null)
                 }
-            }else{
+            } else {
                 liveData.postValue(null)
             }
         }
