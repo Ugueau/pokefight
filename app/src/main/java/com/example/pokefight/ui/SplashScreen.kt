@@ -10,14 +10,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pokefight.R
 import com.example.pokefight.LoginActivity
-import com.example.pokefight.domain.api.ConnectionManager
 
 class SplashScreen : AppCompatActivity() {
     val mainViewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_screen)
-
         val logo = this.findViewById<ImageView>(R.id.splash_logo)
         applyReboundZoomAnimation(logo,5)
 
