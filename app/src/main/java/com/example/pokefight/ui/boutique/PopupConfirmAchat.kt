@@ -182,7 +182,7 @@ class PopupConfirmAchat(
 
     private fun caseCommon(prix: Int) {
         if (pokemon != null) {
-            vm.addToDiscoveredPokemon(pokemon.id)
+            vm.addToDiscoveredPokemon(listOf<Int>(pokemon.id))
             vm.updateUserSolde(prix)
 
             Toast.makeText(
@@ -197,7 +197,7 @@ class PopupConfirmAchat(
 
     private fun caseUncommon(prix: Int) {
         if (pokemon != null) {
-            vm.addToDiscoveredPokemon(pokemon.id)
+            vm.addToDiscoveredPokemon(listOf<Int>(pokemon.id))
             vm.updateUserSolde(prix)
 
             Toast.makeText(
@@ -212,7 +212,7 @@ class PopupConfirmAchat(
 
     private fun caseRare(prix: Int) {
         if (pokemon != null) {
-            vm.addToDiscoveredPokemon(pokemon.id)
+            vm.addToDiscoveredPokemon(listOf<Int>(pokemon.id))
             vm.updateUserSolde(prix)
 
             Toast.makeText(
@@ -230,7 +230,7 @@ class PopupConfirmAchat(
         val randomPokemonId =
             random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
-        vm.addToDiscoveredPokemon(randomPokemonId)
+        vm.addToDiscoveredPokemon(listOf<Int>(randomPokemonId))
 
         val intent = Intent(context, DiscoveredPokemonActivity::class.java)
         intent.putExtra("POKEMON_POKEBALL", randomPokemonId)
@@ -248,6 +248,7 @@ class PopupConfirmAchat(
         endPurchase()
 
         startActivity(intent)
+        dismiss()
     }
 
     private fun caseSuperball(prix: Int) {
@@ -255,15 +256,13 @@ class PopupConfirmAchat(
         val randomPokemonPokeball =
             random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
-        vm.addToDiscoveredPokemon(randomPokemonPokeball)
-
         val intent = Intent(context, DiscoveredPokemonActivity::class.java)
         intent.putExtra("POKEMON_POKEBALL", randomPokemonPokeball)
 
         val randomPokemonSuperball =
             random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
-        vm.addToDiscoveredPokemon(randomPokemonSuperball)
+        vm.addToDiscoveredPokemon(listOf<Int>(randomPokemonPokeball,randomPokemonSuperball))
 
         intent.putExtra("POKEMON_SUPERBALL", randomPokemonSuperball)
 
@@ -280,6 +279,7 @@ class PopupConfirmAchat(
         endPurchase()
 
         startActivity(intent)
+        dismiss()
     }
 
     private fun caseHyperball(prix: Int) {
@@ -287,22 +287,18 @@ class PopupConfirmAchat(
         val randomPokemonPokeball =
             random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
-        vm.addToDiscoveredPokemon(randomPokemonPokeball)
-
         val intent = Intent(context, DiscoveredPokemonActivity::class.java)
         intent.putExtra("POKEMON_POKEBALL", randomPokemonPokeball)
 
         val randomPokemonSuperball =
             random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
-        vm.addToDiscoveredPokemon(randomPokemonSuperball)
-
         intent.putExtra("POKEMON_SUPERBALL", randomPokemonSuperball)
 
         val randomPokemonHyperball =
             random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
-        vm.addToDiscoveredPokemon(randomPokemonHyperball)
+        vm.addToDiscoveredPokemon(listOf<Int>(randomPokemonPokeball,randomPokemonSuperball,randomPokemonHyperball))
 
         intent.putExtra("POKEMON_HYPERBALL", randomPokemonHyperball)
 
@@ -319,5 +315,6 @@ class PopupConfirmAchat(
         endPurchase()
 
         startActivity(intent)
+        dismiss()
     }
 }

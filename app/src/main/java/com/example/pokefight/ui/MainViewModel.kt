@@ -242,10 +242,9 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun addToDiscoveredPokemon(pokemonId: Int) {
+    fun addToDiscoveredPokemon(newPokemonId: List<Int>) {
         viewModelScope.launch {
-            val newDP = listOf<Int>(pokemonId)
-            UserRepository.addDiscoveredPokemon(newDP)
+            UserRepository.addDiscoveredPokemon(newPokemonId)
         }
     }
 
