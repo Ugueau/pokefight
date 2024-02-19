@@ -216,7 +216,7 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun createUser(email: String, password: String, nickname: String): LiveData<User?> {
+    fun createUser(email: String, password: String, nickname : String): LiveData<User?> {
         val liveData = MutableLiveData<User?>()
         viewModelScope.launch {
             val uid = UserRepository.createUser(email, password)
@@ -242,10 +242,9 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun addToDiscoveredPokemon(pokemonId: Int) {
+    fun addToDiscoveredPokemon(newPokemonId: List<Int>) {
         viewModelScope.launch {
-            val newDP = listOf<Int>(pokemonId)
-            UserRepository.addDiscoveredPokemon(newDP)
+            UserRepository.addDiscoveredPokemon(newPokemonId)
         }
     }
 

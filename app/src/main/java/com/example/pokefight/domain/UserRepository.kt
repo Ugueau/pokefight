@@ -59,7 +59,7 @@ object UserRepository {
 
         BDDDataSource.updateUsersolde(user.pokedollar, user.Email, user.Password)
 
-        //todo a faire quand firebase sera prêt
+        DSFireStore.updateUser(user)
     }
 
     fun deconnectUser(){
