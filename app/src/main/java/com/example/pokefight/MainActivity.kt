@@ -1,12 +1,10 @@
 package com.example.pokefight
 
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -17,7 +15,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.pokefight.databinding.ActivityMainBinding
-import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
@@ -73,8 +70,8 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
 
         activeNotifications()
 
-        mainViewModel.logout.observe(this){
-            if(it) {
+        mainViewModel.logout.observe(this) {
+            if (it) {
                 val i = Intent(applicationContext, LoginActivity::class.java)
                 startActivity(i)
                 finish()
@@ -110,7 +107,7 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
                         }
                         val intent = Intent(this, SwapActivity::class.java)
                         startActivity(intent)
-                    }else if (!event.response){
+                    } else if (!event.response) {
                         currentPopup?.dismiss()
                         currentPopup = null
                     }

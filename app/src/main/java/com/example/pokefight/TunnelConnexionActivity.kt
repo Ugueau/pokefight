@@ -1,13 +1,12 @@
 package com.example.pokefight
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
-import com.example.pokefight.ui.fragmentcreationcompte.FragmentConfirmCreation
 import com.example.pokefight.ui.fragmentcreationcompte.FragmentCreationCompte
 
 class TunnelConnexionActivity : AppCompatActivity() {
@@ -40,7 +39,7 @@ class TunnelConnexionActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun endTunnelConnexion(TargetActivity: Intent){
+    fun endTunnelConnexion(TargetActivity: Intent) {
 
         startActivity(TargetActivity)
         finish()

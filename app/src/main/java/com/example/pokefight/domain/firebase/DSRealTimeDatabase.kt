@@ -1,8 +1,6 @@
 package com.example.pokefight.domain.firebase
 
 import android.util.Log
-import com.example.pokefight.domain.SwapRepository
-import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener

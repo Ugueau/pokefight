@@ -3,7 +3,6 @@ package com.example.pokefight.ui.settings
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,7 +45,7 @@ class PopupModifySettings : DialogFragment() {
         nickname.setText(user.Nickname)
 
         val confirm = view.findViewById<Button>(R.id.modify_confirm)
-        confirm.setOnClickListener{
+        confirm.setOnClickListener {
             user.Nickname = nickname.text.toString()
             mainViewModel.updateUser(user)
             dismiss()

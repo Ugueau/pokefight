@@ -3,7 +3,6 @@ package com.example.pokefight.ui.swap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
 
-class PopupSwapWaiting (private val swaperToken : String): DialogFragment() {
+class PopupSwapWaiting(private val swaperToken: String) : DialogFragment() {
 
     private val mainViewModel by activityViewModels<MainViewModel>()
     private var hasClicked = false
@@ -48,14 +47,14 @@ class PopupSwapWaiting (private val swaperToken : String): DialogFragment() {
             creatorDemand.text = "Waiting for $name"
         }
 
-        denyBtn.setOnClickListener{
+        denyBtn.setOnClickListener {
             hasClicked = true
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwapDemand()
             dismiss()
         }
 
-        closeBtn.setOnClickListener{
+        closeBtn.setOnClickListener {
             hasClicked = true
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwapDemand()
@@ -63,13 +62,14 @@ class PopupSwapWaiting (private val swaperToken : String): DialogFragment() {
         }
     }
 
-    fun stopWaiting(response : Boolean) {
+    fun stopWaiting(response: Boolean) {
         this.response = response
         dismiss()
     }
+
     override fun onDestroy() {
         super.onDestroy()
-        if(!hasClicked && !response){
+        if (!hasClicked && !response) {
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwapDemand()
         }

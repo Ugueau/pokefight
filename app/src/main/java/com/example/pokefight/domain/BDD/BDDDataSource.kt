@@ -1,6 +1,5 @@
 package com.example.pokefight.domain.BDD
 
-import android.util.Log
 import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
 import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD

@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
 import com.example.pokefight.domain.BDD.entity.TeamBDD
 
 @Dao

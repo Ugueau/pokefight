@@ -1,6 +1,5 @@
 package com.example.pokefight.domain.firebase
 
-import android.util.Log
 import com.example.pokefight.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore

@@ -1,10 +1,6 @@
 package com.example.pokefight.model
 
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import com.example.pokefight.domain.BDD.entity.UserBDD
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
-import java.io.Serial
 
 data class User (
     var Email: String,

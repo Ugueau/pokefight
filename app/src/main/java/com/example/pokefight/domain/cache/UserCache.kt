@@ -1,6 +1,5 @@
 package com.example.pokefight.domain.cache
 
-import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.User
 
 object UserCache {

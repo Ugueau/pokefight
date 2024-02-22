@@ -1,19 +1,18 @@
 package com.example.pokefight.ui.swap
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.pokefight.R
 import com.example.pokefight.model.formatId
 import com.example.pokefight.ui.MainViewModel
 import com.squareup.picasso.Picasso
-import kotlin.properties.Delegates
 
-class SwapActivity : AppCompatActivity(){
+class SwapActivity : AppCompatActivity() {
     val mainViewModel by viewModels<MainViewModel>()
     var isSwapFinished = false
     private var pokemonId1 = -1
@@ -27,7 +26,7 @@ class SwapActivity : AppCompatActivity(){
         super.onStart()
 
         val userName = findViewById<TextView>(R.id.swap_userName2)
-        mainViewModel.getSwaperName().observe(this){
+        mainViewModel.getSwaperName().observe(this) {
             userName.text = it
         }
 
@@ -39,7 +38,7 @@ class SwapActivity : AppCompatActivity(){
 
         val validateBtn = findViewById<Button>(R.id.swap_validate)
         validateBtn.isEnabled = false
-        validateBtn.setOnClickListener{
+        validateBtn.setOnClickListener {
             mainViewModel.validateSwap()
             selectBtn.isEnabled = false
             validateBtn.isEnabled = false
@@ -48,9 +47,9 @@ class SwapActivity : AppCompatActivity(){
         val pokemon1 = findViewById<ImageView>(R.id.swap_pokemon1)
         val pokemonName1 = findViewById<TextView>(R.id.swap_pokemonName1)
         val pokemonTextId1 = findViewById<TextView>(R.id.swap_pokemonId1)
-        mainViewModel.pokemonSelected.observe(this) {pokemonId ->
-            mainViewModel.getPokemonById(pokemonId).observe(this) {pokemon ->
-                if(pokemon != null) {
+        mainViewModel.pokemonSelected.observe(this) { pokemonId ->
+            mainViewModel.getPokemonById(pokemonId).observe(this) { pokemon ->
+                if (pokemon != null) {
                     val imageUrl = pokemon.sprites.backDefault
                     Picasso.get().load(imageUrl).into(pokemon1)
                     pokemonName1.text = pokemon.name
@@ -64,7 +63,7 @@ class SwapActivity : AppCompatActivity(){
         val pokemon2 = findViewById<ImageView>(R.id.swap_pokemon2)
         val pokemonName2 = findViewById<TextView>(R.id.swap_pokemonName2)
         val pokemonTextId2 = findViewById<TextView>(R.id.swap_pokemonId2)
-        mainViewModel.listenOnCurrentSwap() {pokemon ->
+        mainViewModel.listenOnCurrentSwap() { pokemon ->
             val imageUrl = pokemon.sprites.frontDefault
             Picasso.get().load(imageUrl).into(pokemon2)
             pokemonName2.text = pokemon.name
@@ -72,20 +71,24 @@ class SwapActivity : AppCompatActivity(){
             pokemonTextId2.text = pokemon.formatId(pokemon.id)
         }
 
-        mainViewModel.nbOfValidation.observe(this){ it ->
-            if(it == 2){
-                if(pokemonId1 != -1 && pokemonId2 != -1) {
-                    mainViewModel.swapPokemons(pokemonId1, pokemonId2).observe(this){success ->
-                        if(success){
+        mainViewModel.nbOfValidation.observe(this) { it ->
+            if (it == 2) {
+                if (pokemonId1 != -1 && pokemonId2 != -1) {
+                    mainViewModel.swapPokemons(pokemonId1, pokemonId2).observe(this) { success ->
+                        if (success) {
 
-                            Toast.makeText(baseContext, "Swap successfully ended", Toast.LENGTH_SHORT)
+                            Toast.makeText(
+                                baseContext,
+                                "Swap successfully ended",
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
-                        }else{
+                        } else {
                             Toast.makeText(baseContext, "Swap failed", Toast.LENGTH_SHORT)
                                 .show()
                         }
                     }
-                }else{
+                } else {
                     Toast.makeText(baseContext, "Swap failed", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -96,15 +99,16 @@ class SwapActivity : AppCompatActivity(){
     }
 
     override fun onBackPressed() {
-        if(!isSwapFinished){
+        if (!isSwapFinished) {
             mainViewModel.endSwapDemand()
             isSwapFinished = true
         }
         super.onBackPressed()
     }
+
     override fun onDestroy() {
-        if(!isSwapFinished){
-            mainViewModel.endSwapDemand().observe(this){
+        if (!isSwapFinished) {
+            mainViewModel.endSwapDemand().observe(this) {
                 isSwapFinished = it
             }
         }

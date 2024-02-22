@@ -1,6 +1,5 @@
 package com.example.pokefight.domain
 
-import android.util.Log
 import com.example.pokefight.domain.BDD.BDDDataSource
 import com.example.pokefight.domain.cache.UserCache
 import com.example.pokefight.domain.firebase.DSFireAuth

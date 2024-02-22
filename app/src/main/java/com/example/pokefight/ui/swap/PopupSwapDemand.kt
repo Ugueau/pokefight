@@ -16,7 +16,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
 
-class PopupSwapDemand(private val swaperName : String) : DialogFragment() {
+class PopupSwapDemand(private val swaperName: String) : DialogFragment() {
 
     private val mainViewModel by activityViewModels<MainViewModel>()
     private var hasClicked = false
@@ -59,7 +59,7 @@ class PopupSwapDemand(private val swaperName : String) : DialogFragment() {
         val denyBtn = view.findViewById<Button>(R.id.swapDeny)
         val closeBtn = view.findViewById<Button>(R.id.close_popupSwap)
 
-        acceptBtn.setOnClickListener{
+        acceptBtn.setOnClickListener {
             hasClicked = true
             mainViewModel.sendSwapResponse(true)
             hasAccepted = true
@@ -69,14 +69,14 @@ class PopupSwapDemand(private val swaperName : String) : DialogFragment() {
         creatorDemand.text = "$swaperName ask you a swap"
 
 
-        denyBtn.setOnClickListener{
+        denyBtn.setOnClickListener {
             hasClicked = true
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwapDemand()
             dismiss()
         }
 
-        closeBtn.setOnClickListener{
+        closeBtn.setOnClickListener {
             hasClicked = true
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwapDemand()
@@ -86,7 +86,7 @@ class PopupSwapDemand(private val swaperName : String) : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if(!hasClicked){
+        if (!hasClicked) {
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwapDemand()
         }
@@ -95,7 +95,7 @@ class PopupSwapDemand(private val swaperName : String) : DialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         onDestroyListenner?.onDialogDismiss()
-        if(hasAccepted){
+        if (hasAccepted) {
             onDestroyListenner?.onDialogAcceptedSwap()
         }
     }

@@ -1,9 +1,7 @@
 package com.example.pokefight.model
 
 import com.example.pokefight.R
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.util.HexFormat
 
 data class Pokemon(
     @SerializedName("base_experience")  val baseExperience: Int,

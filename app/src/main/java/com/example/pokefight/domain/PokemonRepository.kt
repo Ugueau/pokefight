@@ -1,6 +1,5 @@
 package com.example.pokefight.domain
 
-import android.util.Log
 import com.example.pokefight.domain.api.DSRetrofit
 import com.example.pokefight.domain.cache.DSPokemonCache
 import com.example.pokefight.model.Pokemon

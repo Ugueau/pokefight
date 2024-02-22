@@ -14,11 +14,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.DiscoveredPokemonActivity
 import com.example.pokefight.R
-import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
 import com.squareup.picasso.Picasso

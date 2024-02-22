@@ -2,30 +2,22 @@ package com.example.pokefight.ui.fragmentcreationcompte
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.R
 import com.example.pokefight.TunnelConnexionActivity
-import com.example.pokefight.VIewModel.UserViewModel
-import com.example.pokefight.domain.api.ConnectionManager
-import com.example.pokefight.model.User
 import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
-import com.example.pokefight.ui.settings.PopupModifySettings
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import java.lang.Exception
-import kotlin.random.Random
 
 class FragmentCreationCompte : Fragment() {
 

@@ -1,7 +1,5 @@
 package com.example.pokefight.domain
 
-import android.util.Log
-import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.RealTimeDatabaseEvent
 
