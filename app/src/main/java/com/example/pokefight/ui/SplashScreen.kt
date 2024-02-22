@@ -6,10 +6,14 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.example.pokefight.R
 import com.example.pokefight.LoginActivity
+import com.example.pokefight.BuildConfig
 
 class SplashScreen : AppCompatActivity() {
     val mainViewModel by viewModels<MainViewModel>()
@@ -17,6 +21,17 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_screen)
         val logo = this.findViewById<ImageView>(R.id.splash_logo)
+        val buildModeText = findViewById<TextView>(R.id.build_mode)
+        val background = findViewById<ConstraintLayout>(R.id.splash_background)
+        if(BuildConfig.buildName == "dev"){
+            buildModeText.text = "DEBUG"
+            val colorRes = ContextCompat.getColor(this, R.color.md_theme_light_secondaryContainer)
+            background.setBackgroundColor(colorRes)
+        }else if (BuildConfig.buildName == "preproduction"){
+            buildModeText.text = "PRE-PRODUCTION"
+            val colorRes = ContextCompat.getColor(this, R.color.md_theme_light_tertiaryContainer)
+            background.setBackgroundColor(colorRes)
+        }
         applyReboundZoomAnimation(logo,5)
 
         mainViewModel.checkNetworkConnection(this).observe(this){isConnected ->
