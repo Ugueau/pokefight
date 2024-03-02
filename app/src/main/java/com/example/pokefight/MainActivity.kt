@@ -135,6 +135,12 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
                     }
                 }
 
+                is RealTimeDatabaseEvent.FRIEND_DEMAND -> {
+                    if (event.userToken != "" && currentPopup == null) {
+
+                    }
+                }
+
                 else -> {
                     //Do nothing
                 }

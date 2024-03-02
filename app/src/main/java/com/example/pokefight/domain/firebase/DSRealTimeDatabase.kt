@@ -123,14 +123,19 @@ object DSRealTimeDatabase {
             }.await()
         realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("")
             .addOnFailureListener {
-                Log.e("insertUserInRealTimeDatabase", "failed")
+                Log.e("insertUserInRealTimeDatabase", "crashed")
             }.await()
-        realtime.child("users").child(userToken).child("friend").setValue("").addOnFailureListener {
-            Log.e("insertUserInRealTimeDatabase", "failed")
-        }.await()
+        realtime.child("users").child(userToken).child("friend").child("fromUser").setValue("")
+            .addOnFailureListener {
+                Log.e("insertUserInRealTimeDatabase", "crashed")
+            }.await()
+        realtime.child("users").child(userToken).child("friend").child("hasAccepted").setValue("")
+            .addOnFailureListener {
+                Log.e("insertUserInRealTimeDatabase", "crashed")
+            }.await()
         realtime.child("users").child(userToken).child("esp32_swap").setValue("")
             .addOnFailureListener {
-                Log.e("insertUserInRealTimeDatabase", "failed")
+                Log.e("insertUserInRealTimeDatabase", "crashed")
             }.await()
     }
 
@@ -162,6 +167,11 @@ object DSRealTimeDatabase {
                     snapshot.getValue<String>()?.let {value ->
                         realtime.child("users").child(userToken).child("esp32_swap").setValue("")
                         callback(RealTimeDatabaseEvent.SWAP_CREATE_SWAP(value))
+                    }
+                }else if(snapshot.key == "friend") {
+                    snapshot.getValue<String>()?.let {value ->
+                        realtime.child("users").child(userToken).child("friend").setValue("")
+                        callback(RealTimeDatabaseEvent.FRIEND_DEMAND(value))
                     }
                 }
             }

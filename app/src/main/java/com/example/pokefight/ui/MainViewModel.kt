@@ -407,4 +407,14 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
+    fun sendFriendResponse(response: Boolean) {
+        viewModelScope.launch {
+            if (response) {
+
+            } else {
+
+            }
+        }
+    }
+
 }

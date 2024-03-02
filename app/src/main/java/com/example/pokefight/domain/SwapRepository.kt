@@ -44,6 +44,7 @@ object SwapRepository {
 
     suspend fun sendSwapDeny(){
         if(currentSwap.isNotEmpty()) {
+            //Don't remove this !
             val tmp = currentSwap
             val creatorToken = tmp.split("_")[0]
             DSRealTimeDatabase.sendSwapDeny(creatorToken)

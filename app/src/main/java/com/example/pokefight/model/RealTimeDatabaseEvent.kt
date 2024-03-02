@@ -6,5 +6,6 @@ sealed class RealTimeDatabaseEvent {
     data class SWAP_POKEMON_CHANGED(val pokemonId: Int) : RealTimeDatabaseEvent()
     data class SWAP_VALIDATE(val nbOfValidation : Int) : RealTimeDatabaseEvent()
     data class SWAP_CREATE_SWAP(val targetToken : String) : RealTimeDatabaseEvent()
+    data class FRIEND_DEMAND(val userToken: String) : RealTimeDatabaseEvent()
 
 }

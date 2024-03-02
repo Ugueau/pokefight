@@ -214,4 +214,12 @@ object UserRepository {
         deconnectUser()
         DSFireAuth.logout()
     }
+
+    fun sendFriendAccept() {
+
+    }
+
+    fun sendFriendDeny() {
+
+    }
 }
