@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
 
         FightButton = view.findViewById<Button>(R.id.FightButton)
         FightButton.setOnClickListener {
-            qrcodeReader.checkCameraPermission()
+            qrcodeReader.scan()
         }
 
         val connectedUser = vm.getConnectedUser()

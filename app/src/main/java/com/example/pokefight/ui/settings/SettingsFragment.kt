@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
+import com.example.pokefight.tools.QRCodeTool
 import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
 import okhttp3.internal.notify
@@ -101,10 +103,14 @@ class SettingsFragment : Fragment() {
 
 
         val addFriendBtn = view.findViewById<Button>(R.id.settings_friend_add)
+        val qrcodeReader = QRCodeTool(this,requireContext())
+        qrcodeReader.result.observe(viewLifecycleOwner){token ->
+            if(token != "") {
+                mainViewModel.askAsAFriend(token)
+            }
+        }
         addFriendBtn.setOnClickListener {
-
-            //TODO replace with QR code reader
-            mainViewModel.askAsAFriend("JqhLvxdQZDP6Uxun1bEcxkAc2fi1")
+            qrcodeReader.scan()
         }
 
     }
