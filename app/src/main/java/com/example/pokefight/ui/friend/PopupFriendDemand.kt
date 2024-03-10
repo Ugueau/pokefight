@@ -16,28 +16,10 @@ import androidx.fragment.app.activityViewModels
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
 
-class PopupFriendDemand(private val userToken: String) : DialogFragment() {
+class PopupFriendDemand(private val userToken: String, private val userName : String) : DialogFragment() {
 
     private val mainViewModel by activityViewModels<MainViewModel>()
     private var hasClicked = false
-    private var hasAccepted = false
-
-
-    interface OnDialogDestroyListenner {
-        fun onDialogAcceptedSwap()
-        fun onDialogDismiss()
-    }
-
-    private var onDestroyListenner: OnDialogDestroyListenner? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            onDestroyListenner = context as OnDialogDestroyListenner
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnAcceptedListenner")
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,25 +43,23 @@ class PopupFriendDemand(private val userToken: String) : DialogFragment() {
 
         acceptBtn.setOnClickListener {
             hasClicked = true
-            mainViewModel.sendSwapResponse(true)
-            hasAccepted = true
+            mainViewModel.sendFriendResponse(userToken,true)
+            mainViewModel.addFriend(userToken)
             dismiss()
         }
 
-        creatorDemand.text = "$userToken asks you as a friend"
+        creatorDemand.text = "$userName asks you as a friend"
 
 
         denyBtn.setOnClickListener {
             hasClicked = true
-            //mainViewModel.sendSwapResponse(false)
-            //mainViewModel.endSwapDemand()
+            mainViewModel.sendFriendResponse(userToken,false)
             dismiss()
         }
 
         closeBtn.setOnClickListener {
             hasClicked = true
-            //mainViewModel.sendSwapResponse(false)
-            //mainViewModel.endSwapDemand()
+            mainViewModel.sendFriendResponse(userToken,false)
             dismiss()
         }
     }
@@ -87,16 +67,7 @@ class PopupFriendDemand(private val userToken: String) : DialogFragment() {
     override fun onDestroy() {
         super.onDestroy()
         if (!hasClicked) {
-            //mainViewModel.sendSwapResponse(false)
-            //mainViewModel.endSwapDemand()
-        }
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        onDestroyListenner?.onDialogDismiss()
-        if (hasAccepted) {
-            onDestroyListenner?.onDialogAcceptedSwap()
+            mainViewModel.sendFriendResponse(userToken,false)
         }
     }
 }

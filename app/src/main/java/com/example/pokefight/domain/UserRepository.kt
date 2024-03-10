@@ -215,11 +215,31 @@ object UserRepository {
         DSFireAuth.logout()
     }
 
-    fun sendFriendAccept() {
-
+    suspend fun sendFriendAccept(askerToken :String) {
+        DSRealTimeDatabase.sendFriendAccept(askerToken, getConnectedUser().UserToken)
     }
 
-    fun sendFriendDeny() {
+    suspend fun sendFriendDeny(askerToken :String) {
+        DSRealTimeDatabase.sendFriendDeny(askerToken)
+    }
 
+    suspend fun askAsAFriend(targetUserToken : String) : Boolean {
+        return DSRealTimeDatabase.askAsAFriend(targetUserToken, getConnectedUser().UserToken)
+    }
+
+    suspend fun cleanNotifications(){
+        DSRealTimeDatabase.clearUserSpace(getConnectedUser().UserToken)
+    }
+
+    suspend fun addFriend(friendToken : String){
+        val user = getConnectedUser()
+        if (user.userId != null) {
+            val friends = DSFireStore.getFiendsFromUserToken(user.UserToken)
+            val newFriendList = friends.toMutableList()
+            if(!friends.contains(friendToken)){
+                newFriendList.add(friendToken)
+            }
+            DSFireStore.insertInFriends(user.UserToken, newFriendList)
+        }
     }
 }

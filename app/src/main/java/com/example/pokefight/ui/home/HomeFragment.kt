@@ -47,7 +47,11 @@ class HomeFragment : Fragment() {
         TextViewTrophy = binding.TextViewTrophy
         TextViewTrophy.text = mainViewModel.getConnectedUser().Trophy.toString()
 
+        //Just for testing
         val btn = view.findViewById<Button>(R.id.FightButton)
+        btn.setOnClickListener {
+            mainViewModel.askAsAFriend("JqhLvxdQZDP6Uxun1bEcxkAc2fi1")
+        }
     }
 
     override fun onDestroyView() {

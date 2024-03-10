@@ -169,9 +169,23 @@ object DSRealTimeDatabase {
                         callback(RealTimeDatabaseEvent.SWAP_CREATE_SWAP(value))
                     }
                 }else if(snapshot.key == "friend") {
-                    snapshot.getValue<String>()?.let {value ->
-                        realtime.child("users").child(userToken).child("friend").setValue("")
-                        callback(RealTimeDatabaseEvent.FRIEND_DEMAND(value))
+                    snapshot.child("fromUser").key?.let { field ->
+                        snapshot.child("fromUser").getValue<String>()?.let { value ->
+                            if (value.isNotEmpty()) {
+                                realtime.child("users").child(userToken).child("friend").child("fromUser").setValue("")
+                                callback(RealTimeDatabaseEvent.FRIEND_DEMAND(value))
+                            }
+                        }
+                    }
+                    snapshot.child("hasAccepted").key?.let { field ->
+                        snapshot.child("hasAccepted").getValue<String>()?.let { value ->
+                            if (value != "denied" && value != "") {
+                                callback(RealTimeDatabaseEvent.FRIEND_RESPONSE(value))
+                            } else if (value == "denied") {
+                                callback(RealTimeDatabaseEvent.FRIEND_RESPONSE(""))
+                            }
+                            realtime.child("users").child(userToken).child("friend").child("hasAccepted").setValue("")
+                        }
                     }
                 }
             }
@@ -227,5 +241,33 @@ object DSRealTimeDatabase {
             realtime.child("swap").child(swapName).child("hasValidated")
                 .setValue(nbOfValidation + 1)
         }.await()
+    }
+
+    suspend fun askAsAFriend(targetUserToken : String, fromUserToken : String) :Boolean {
+        var success = true
+        realtime.child("users").child(targetUserToken).child("friend").child("fromUser").setValue(fromUserToken).addOnFailureListener {
+            success = false
+        }.await()
+        return success
+    }
+
+    suspend fun sendFriendAccept(askerToken: String, userToken: String) {
+        realtime.child("users").child(askerToken).child("friend").child("hasAccepted")
+            .setValue(userToken).await()
+    }
+
+    suspend fun sendFriendDeny(askerToken: String) {
+        if (askerToken.isNotEmpty()) {
+            realtime.child("users").child(askerToken).child("friend").child("hasAccepted")
+                .setValue("denied").await()
+        }
+    }
+
+    suspend fun clearUserSpace(userToken: String){
+        realtime.child("users").child(userToken).child("friend").child("hasAccepted").setValue("").await()
+        realtime.child("users").child(userToken).child("friend").child("fromUser").setValue("").await()
+        realtime.child("users").child(userToken).child("esp32_swap").setValue("").await()
+        realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("").await()
+        realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").await()
     }
 }

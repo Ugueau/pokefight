@@ -37,6 +37,10 @@ object DSFireStore {
                 .update("team", listOf(1, 4, 7)).addOnSuccessListener {
                     succeed = true
             }
+            firestore.collection("users").document(user.UserToken)
+                .update("friends", emptyList<String>()).addOnSuccessListener {
+                    succeed = true
+                }
         }.await()
 
         return succeed
@@ -48,6 +52,10 @@ object DSFireStore {
 
     suspend fun insertInDiscoveredPokemon(userToken: String, newDiscoveredList: List<Int>) {
         firestore.collection("users").document(userToken).update("discovered",newDiscoveredList).await()
+    }
+
+    suspend fun insertInFriends(userToken: String, newFriendList: List<String>) {
+        firestore.collection("users").document(userToken).update("friends",newFriendList).await()
     }
 
     suspend fun getUserByToken(userToken: String): User? {
@@ -92,6 +100,18 @@ object DSFireStore {
         return discovered
     }
 
+    suspend fun getFiendsFromUserToken(userToken: String): List<String> {
+        val userDoc = firestore.collection("users").document(userToken)
+        val friends = mutableListOf<String>()
+        val document = userDoc.get().await()
+        if (document != null) {
+            (document.get("friends") as? List<String>)?.let {
+                friends.addAll(it)
+            }
+        }
+        return friends
+    }
+
     suspend fun updateUser(user : User){
         val userUpdate = hashMapOf<String,Any?>(
             "email" to user.Email,
@@ -102,6 +122,7 @@ object DSFireStore {
         )
         firestore.collection("users").document(user.UserToken).update(userUpdate).await()
     }
+
 
 
 }

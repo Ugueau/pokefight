@@ -308,6 +308,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun setNotificationListener(callback: (RealTimeDatabaseEvent) -> Unit) {
+        viewModelScope.launch {
+            UserRepository.cleanNotifications()
+        }
         UserRepository.setNotificationListener { event ->
             if (event is RealTimeDatabaseEvent.SWAP_DEMAND && event.userToken.isNotEmpty()) {
                 SwapRepository.setCurrentSwapName("${event.userToken}_${UserRepository.getConnectedUser().UserToken}")
@@ -401,20 +404,33 @@ class MainViewModel : ViewModel() {
         val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val data = ConnectionManager.checkInternetConnection(context)
-            Log.e("checkNetwork", "Network access state : ${data.toString()} ")
             liveData.postValue(data)
         }
         return liveData
     }
 
-    fun sendFriendResponse(response: Boolean) {
+    fun sendFriendResponse(askerToken : String, response: Boolean) {
         viewModelScope.launch {
             if (response) {
-
+                UserRepository.sendFriendAccept(askerToken)
             } else {
-
+                UserRepository.sendFriendDeny(askerToken)
             }
         }
     }
 
+    fun askAsAFriend(targetUserToken : String) : LiveData<Boolean> {
+        val liveData = MutableLiveData<Boolean>()
+        viewModelScope.launch {
+            val data = UserRepository.askAsAFriend(targetUserToken)
+            liveData.postValue(data)
+        }
+        return liveData
+    }
+
+    fun addFriend(friendToken : String){
+        viewModelScope.launch {
+            UserRepository.addFriend(friendToken)
+        }
+    }
 }

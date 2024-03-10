@@ -18,6 +18,7 @@ import com.example.pokefight.databinding.ActivityMainBinding
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.friend.PopupFriendDemand
 import com.example.pokefight.ui.swap.PopupSwapDemand
 import com.example.pokefight.ui.swap.PopupSwapWaiting
 import com.example.pokefight.ui.swap.SwapActivity
@@ -137,7 +138,21 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
 
                 is RealTimeDatabaseEvent.FRIEND_DEMAND -> {
                     if (event.userToken != "" && currentPopup == null) {
+                        if(currentPopup == null){
+                            mainViewModel.getNameOf(event.userToken).observe(this) { userName ->
+                                currentPopup = PopupFriendDemand(event.userToken,userName)
+                                currentPopup?.show(supportFragmentManager, "popupFriendDemand")
+                            }
+                        }
+                    }
+                }
 
+                is RealTimeDatabaseEvent.FRIEND_RESPONSE -> {
+                    if (event.userToken != "") {
+                        mainViewModel.addFriend(event.userToken)
+                    }
+                    else{
+                        //Notify user refused friend request
                     }
                 }
 
