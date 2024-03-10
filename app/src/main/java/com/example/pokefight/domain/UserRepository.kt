@@ -242,4 +242,15 @@ object UserRepository {
             DSFireStore.insertInFriends(user.UserToken, newFriendList)
         }
     }
+
+    suspend fun getFriends() : List<User> {
+        val friendTokenList = DSFireStore.getFiendsFromUserToken(getConnectedUser().UserToken)
+        val friends = mutableListOf<User>()
+        friendTokenList.forEach {friendToken ->
+            DSFireStore.getUserByToken(friendToken)?.let {
+                friends.add(it)
+            }
+        }
+        return friends
+    }
 }

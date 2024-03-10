@@ -140,8 +140,8 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
                     if (event.userToken != "" && currentPopup == null) {
                         if(currentPopup == null){
                             mainViewModel.getNameOf(event.userToken).observe(this) { userName ->
-                                currentPopup = PopupFriendDemand(event.userToken,userName)
-                                currentPopup?.show(supportFragmentManager, "popupFriendDemand")
+                                val friendPopup = PopupFriendDemand(event.userToken,userName)
+                                friendPopup.show(supportFragmentManager, "popupFriendDemand")
                             }
                         }
                     }
