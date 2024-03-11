@@ -1,30 +1,28 @@
 package com.example.pokefight
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
 import com.squareup.picasso.Picasso
 
 class DiscoveredPokemonActivity : AppCompatActivity() {
 
     val mainViewModel by viewModels<MainViewModel>()
-    lateinit var vm : MainViewModel
+    lateinit var vm: MainViewModel
 
-    private var pokemonPokeball : Int = 0
-    private var pokemonSuperball : Int= 0
-    private var pokemonHyperball : Int= 0
+    private var pokemonPokeball: Int = 0
+    private var pokemonSuperball: Int = 0
+    private var pokemonHyperball: Int = 0
 
-    private lateinit var idPurchase : String
+    private lateinit var idPurchase: String
 
     private var counter = 0
 
@@ -64,12 +62,12 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
 
         idPurchase = intent.getStringExtra("PURCHASE") ?: ""
 
-        if (idPurchase != ""){
+        if (idPurchase != "") {
             when (idPurchase) {
                 "COMMON" -> {
-                    if (pokemonPokeball != 0){
+                    if (pokemonPokeball != 0) {
 
-                        vm.getPokemonById(pokemonPokeball).observe(this){
+                        vm.getPokemonById(pokemonPokeball).observe(this) {
                             val imageUrlRare = it!!.sprites.frontDefault
                             Picasso.get().load(imageUrlRare).into(pokemonImage)
                             pokemonName.text = it.name
@@ -79,8 +77,8 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
                 }
 
                 "UNCOMMON" -> {
-                    if (pokemonPokeball != 0){
-                        vm.getPokemonById(pokemonPokeball).observe(this){
+                    if (pokemonPokeball != 0) {
+                        vm.getPokemonById(pokemonPokeball).observe(this) {
                             val imageUrlRare = it!!.sprites.frontDefault
                             Picasso.get().load(imageUrlRare).into(pokemonImage)
                             pokemonName.text = it.name
@@ -90,8 +88,8 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
                 }
 
                 "RARE" -> {
-                    if (pokemonPokeball != 0){
-                        vm.getPokemonById(pokemonPokeball).observe(this){
+                    if (pokemonPokeball != 0) {
+                        vm.getPokemonById(pokemonPokeball).observe(this) {
                             val imageUrlRare = it!!.sprites.frontDefault
                             Picasso.get().load(imageUrlRare).into(pokemonImage)
                             pokemonName.text = it.name
@@ -101,8 +99,8 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
                 }
 
                 "POKEBALL" -> {
-                    if (pokemonPokeball != 0){
-                        vm.getPokemonById(pokemonPokeball).observe(this){
+                    if (pokemonPokeball != 0) {
+                        vm.getPokemonById(pokemonPokeball).observe(this) {
                             val imageUrlRare = it!!.sprites.frontDefault
                             Picasso.get().load(imageUrlRare).into(pokemonImage)
                             pokemonName.text = it.name
@@ -112,8 +110,8 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
                 }
 
                 "SUPERBALL" -> {
-                    if (pokemonSuperball != 0){
-                        vm.getPokemonById(pokemonSuperball).observe(this){
+                    if (pokemonSuperball != 0) {
+                        vm.getPokemonById(pokemonSuperball).observe(this) {
                             val imageUrlRare = it!!.sprites.frontDefault
                             Picasso.get().load(imageUrlRare).into(pokemonImage)
                             pokemonName.text = it.name
@@ -124,8 +122,8 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
                 }
 
                 "HYPERBALL" -> {
-                    if (pokemonHyperball != 0){
-                        vm.getPokemonById(pokemonHyperball).observe(this){
+                    if (pokemonHyperball != 0) {
+                        vm.getPokemonById(pokemonHyperball).observe(this) {
                             val imageUrlRare = it!!.sprites.frontDefault
                             Picasso.get().load(imageUrlRare).into(pokemonImage)
                             pokemonName.text = it.name
@@ -137,10 +135,10 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
         }
     }
 
-    private fun nextPokemonClicked(){
-        if (counter == 2){
-            if (pokemonSuperball != 0){
-                vm.getPokemonById(pokemonSuperball).observe(this){
+    private fun nextPokemonClicked() {
+        if (counter == 2) {
+            if (pokemonSuperball != 0) {
+                vm.getPokemonById(pokemonSuperball).observe(this) {
                     val imageUrlRare = it!!.sprites.frontDefault
                     Picasso.get().load(imageUrlRare).into(pokemonImage)
                     pokemonName.text = it.name
@@ -148,9 +146,9 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
                 }
             }
         }
-        if (counter == 1){
-            if (pokemonPokeball != 0){
-                vm.getPokemonById(pokemonPokeball).observe(this){
+        if (counter == 1) {
+            if (pokemonPokeball != 0) {
+                vm.getPokemonById(pokemonPokeball).observe(this) {
                     val imageUrlRare = it!!.sprites.frontDefault
                     Picasso.get().load(imageUrlRare).into(pokemonImage)
                     pokemonName.text = it.name
@@ -158,7 +156,7 @@ class DiscoveredPokemonActivity : AppCompatActivity() {
                 }
             }
         }
-        if (counter == 0){
+        if (counter == 0) {
             this.finish()
         }
     }

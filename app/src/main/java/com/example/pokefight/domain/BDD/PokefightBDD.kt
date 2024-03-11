@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.*
 import com.example.pokefight.domain.BDD.DAO.UserDAO
 import com.example.pokefight.domain.BDD.DAO.DiscoveredPokemonDAO
-import com.example.pokefight.domain.BDD.Converters
 import com.example.pokefight.domain.BDD.DAO.TeamDAO
 import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
 import com.example.pokefight.domain.BDD.entity.TeamBDD

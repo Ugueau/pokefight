@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentPokedexBinding
 import com.example.pokefight.domain.PokemonRepository
-import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
 

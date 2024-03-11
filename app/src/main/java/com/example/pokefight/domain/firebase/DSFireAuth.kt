@@ -3,9 +3,7 @@ package com.example.pokefight.domain.firebase
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
 

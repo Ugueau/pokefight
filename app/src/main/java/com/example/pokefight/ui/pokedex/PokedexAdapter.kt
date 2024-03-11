@@ -1,16 +1,12 @@
 package com.example.pokefight.ui.pokedex
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
@@ -18,9 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.formatId
-import com.example.pokefight.model.stringify
 import com.squareup.picasso.Picasso
-import okhttp3.internal.lockAndWaitNanos
 
 class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemon>, private val fragmentManager: FragmentManager)  : RecyclerView.Adapter<PokedexAdapter.PokedexViewHolder>(){
     private var teamMode = false

@@ -1,27 +1,18 @@
 package com.example.pokefight
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
-import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.example.pokefight.domain.api.ConnectionManager
-import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class LoginActivity : AppCompatActivity() {
 
@@ -65,10 +56,10 @@ class LoginActivity : AppCompatActivity() {
         passwordLayout = this.findViewById(R.id.layoutPassword)
 
         connexion.setOnClickListener { click ->
-            mainViewModel.checkNetworkConnection(this).observe(this){isConnected ->
-                if(isConnected){
+            mainViewModel.checkNetworkConnection(this).observe(this) { isConnected ->
+                if (isConnected) {
                     this.Connexion()
-                }else {
+                } else {
                     val i = Intent(applicationContext, ErrorActivity::class.java)
                     startActivity(i)
                     finish()
@@ -77,10 +68,10 @@ class LoginActivity : AppCompatActivity() {
         }
 
         newUser.setOnClickListener { click ->
-            mainViewModel.checkNetworkConnection(this).observe(this){isConnected ->
-                if(isConnected){
+            mainViewModel.checkNetworkConnection(this).observe(this) { isConnected ->
+                if (isConnected) {
                     this.tunnelConnexion()
-                }else {
+                } else {
                     val i = Intent(applicationContext, ErrorActivity::class.java)
                     startActivity(i)
                     finish()
@@ -88,6 +79,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
     fun Connexion() {
 
         //gestion de la connexion du User par defaut
@@ -109,7 +101,7 @@ class LoginActivity : AppCompatActivity() {
                     ).show()
 
                     mainViewModel.connectUser(it)
-                    mainViewModel.endSwapDemand().observe(this){
+                    mainViewModel.endSwapDemand().observe(this) {
                         mainActivity = Intent(this, MainActivity::class.java)
                         startActivity(mainActivity)
                         finish()

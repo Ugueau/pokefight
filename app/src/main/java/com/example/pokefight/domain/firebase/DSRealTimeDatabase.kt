@@ -1,8 +1,6 @@
 package com.example.pokefight.domain.firebase
 
 import android.util.Log
-import com.example.pokefight.domain.SwapRepository
-import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
@@ -125,14 +123,19 @@ object DSRealTimeDatabase {
             }.await()
         realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("")
             .addOnFailureListener {
-                Log.e("insertUserInRealTimeDatabase", "failed")
+                Log.e("insertUserInRealTimeDatabase", "crashed")
             }.await()
-        realtime.child("users").child(userToken).child("friend").setValue("").addOnFailureListener {
-            Log.e("insertUserInRealTimeDatabase", "failed")
-        }.await()
+        realtime.child("users").child(userToken).child("friend").child("fromUser").setValue("")
+            .addOnFailureListener {
+                Log.e("insertUserInRealTimeDatabase", "crashed")
+            }.await()
+        realtime.child("users").child(userToken).child("friend").child("hasAccepted").setValue("")
+            .addOnFailureListener {
+                Log.e("insertUserInRealTimeDatabase", "crashed")
+            }.await()
         realtime.child("users").child(userToken).child("esp32_swap").setValue("")
             .addOnFailureListener {
-                Log.e("insertUserInRealTimeDatabase", "failed")
+                Log.e("insertUserInRealTimeDatabase", "crashed")
             }.await()
     }
 
@@ -164,6 +167,25 @@ object DSRealTimeDatabase {
                     snapshot.getValue<String>()?.let {value ->
                         realtime.child("users").child(userToken).child("esp32_swap").setValue("")
                         callback(RealTimeDatabaseEvent.SWAP_CREATE_SWAP(value))
+                    }
+                }else if(snapshot.key == "friend") {
+                    snapshot.child("fromUser").key?.let { field ->
+                        snapshot.child("fromUser").getValue<String>()?.let { value ->
+                            if (value.isNotEmpty()) {
+                                realtime.child("users").child(userToken).child("friend").child("fromUser").setValue("")
+                                callback(RealTimeDatabaseEvent.FRIEND_DEMAND(value))
+                            }
+                        }
+                    }
+                    snapshot.child("hasAccepted").key?.let { field ->
+                        snapshot.child("hasAccepted").getValue<String>()?.let { value ->
+                            if (value != "denied" && value != "") {
+                                callback(RealTimeDatabaseEvent.FRIEND_RESPONSE(value))
+                            } else if (value == "denied") {
+                                callback(RealTimeDatabaseEvent.FRIEND_RESPONSE(""))
+                            }
+                            realtime.child("users").child(userToken).child("friend").child("hasAccepted").setValue("")
+                        }
                     }
                 }
             }
@@ -227,5 +249,33 @@ object DSRealTimeDatabase {
 
     fun cancelFight(tokenOpponent: String){
         realtime.child("users").child(tokenOpponent).child("fight").child("cancel").setValue(true)
+    }
+    
+    suspend fun askAsAFriend(targetUserToken : String, fromUserToken : String) :Boolean {
+        var success = true
+        realtime.child("users").child(targetUserToken).child("friend").child("fromUser").setValue(fromUserToken).addOnFailureListener {
+            success = false
+        }.await()
+        return success
+    }
+
+    suspend fun sendFriendAccept(askerToken: String, userToken: String) {
+        realtime.child("users").child(askerToken).child("friend").child("hasAccepted")
+            .setValue(userToken).await()
+    }
+
+    suspend fun sendFriendDeny(askerToken: String) {
+        if (askerToken.isNotEmpty()) {
+            realtime.child("users").child(askerToken).child("friend").child("hasAccepted")
+                .setValue("denied").await()
+        }
+    }
+
+    suspend fun clearUserSpace(userToken: String){
+        realtime.child("users").child(userToken).child("friend").child("hasAccepted").setValue("").await()
+        realtime.child("users").child(userToken).child("friend").child("fromUser").setValue("").await()
+        realtime.child("users").child(userToken).child("esp32_swap").setValue("").await()
+        realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("").await()
+        realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").await()
     }
 }

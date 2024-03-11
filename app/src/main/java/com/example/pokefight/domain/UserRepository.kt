@@ -1,6 +1,5 @@
 package com.example.pokefight.domain
 
-import android.util.Log
 import com.example.pokefight.domain.BDD.BDDDataSource
 import com.example.pokefight.domain.cache.UserCache
 import com.example.pokefight.domain.firebase.DSFireAuth
@@ -218,5 +217,44 @@ object UserRepository {
 
     suspend fun getUser(token:String): User?{
        return DSFireStore.getUserByToken(token)
+    }
+    
+    suspend fun sendFriendAccept(askerToken :String) {
+        DSRealTimeDatabase.sendFriendAccept(askerToken, getConnectedUser().UserToken)
+    }
+
+    suspend fun sendFriendDeny(askerToken :String) {
+        DSRealTimeDatabase.sendFriendDeny(askerToken)
+    }
+
+    suspend fun askAsAFriend(targetUserToken : String) : Boolean {
+        return DSRealTimeDatabase.askAsAFriend(targetUserToken, getConnectedUser().UserToken)
+    }
+
+    suspend fun cleanNotifications(){
+        DSRealTimeDatabase.clearUserSpace(getConnectedUser().UserToken)
+    }
+
+    suspend fun addFriend(friendToken : String){
+        val user = getConnectedUser()
+        if (user.userId != null) {
+            val friends = DSFireStore.getFiendsFromUserToken(user.UserToken)
+            val newFriendList = friends.toMutableList()
+            if(!friends.contains(friendToken)){
+                newFriendList.add(friendToken)
+            }
+            DSFireStore.insertInFriends(user.UserToken, newFriendList)
+        }
+    }
+
+    suspend fun getFriends() : List<User> {
+        val friendTokenList = DSFireStore.getFiendsFromUserToken(getConnectedUser().UserToken)
+        val friends = mutableListOf<User>()
+        friendTokenList.forEach {friendToken ->
+            DSFireStore.getUserByToken(friendToken)?.let {
+                friends.add(it)
+            }
+        }
+        return friends
     }
 }

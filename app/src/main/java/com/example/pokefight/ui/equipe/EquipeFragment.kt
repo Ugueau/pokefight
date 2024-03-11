@@ -12,7 +12,6 @@ import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentEquipeBinding
 import com.example.pokefight.ui.MainViewModel
 import androidx.appcompat.app.AppCompatActivity
-import com.example.pokefight.domain.api.ConnectionManager
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.ErrorActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton

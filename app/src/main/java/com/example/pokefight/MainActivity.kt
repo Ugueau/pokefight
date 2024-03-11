@@ -1,12 +1,10 @@
 package com.example.pokefight
 
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -17,10 +15,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.pokefight.databinding.ActivityMainBinding
-import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.friend.PopupFriendDemand
 import com.example.pokefight.ui.swap.PopupSwapDemand
 import com.example.pokefight.ui.swap.PopupSwapWaiting
 import com.example.pokefight.ui.swap.SwapActivity
@@ -73,8 +71,8 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
 
         activeNotifications()
 
-        mainViewModel.logout.observe(this){
-            if(it) {
+        mainViewModel.logout.observe(this) {
+            if (it) {
                 val i = Intent(applicationContext, LoginActivity::class.java)
                 startActivity(i)
                 finish()
@@ -110,7 +108,7 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
                         }
                         val intent = Intent(this, SwapActivity::class.java)
                         startActivity(intent)
-                    }else if (!event.response){
+                    } else if (!event.response) {
                         currentPopup?.dismiss()
                         currentPopup = null
                     }
@@ -135,6 +133,26 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
                         isWaitingForSwapResponse = true
                         currentPopup = PopupSwapWaiting(event.targetToken)
                         currentPopup?.show(supportFragmentManager, "popupSwapDemand")
+                    }
+                }
+
+                is RealTimeDatabaseEvent.FRIEND_DEMAND -> {
+                    if (event.userToken != "" && currentPopup == null) {
+                        if(currentPopup == null){
+                            mainViewModel.getNameOf(event.userToken).observe(this) { userName ->
+                                val friendPopup = PopupFriendDemand(event.userToken,userName)
+                                friendPopup.show(supportFragmentManager, "popupFriendDemand")
+                            }
+                        }
+                    }
+                }
+
+                is RealTimeDatabaseEvent.FRIEND_RESPONSE -> {
+                    if (event.userToken != "") {
+                        mainViewModel.addFriend(event.userToken)
+                    }
+                    else{
+                        //Notify user refused friend request
                     }
                 }
 

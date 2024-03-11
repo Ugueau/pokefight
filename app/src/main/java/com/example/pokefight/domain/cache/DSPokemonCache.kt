@@ -1,7 +1,6 @@
 package com.example.pokefight.domain.cache
 
 import com.example.pokefight.model.Pokemon
-import java.lang.Exception
 import java.lang.IndexOutOfBoundsException
 
 object DSPokemonCache {

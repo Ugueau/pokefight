@@ -23,6 +23,7 @@ class MainViewModel : ViewModel() {
     val pokemonSelected = MutableLiveData<Int>()
     val nbOfValidation = MutableLiveData<Int>()
     val logout = MutableLiveData<Boolean>()
+    val friendsUpdated = MutableLiveData<Boolean>()
 
     fun connectUser(connectedUser: User) {
 
@@ -217,7 +218,7 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun createUser(email: String, password: String, nickname : String): LiveData<User?> {
+    fun createUser(email: String, password: String, nickname: String): LiveData<User?> {
         val liveData = MutableLiveData<User?>()
         viewModelScope.launch {
             val uid = UserRepository.createUser(email, password)
@@ -292,23 +293,26 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun listenOnCurrentSwap(callback: (pokemon : Pokemon) -> Unit) {
-        SwapRepository.listenOnCurrentSwap{event ->
-            if(event is RealTimeDatabaseEvent.SWAP_POKEMON_CHANGED) {
+    fun listenOnCurrentSwap(callback: (pokemon: Pokemon) -> Unit) {
+        SwapRepository.listenOnCurrentSwap { event ->
+            if (event is RealTimeDatabaseEvent.SWAP_POKEMON_CHANGED) {
                 viewModelScope.launch {
                     val pokemon = PokemonRepository.getPokemonById(event.pokemonId)
-                    pokemon?.let{
+                    pokemon?.let {
                         callback(it)
                     }
                 }
             }
-            if(event is RealTimeDatabaseEvent.SWAP_VALIDATE) {
+            if (event is RealTimeDatabaseEvent.SWAP_VALIDATE) {
                 nbOfValidation.postValue(event.nbOfValidation)
             }
         }
     }
 
     fun setNotificationListener(callback: (RealTimeDatabaseEvent) -> Unit) {
+        viewModelScope.launch {
+            UserRepository.cleanNotifications()
+        }
         UserRepository.setNotificationListener { event ->
             if (event is RealTimeDatabaseEvent.SWAP_DEMAND && event.userToken.isNotEmpty()) {
                 SwapRepository.setCurrentSwapName("${event.userToken}_${UserRepository.getConnectedUser().UserToken}")
@@ -347,7 +351,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun endSwapDemand() : LiveData<Boolean> {
+    fun endSwapDemand(): LiveData<Boolean> {
         val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val data = SwapRepository.clearSwapDemand()
@@ -370,17 +374,17 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun setPokemonSelectedForSwap(pokemonId : Int) {
+    fun setPokemonSelectedForSwap(pokemonId: Int) {
         pokemonSelected.postValue(pokemonId)
     }
 
-    fun validateSwap(){
+    fun validateSwap() {
         viewModelScope.launch {
             SwapRepository.validateSwap()
         }
     }
 
-    fun swapPokemons(pokemonId1 : Int, pokemonId2 : Int) : LiveData<Boolean> {
+    fun swapPokemons(pokemonId1: Int, pokemonId2: Int): LiveData<Boolean> {
         val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val data = SwapRepository.swapPokemons(pokemonId1, pokemonId2)
@@ -398,11 +402,10 @@ class MainViewModel : ViewModel() {
         UserRepository.deconnectUser()
     }
 
-    fun checkNetworkConnection(context : Context) : LiveData<Boolean> {
+    fun checkNetworkConnection(context: Context): LiveData<Boolean> {
         val liveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val data = ConnectionManager.checkInternetConnection(context)
-            Log.e("checkNetwork", "Network access state : ${data.toString()} ")
             liveData.postValue(data)
         }
         return liveData
@@ -421,7 +424,42 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
+    fun sendFriendResponse(askerToken: String, response: Boolean) {
+        viewModelScope.launch {
+            if (response) {
+                UserRepository.sendFriendAccept(askerToken)
+            } else {
+                UserRepository.sendFriendDeny(askerToken)
+            }
+        }
+    }
+
+    fun askAsAFriend(targetUserToken: String): LiveData<Boolean> {
+        val liveData = MutableLiveData<Boolean>()
+        viewModelScope.launch {
+            val data = UserRepository.askAsAFriend(targetUserToken)
+            liveData.postValue(data)
+        }
+        return liveData
+    }
+
     fun cancelFight(tokenOpponent: String){
         FightRepository.cancelFight(tokenOpponent)
+    }
+    
+    fun addFriend(friendToken: String) {
+        viewModelScope.launch {
+            UserRepository.addFriend(friendToken)
+            friendsUpdated.postValue(true)
+        }
+    }
+
+    fun getFriends(): LiveData<List<User>> {
+        val liveData = MutableLiveData<List<User>>()
+        viewModelScope.launch {
+            val data = UserRepository.getFriends()
+            liveData.postValue(data)
+        }
+        return liveData
     }
 }

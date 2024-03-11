@@ -6,29 +6,42 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.pokefight.R
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import com.example.pokefight.BuildConfig
 import com.example.pokefight.LoginActivity
-import com.example.pokefight.domain.api.ConnectionManager
+import com.example.pokefight.R
 
 class SplashScreen : AppCompatActivity() {
     val mainViewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_screen)
-
         val logo = this.findViewById<ImageView>(R.id.splash_logo)
-        applyReboundZoomAnimation(logo,5)
+        val buildModeText = findViewById<TextView>(R.id.build_mode)
+        val background = findViewById<ConstraintLayout>(R.id.splash_background)
+        if (BuildConfig.buildName == "dev") {
+            buildModeText.text = "DEBUG"
+            val colorRes = ContextCompat.getColor(this, R.color.md_theme_light_secondaryContainer)
+            background.setBackgroundColor(colorRes)
+        } else if (BuildConfig.buildName == "preproduction") {
+            buildModeText.text = "PRE-PRODUCTION"
+            val colorRes = ContextCompat.getColor(this, R.color.md_theme_light_tertiaryContainer)
+            background.setBackgroundColor(colorRes)
+        }
+        applyReboundZoomAnimation(logo, 5)
 
-        mainViewModel.checkNetworkConnection(this).observe(this){isConnected ->
-            if(isConnected){
+        mainViewModel.checkNetworkConnection(this).observe(this) { isConnected ->
+            if (isConnected) {
                 mainViewModel.getPokemonList(1, 30).observe(this) {
                     val i = Intent(applicationContext, LoginActivity::class.java)
                     startActivity(i)
                     finish()
                 }
-            }else{
+            } else {
                 val i = Intent(applicationContext, ErrorActivity::class.java)
                 startActivity(i)
                 finish()
