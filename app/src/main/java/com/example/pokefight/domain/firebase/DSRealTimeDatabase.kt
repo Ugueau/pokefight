@@ -220,4 +220,12 @@ object DSRealTimeDatabase {
                 .setValue(nbOfValidation + 1)
         }.await()
     }
+
+    fun askFight(tokenOpponent : String, userToken: String){
+        realtime.child("users").child(tokenOpponent).child("fight").child("ask").setValue(tokenOpponent)
+    }
+
+    fun cancelFight(tokenOpponent: String){
+        realtime.child("users").child(tokenOpponent).child("fight").child("cancel").setValue(true)
+    }
 }

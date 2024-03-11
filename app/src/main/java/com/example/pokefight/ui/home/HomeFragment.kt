@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -21,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentHomeBinding
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.fight.PopupWaitingFight
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
@@ -59,7 +61,12 @@ class HomeFragment : Fragment() {
         }
 
     private fun setResult(contents: String) {
-        Log.i("setResult: ", contents)
+
+        vm.askFight(contents)
+
+        val popupWaitingFight = PopupWaitingFight(contents)
+
+        popupWaitingFight.show((activity as AppCompatActivity).supportFragmentManager, "popupWaitingFight")
     }
 
     private fun showCamera() {

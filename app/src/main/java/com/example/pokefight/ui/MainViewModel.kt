@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.pokefight.domain.FightRepository
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.domain.SwapRepository
 import com.example.pokefight.domain.UserRepository
@@ -407,4 +408,20 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
+    fun askFight(tokenOpponent: String){
+        val userToken = this.getConnectedUser().UserToken
+        FightRepository.askFight(tokenOpponent, userToken)
+    }
+    fun getUser(token:String): MutableLiveData<User?>{
+        val liveData = MutableLiveData<User?>()
+        viewModelScope.launch {
+            val data = UserRepository.getUser(token)
+            liveData.postValue(data)
+        }
+        return liveData
+    }
+
+    fun cancelFight(tokenOpponent: String){
+        FightRepository.cancelFight(tokenOpponent)
+    }
 }

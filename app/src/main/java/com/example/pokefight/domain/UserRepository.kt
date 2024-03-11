@@ -215,4 +215,8 @@ object UserRepository {
         deconnectUser()
         DSFireAuth.logout()
     }
+
+    suspend fun getUser(token:String): User?{
+       return DSFireStore.getUserByToken(token)
+    }
 }

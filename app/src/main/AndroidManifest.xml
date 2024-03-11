@@ -20,15 +20,16 @@
         android:theme="@style/Theme.Pokefight"
         tools:targetApi="31">
         <activity
+            android:name=".ui.fight.fightActivity"
+            android:exported="false" />
+        <activity
             android:name=".DiscoveredPokemonActivity"
             android:exported="false"
             android:label="@string/title_activity_discovered_pokemon"
             android:theme="@style/Theme.Pokefight" />
-
         <activity
             android:name=".ui.ErrorActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.swap.SwapActivity"
             android:exported="false" />
@@ -50,11 +51,10 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
-        
-        <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
-            tools:replace="android:screenOrientation"/>
-
+            tools:replace="android:screenOrientation" />
     </application>
 
 </manifest>
