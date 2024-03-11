@@ -12,9 +12,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.pokefight.R
+import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
 
-class PopupAskFight: DialogFragment(){
+class PopupAskFight(val opponentToken:String): DialogFragment(){
 
     val MainViewModel by viewModels<MainViewModel>()
     lateinit var vm: MainViewModel
@@ -44,6 +45,19 @@ class PopupAskFight: DialogFragment(){
         }
 
         vm = ViewModelProvider(this)[MainViewModel::class.java]
+
+        vm.setNotificationListener { event ->
+            when (event) {
+                is RealTimeDatabaseEvent.CANCEL_FIGHT -> {
+                    if (event.response == true){
+                        dismiss()
+                    }
+                }
+                else -> {
+                    //Do nothing
+                }
+            }
+        }
 
     }
 }

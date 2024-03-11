@@ -188,6 +188,17 @@ object DSRealTimeDatabase {
                         }
                     }
                 }
+                else if (snapshot.key == "fight"){
+                    snapshot.child("ask").getValue<String>()?.let {
+                        callback(RealTimeDatabaseEvent.ASK_FIGHT(it))
+                    }
+                    snapshot.child("cancel").getValue<Boolean>()?.let{
+                        callback(RealTimeDatabaseEvent.CANCEL_FIGHT(it))
+                    }
+                    snapshot.child("accepted").getValue<Boolean>()?.let{
+                        callback(RealTimeDatabaseEvent.ACCEPTED_FIGHT(it))
+                    }
+                }
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {

@@ -8,5 +8,8 @@ sealed class RealTimeDatabaseEvent {
     data class SWAP_CREATE_SWAP(val targetToken : String) : RealTimeDatabaseEvent()
     data class FRIEND_DEMAND(val userToken: String) : RealTimeDatabaseEvent()
     data class FRIEND_RESPONSE(val userToken: String) : RealTimeDatabaseEvent()
+    data class ASK_FIGHT(val opponentToken: String) : RealTimeDatabaseEvent()
+    data class CANCEL_FIGHT(val response: Boolean) : RealTimeDatabaseEvent()
+    data class ACCEPTED_FIGHT(val response: Boolean) : RealTimeDatabaseEvent()
 
 }

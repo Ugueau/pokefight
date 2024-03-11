@@ -58,6 +58,11 @@ class HomeFragment : Fragment() {
 
         val qrcodeReader = QRCodeTool(this, requireContext())
 
+        qrcodeReader.result.observe(viewLifecycleOwner){
+            val popupWaitingFight = PopupWaitingFight(it)
+            popupWaitingFight.show((activity as AppCompatActivity).supportFragmentManager, "popupWaitingFight")
+        }
+
         FightButton = view.findViewById<Button>(R.id.FightButton)
         FightButton.setOnClickListener {
             qrcodeReader.scan()
