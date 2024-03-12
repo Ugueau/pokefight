@@ -30,7 +30,7 @@ Welcome to Pokéfight, an exciting school project created by Mael CHALON and Hug
 
 To install Pokéfight, follow the steps below:
 
-1. Get the APK on this link : [[https://app.bitrise.io/app/880afb6b-a5f9-4b4f-a574-3a3e8ec443ac/build/f03f9edc-1660-420e-a8bc-1efa0466b0bc/artifact/499021091c97193e/p/cea5cfacb9563620db58cbe76d26ec34](https://app.bitrise.io/app/880afb6b-a5f9-4b4f-a574-3a3e8ec443ac/build/f03f9edc-1660-420e-a8bc-1efa0466b0bc/artifact/499021091c97193e/p/cea5cfacb9563620db58cbe76d26ec34)](https://app.bitrise.io/app/880afb6b-a5f9-4b4f-a574-3a3e8ec443ac/build/0e501235-f546-4217-9420-e3b3d7c02c9e/artifact/737decd625917dc3/p/23ebd2a488c7bf3bdf2ed043a99e3f55)
+1. Get the APK on this link : (https://app.bitrise.io/app/880afb6b-a5f9-4b4f-a574-3a3e8ec443ac/build/0e501235-f546-4217-9420-e3b3d7c02c9e/artifact/737decd625917dc3/p/23ebd2a488c7bf3bdf2ed043a99e3f55)
 
 2. Enjoy the Pokéfight experience and become the ultimate Pokémon trainer!
 
