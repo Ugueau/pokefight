@@ -1,6 +1,6 @@
 # Pokéfight - Pokémon Management and Battle Application
 
-Welcome to Pokéfight, an exciting school project created by Mael CHALON and Hugo MILLOT! This application is designed to enhance your Pokémon experience by allowing you to collect Pokémon, manage a team, engage in battles, and even exchange Pokémon with others using a specially crafted ESP32 microcontroller.
+Welcome to Pokéfight, an exciting school project created by Mael CHALON and Hugo MILLOT and Mohamed LAIDAOUI! This application is designed to enhance your Pokémon experience by allowing you to collect Pokémon, manage a team, engage in battles, and even exchange Pokémon with others using a specially crafted ESP32 microcontroller.
 
 ## Features
 
