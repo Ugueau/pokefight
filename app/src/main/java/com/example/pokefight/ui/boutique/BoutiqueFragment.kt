@@ -126,7 +126,7 @@ class BoutiqueFragment : Fragment() {
             else{
                 Toast.makeText(
                     context,
-                    "Pokemon not allready loaded",
+                    "Pokemon not already loaded",
                     Toast.LENGTH_SHORT,
                 ).show()
             }

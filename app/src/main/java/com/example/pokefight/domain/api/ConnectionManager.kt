@@ -3,6 +3,7 @@ package com.example.pokefight.domain.api
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +29,10 @@ class ConnectionManager {
         }
 
         suspend fun checkInternetConnection(context: Context): Boolean{
+            if (Build.DEVICE.contains("emulator")){
+                return true
+            }
+
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
             val network = connectivityManager.activeNetwork
