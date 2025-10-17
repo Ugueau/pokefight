@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.pokefight.domain.BDD.PokefightBDD
 import com.example.pokefight.domain.firebase.DSFireStore
 import com.example.pokefight.domain.firebase.DSRealTimeDatabase
+import com.example.pokefight.domain.preferences.PreferencesDataSource
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import timber.log.Timber
@@ -19,6 +20,7 @@ class PokefightApp : Application() {
         FirebaseAuth.getInstance()
         DSFireStore.startFireStoreConnection()
         DSRealTimeDatabase.startRealTimeConnection()
+        PreferencesDataSource.init(this)
     }
 
 }

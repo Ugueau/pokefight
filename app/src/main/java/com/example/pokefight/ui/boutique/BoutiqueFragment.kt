@@ -1,5 +1,4 @@
 package com.example.pokefight.ui.boutique
-import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +9,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
-import com.example.pokefight.DiscoveredPokemonActivity
 import com.example.pokefight.R
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
@@ -75,11 +72,57 @@ class BoutiqueFragment : Fragment() {
         NomPokemon2 = view.findViewById(R.id.NomPokemon2)
         NomPokemon3 = view.findViewById(R.id.NomPokemon3)
 
-        loadPokemonBoutique(
-            commonCallback = ::reloadPokemonCommon,
-            uncommonCallback = ::reloadPokemonUncommon,
-            rareCallback = ::reloadPokemonRare
-        )
+        vm.getDraws().observe(viewLifecycleOwner){ pokemonDraw ->
+            loadPokemonCommon(pokemonDraw.id1)
+            loadPokemonUncommon(pokemonDraw.id2)
+            loadPokemonRare(pokemonDraw.id3)
+            val idCommon = pokemonDraw.id1
+            val idUncommon = pokemonDraw.id2
+            val idRare = pokemonDraw.id3
+            // instentiation des layout d'achat du fragment
+            // première ligne pour l'achat de pokemon
+            val layoutCarte1 = (view.findViewById(R.id.layoutCarte1)as ConstraintLayout)
+            layoutCarte1.setOnClickListener {
+                lateinit var pokemon: Pokemon
+                vm.getPokemonById(idCommon).observe(viewLifecycleOwner){
+                    if (it != null) {
+                        pokemon = it
+                        showPopupConfirmAchat(
+                            vm.prix_boutique.keys.elementAt(0),
+                            listOf<Pokemon>(pokemon)
+                        )
+                    }
+                }
+            }
+
+            val layoutCarte2 = (view.findViewById(R.id.layoutCarte2)as ConstraintLayout)
+            layoutCarte2.setOnClickListener {
+                lateinit var pokemon: Pokemon
+                vm.getPokemonById(idUncommon).observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        pokemon = it
+                        showPopupConfirmAchat(
+                            vm.prix_boutique.keys.elementAt(1),
+                            listOf<Pokemon>(pokemon)
+                        )
+                    }
+                }
+            }
+
+            val layoutCarte3 = (view.findViewById(R.id.layoutCarte3)as ConstraintLayout)
+            layoutCarte3.setOnClickListener {
+                lateinit var pokemon: Pokemon
+                vm.getPokemonById(idRare).observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        pokemon = it
+                        showPopupConfirmAchat(
+                            vm.prix_boutique.keys.elementAt(2),
+                            listOf<Pokemon>(pokemon)
+                        )
+                    }
+                }
+            }
+        }
 
         tvPrixCoffrePokeball = view.findViewById(R.id.prix_coffre_pokeball)
         tvPrixCoffreSuperball = view.findViewById(R.id.prix_coffre_superball)
@@ -106,83 +149,6 @@ class BoutiqueFragment : Fragment() {
         layoutPokedollar = view.findViewById(R.id.layoutPokedollar)
         layoutPokedollar.setOnClickListener { click -> this.showPopupPokedollar() }
 
-        // instentiation des layout d'achat du fragment
-        // première ligne pour l'achat de pokemon
-        val layoutCarte1 = (view.findViewById(R.id.layoutCarte1)as ConstraintLayout)
-        layoutCarte1.setOnClickListener {
-
-            val id = vm.pokemon_boutique["COMMON"]
-
-            if (id != null){
-                lateinit var pokemon: Pokemon
-                vm.getPokemonById(id).observe(viewLifecycleOwner){
-                    if (it != null) {
-                        pokemon = it
-                        showPopupConfirmAchat(
-                            vm.prix_boutique.keys.elementAt(0),
-                            listOf<Pokemon>(pokemon)
-                        )
-                    }
-                }
-            }
-            else{
-                Toast.makeText(
-                    context,
-                    "Pokemon not already loaded",
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-        }
-
-        val layoutCarte2 = (view.findViewById(R.id.layoutCarte2)as ConstraintLayout)
-        layoutCarte2.setOnClickListener {
-            val id = vm.pokemon_boutique["UNCOMMON"]
-
-            if (id != null){
-                lateinit var pokemon: Pokemon
-                vm.getPokemonById(id).observe(viewLifecycleOwner){
-                    if (it != null) {
-                        pokemon = it
-                        showPopupConfirmAchat(
-                            vm.prix_boutique.keys.elementAt(1),
-                            listOf<Pokemon>(pokemon)
-                        )
-                    }
-                }
-            }
-            else{
-                Toast.makeText(
-                    context,
-                    "Pokemon not already loaded",
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-        }
-
-        val layoutCarte3 = (view.findViewById(R.id.layoutCarte3)as ConstraintLayout)
-        layoutCarte3.setOnClickListener {
-            val id = vm.pokemon_boutique["RARE"]
-
-            if (id != null){
-                lateinit var pokemon: Pokemon
-                vm.getPokemonById(id).observe(viewLifecycleOwner){
-                    if (it != null) {
-                        pokemon = it
-                        showPopupConfirmAchat(
-                            vm.prix_boutique.keys.elementAt(2),
-                            listOf<Pokemon>(pokemon)
-                        )
-                    }
-                }
-            }
-            else{
-                Toast.makeText(
-                    context,
-                    "Pokemon not allready loaded",
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-        }
 
         // deuxième ligne pour l'achat de coffre
         val layoutPokeball = (view.findViewById(R.id.layoutPokeball)as ConstraintLayout)
@@ -213,7 +179,7 @@ class BoutiqueFragment : Fragment() {
             vm.getPokemonListByIds(pokemonIds).observe(viewLifecycleOwner){ pokemonList ->
                 pokemons.addAll(pokemonList)
                 showPopupConfirmAchat(
-                    vm.prix_boutique.keys.elementAt(5),
+                    vm.prix_boutique.keys.elementAt(4),
                     pokemons
                 )
             }
@@ -258,9 +224,9 @@ class BoutiqueFragment : Fragment() {
         tvSoldeUser.text = vm.getConnectedUser().pokedollar.toString()
     }
 
-    fun reloadPokemonCommon(){
+    fun loadPokemonCommon(pokemonId : Int){
         lateinit var common : Pokemon
-        vm.getPokemonById(vm.pokemon_boutique["COMMON"]!!).observe(viewLifecycleOwner){
+        vm.getPokemonById(pokemonId).observe(viewLifecycleOwner){
             if (it == null){
                 Log.e("PokemonError", "Pokemon not found or unauthorized")
             }
@@ -274,9 +240,9 @@ class BoutiqueFragment : Fragment() {
 
     }
 
-    fun reloadPokemonUncommon(){
+    fun loadPokemonUncommon(pokemonId : Int){
         lateinit var uncommon : Pokemon
-        vm.getPokemonById(vm.pokemon_boutique["UNCOMMON"]!!).observe(viewLifecycleOwner){
+        vm.getPokemonById(pokemonId).observe(viewLifecycleOwner){
             if (it == null){
                 Log.e("PokemonError", "Pokemon not found or unauthorized")
             }
@@ -289,9 +255,9 @@ class BoutiqueFragment : Fragment() {
         }
     }
 
-    fun reloadPokemonRare(){
+    fun loadPokemonRare(pokemonId : Int){
         lateinit var rare : Pokemon
-        vm.getPokemonById(vm.pokemon_boutique["RARE"]!!).observe(viewLifecycleOwner){
+        vm.getPokemonById(pokemonId).observe(viewLifecycleOwner){
             if (it == null){
                 Log.e("PokemonError", "Pokemon not found or unauthorized")
             }
@@ -300,50 +266,6 @@ class BoutiqueFragment : Fragment() {
                 val imageUrlRare = rare.sprites.frontDefault
                 Picasso.get().load(imageUrlRare).into(SpritePokemon3)
                 NomPokemon3.text = rare.name
-            }
-        }
-    }
-
-    fun loadPokemonBoutique(commonCallback: () -> Unit, uncommonCallback: () -> Unit, rareCallback: () -> Unit){
-        // set des pokemons de la boutique
-        lateinit var common : Pokemon
-        lateinit var uncommon : Pokemon
-        lateinit var rare : Pokemon
-
-
-        // common
-        vm.generatePokemonCommonBoutique().observe(viewLifecycleOwner){ it ->
-            if (it == null){
-                Log.e("PokemonError", "Pokemon not found or unauthorized")
-            }
-            else{
-                common = it
-                vm.SetBoutiquePokemonComon(common.id)
-                commonCallback()
-            }
-        }
-
-        //uncommon
-        vm.generatePokemonUncommonBoutique().observe(viewLifecycleOwner){ it ->
-            if (it == null){
-                Log.e("PokemonError", "Pokemon not found or unauthorized")
-            }
-            else{
-                uncommon = it
-                vm.SetBoutiquePokemonUncomon(uncommon.id)
-                uncommonCallback()
-            }
-        }
-
-        //rare
-        vm.generatePokemonRareBoutique().observe(viewLifecycleOwner){ it ->
-            if (it == null){
-                Log.e("PokemonError", "Pokemon not found or unauthorized")
-            }
-            else{
-                rare = it
-                vm.SetBoutiquePokemonRare(rare.id)
-                rareCallback()
             }
         }
     }
