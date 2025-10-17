@@ -8,6 +8,7 @@ import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.model.User
+import timber.log.Timber
 
 object UserRepository {
 
@@ -172,9 +173,14 @@ object UserRepository {
             newPokemonId.forEach { pokemonId ->
                 if (!alreadyDiscovered.contains(pokemonId)) {
                     alreadyDiscovered.add(pokemonId)
+
                 }
             }
-            BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
+            try {
+                BDDDataSource.updateDiscoveredPokemons(alreadyDiscovered, user.userId)
+            } catch (e: Exception) {
+                Timber.tag("UserRepository ERROR").e("Database update failed: %s", e.stackTraceToString())
+            }
             DSFireStore.insertInDiscoveredPokemon(user.UserToken, alreadyDiscovered)
         }
     }

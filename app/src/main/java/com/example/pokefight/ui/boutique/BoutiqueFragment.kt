@@ -1,4 +1,5 @@
 package com.example.pokefight.ui.boutique
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
+import com.example.pokefight.DiscoveredPokemonActivity
 import com.example.pokefight.R
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
@@ -45,6 +47,8 @@ class BoutiqueFragment : Fragment() {
     private lateinit var NomPokemon1 : TextView
     private lateinit var NomPokemon2 : TextView
     private lateinit var NomPokemon3 : TextView
+
+    private var isAchatConfirmed = false
 
     companion object {
         fun newInstance() = BoutiqueFragment()
@@ -116,12 +120,10 @@ class BoutiqueFragment : Fragment() {
                         pokemon = it
                         showPopupConfirmAchat(
                             vm.prix_boutique.keys.elementAt(0),
-                            pokemon
+                            listOf<Pokemon>(pokemon)
                         )
                     }
                 }
-
-
             }
             else{
                 Toast.makeText(
@@ -143,7 +145,7 @@ class BoutiqueFragment : Fragment() {
                         pokemon = it
                         showPopupConfirmAchat(
                             vm.prix_boutique.keys.elementAt(1),
-                            pokemon
+                            listOf<Pokemon>(pokemon)
                         )
                     }
                 }
@@ -151,7 +153,7 @@ class BoutiqueFragment : Fragment() {
             else{
                 Toast.makeText(
                     context,
-                    "Pokemon not allready loaded",
+                    "Pokemon not already loaded",
                     Toast.LENGTH_SHORT,
                 ).show()
             }
@@ -168,7 +170,7 @@ class BoutiqueFragment : Fragment() {
                         pokemon = it
                         showPopupConfirmAchat(
                             vm.prix_boutique.keys.elementAt(2),
-                            pokemon
+                            listOf<Pokemon>(pokemon)
                         )
                     }
                 }
@@ -185,26 +187,54 @@ class BoutiqueFragment : Fragment() {
         // deuxième ligne pour l'achat de coffre
         val layoutPokeball = (view.findViewById(R.id.layoutPokeball)as ConstraintLayout)
         layoutPokeball.setOnClickListener {
-            showPopupConfirmAchat(
-                vm.prix_boutique.keys.elementAt(3),
-                null
-            )
+            val random = java.util.Random()
+            val randomPokemonId = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+            val pokemons = mutableListOf<Pokemon>()
+            vm.getPokemonById(randomPokemonId).observe(viewLifecycleOwner){
+                if (it != null) {
+                    pokemons.add(it)
+                    showPopupConfirmAchat(
+                        vm.prix_boutique.keys.elementAt(3),
+                        pokemons
+                    )
+                }
+            }
         }
 
         val layoutSuperball = (view.findViewById(R.id.layoutSuperball)as ConstraintLayout)
         layoutSuperball.setOnClickListener {
-            showPopupConfirmAchat(
-                vm.prix_boutique.keys.elementAt(4),
-                null
-            )
+            val pokemons = mutableListOf<Pokemon>()
+            val pokemonIds = mutableListOf<Int>()
+            for (i in 0..1){
+                val random = java.util.Random()
+                val randomPokemonId = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+                pokemonIds.add(randomPokemonId)
+            }
+            vm.getPokemonListByIds(pokemonIds).observe(viewLifecycleOwner){ pokemonList ->
+                pokemons.addAll(pokemonList)
+                showPopupConfirmAchat(
+                    vm.prix_boutique.keys.elementAt(5),
+                    pokemons
+                )
+            }
         }
 
         val layoutHyperball = (view.findViewById(R.id.layoutHyperball)as ConstraintLayout)
         layoutHyperball.setOnClickListener {
-            showPopupConfirmAchat(
-                vm.prix_boutique.keys.elementAt(5),
-                null
-            )
+            val pokemons = mutableListOf<Pokemon>()
+            val pokemonIds = mutableListOf<Int>()
+            for (i in 0..2){
+                val random = java.util.Random()
+                val randomPokemonId = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+                pokemonIds.add(randomPokemonId)
+            }
+            vm.getPokemonListByIds(pokemonIds).observe(viewLifecycleOwner){ pokemonList ->
+                pokemons.addAll(pokemonList)
+                showPopupConfirmAchat(
+                    vm.prix_boutique.keys.elementAt(5),
+                    pokemons
+                )
+            }
         }
 
         return view;
@@ -215,10 +245,10 @@ class BoutiqueFragment : Fragment() {
         popupPokedollar.show((activity as AppCompatActivity).supportFragmentManager, "popupPokedollar")
     }
 
-    private fun showPopupConfirmAchat( key : String, pokemon: Pokemon?){
+    private fun showPopupConfirmAchat( key : String, pokemons: List<Pokemon>){
         val popupConfirmAchat = PopupConfirmAchat(
             key,
-            pokemon,
+            pokemons,
             endPurchase = ::reloadSolde
         )
         popupConfirmAchat.show((activity as AppCompatActivity).supportFragmentManager, "popupConfirmAchat")
@@ -317,4 +347,5 @@ class BoutiqueFragment : Fragment() {
             }
         }
     }
+
 }

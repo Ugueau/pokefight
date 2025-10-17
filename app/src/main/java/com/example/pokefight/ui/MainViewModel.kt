@@ -59,6 +59,17 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
+    fun getPokemonListByIds(pokemonListIds : List<Int>): LiveData<List<Pokemon>> {
+        val liveData = MutableLiveData<List<Pokemon>>()
+        val pokemonListIdsFiltered = pokemonListIds.filter { id -> id <= PokemonRepository.MAX_ID }
+
+        viewModelScope.launch {
+            val data = PokemonRepository.getPokemons(pokemonListIdsFiltered)
+            liveData.postValue(data)
+        }
+        return liveData
+    }
+
     fun getPokemonById(id: Int): LiveData<Pokemon?> {
         val liveData = MutableLiveData<Pokemon?>()
         if (id <= PokemonRepository.MAX_ID) {

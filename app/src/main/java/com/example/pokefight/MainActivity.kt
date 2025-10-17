@@ -18,13 +18,15 @@ import com.example.pokefight.databinding.ActivityMainBinding
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.RealTimeDatabaseEvent
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.boutique.PopupConfirmAchat
 import com.example.pokefight.ui.friend.PopupFriendDemand
 import com.example.pokefight.ui.swap.PopupSwapDemand
 import com.example.pokefight.ui.swap.PopupSwapWaiting
 import com.example.pokefight.ui.swap.SwapActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import timber.log.Timber
 
-class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenner {
+class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenner, PopupConfirmAchat.OnPopupConfirmAchatListener {
 
     private lateinit var binding: ActivityMainBinding
     val mainViewModel by viewModels<MainViewModel>()
@@ -66,6 +68,7 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
                 R.id.navigation_settings
             )
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -170,5 +173,18 @@ class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenn
 
     override fun onDialogDismiss() {
         currentPopup = null
+    }
+
+    override fun onPopupConfirmAchatResult(
+        isAchatConfirmed: Boolean,
+        pokemons: List<Pokemon>,
+        prix: Int
+    ) {
+        if (isAchatConfirmed)
+        {
+            vm.updateUserSolde(-prix)
+            val pokemonIds = pokemons.map { it.id }
+            vm.addToDiscoveredPokemon(pokemonIds)
+        }
     }
 }
