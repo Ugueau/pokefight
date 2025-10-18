@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import timber.log.Timber
 import java.net.InetAddress
 
 class ConnectionManager {
@@ -42,25 +43,36 @@ class ConnectionManager {
             if (capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                         capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))) {
                 var success = false
+                Timber.tag("ConnectionManager").e("Step1")
                 isInternetReachable().collect{
                     success = it
+                    Timber.tag("ConnectionManager").e("Step4")
                 }
+                Timber.tag("ConnectionManager").e("Step5")
                 return success
             }
+            Timber.tag("ConnectionManager").e("broken :/")
             return false
         }
 
-        suspend private fun isInternetReachable():  Flow<Boolean> = flow {
+        private fun isInternetReachable(): Flow<Boolean> = flow {
             try {
-                // Use a reliable server, such as Google's DNS server (8.8.8.8), for the connectivity check
-                val address = InetAddress.getByName("8.8.8.8")
-                val success = address.isReachable(3000)  // 3 seconds timeout
+                // Use a lightweight HTTP HEAD request instead of ICMP ping
+                val url = java.net.URL("https://clients3.google.com/generate_204")
+                val connection = url.openConnection() as java.net.HttpURLConnection
+                connection.connectTimeout = 3000
+                connection.readTimeout = 3000
+                connection.requestMethod = "HEAD"
+                connection.instanceFollowRedirects = false
+                connection.connect()
+                val success = connection.responseCode == 204
+                Timber.tag("ConnectionManager").e("HTTP success: $success (code ${connection.responseCode})")
                 emit(success)
+                connection.disconnect()
             } catch (e: Exception) {
-                Log.e("Connection Manager", e.message.toString())
+                Timber.tag("ConnectionManager").e("HTTP check failed: ${e.message}")
                 emit(false)
             }
-        }
-            .flowOn(Dispatchers.IO)
+        }.flowOn(Dispatchers.IO)
     }
 }
