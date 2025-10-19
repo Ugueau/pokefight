@@ -43,15 +43,11 @@ class ConnectionManager {
             if (capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                         capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))) {
                 var success = false
-                Timber.tag("ConnectionManager").e("Step1")
                 isInternetReachable().collect{
                     success = it
-                    Timber.tag("ConnectionManager").e("Step4")
                 }
-                Timber.tag("ConnectionManager").e("Step5")
                 return success
             }
-            Timber.tag("ConnectionManager").e("broken :/")
             return false
         }
 

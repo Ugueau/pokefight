@@ -82,7 +82,7 @@ class TeamAdapter(val context : Context, private val fragmentManager: FragmentMa
         val pokemonClick = layout.findViewById<ConstraintLayout>(R.id.team_pokemon)
         pokemonClick.setOnClickListener{
             val popupPokemonDetail = PopupPokemonDetail()
-            popupPokemonDetail.setPokemonToDisplay(pokemon)
+            popupPokemonDetail.setPokemonToDisplay(pokemon, true)
             popupPokemonDetail.show(fragmentManager, "popupPokemonDetail")
         }
 

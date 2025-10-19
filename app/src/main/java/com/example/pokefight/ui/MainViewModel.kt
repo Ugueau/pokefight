@@ -374,7 +374,7 @@ class MainViewModel : ViewModel() {
                 while (pokemonFound < 3) {
                     val random = java.util.Random()
                     val randomNumber =
-                        random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+                        random.nextInt(PokemonRepository.MAX_ID) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
 
                     val pokemon = PokemonRepository.getPokemonById(randomNumber)
 

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import com.example.pokefight.R
+import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.ui.MainViewModel
 import com.squareup.picasso.Picasso
@@ -154,7 +155,7 @@ class BoutiqueFragment : Fragment() {
         val layoutPokeball = (view.findViewById(R.id.layoutPokeball)as ConstraintLayout)
         layoutPokeball.setOnClickListener {
             val random = java.util.Random()
-            val randomPokemonId = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+            val randomPokemonId = random.nextInt(PokemonRepository.MAX_ID) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
             val pokemons = mutableListOf<Pokemon>()
             vm.getPokemonById(randomPokemonId).observe(viewLifecycleOwner){
                 if (it != null) {
@@ -173,7 +174,7 @@ class BoutiqueFragment : Fragment() {
             val pokemonIds = mutableListOf<Int>()
             for (i in 0..1){
                 val random = java.util.Random()
-                val randomPokemonId = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+                val randomPokemonId = random.nextInt(PokemonRepository.MAX_ID) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
                 pokemonIds.add(randomPokemonId)
             }
             vm.getPokemonListByIds(pokemonIds).observe(viewLifecycleOwner){ pokemonList ->
@@ -191,7 +192,7 @@ class BoutiqueFragment : Fragment() {
             val pokemonIds = mutableListOf<Int>()
             for (i in 0..2){
                 val random = java.util.Random()
-                val randomPokemonId = random.nextInt(151) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
+                val randomPokemonId = random.nextInt(PokemonRepository.MAX_ID) + 1 // random number betwin 0 & 150 + 1 to start at 1 and finish at 151
                 pokemonIds.add(randomPokemonId)
             }
             vm.getPokemonListByIds(pokemonIds).observe(viewLifecycleOwner){ pokemonList ->

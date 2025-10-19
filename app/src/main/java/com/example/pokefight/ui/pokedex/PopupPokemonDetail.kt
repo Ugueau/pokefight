@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.example.pokefight.R
@@ -21,10 +22,12 @@ import com.example.pokefight.model.formatId
 import com.example.pokefight.model.getAttribute
 import com.example.pokefight.model.getRarity
 import com.example.pokefight.model.getTypeColor
+import com.example.pokefight.tools.ColorHelper
 import com.squareup.picasso.Picasso
 
 class  PopupPokemonDetail : DialogFragment() {
     lateinit var pokemon: Pokemon
+     var pokemonIsOwned: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,8 +44,9 @@ class  PopupPokemonDetail : DialogFragment() {
         return v
     }
 
-    fun setPokemonToDisplay(pokemonToDisplay: Pokemon){
+    fun setPokemonToDisplay(pokemonToDisplay: Pokemon, pokemonToDisplayIsOwned : Boolean){
         pokemon = pokemonToDisplay
+        pokemonIsOwned = pokemonToDisplayIsOwned
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,6 +61,7 @@ class  PopupPokemonDetail : DialogFragment() {
         val imageUrl = pokemon.sprites.frontDefault
         Picasso.get().load(imageUrl).into(sprite)
 
+        val card = view.findViewById<ConstraintLayout>(R.id.popup_detail_card)
         val nameAndId = view.findViewById<TextView>(R.id.pokedex_detail_name)
         val type1 = view.findViewById<TextView>(R.id.pokedex_detail_type1)
         val type2 = view.findViewById<TextView>(R.id.pokedex_detail_type2)
@@ -64,6 +69,11 @@ class  PopupPokemonDetail : DialogFragment() {
         val attack = view.findViewById<TextView>(R.id.pokedex_detail_attack)
         val defense = view.findViewById<TextView>(R.id.pokedex_detail_defense)
         val rarity = view.findViewById<TextView>(R.id.pokedex_rarity)
+        val isOwnedTv = view.findViewById<TextView>(R.id.is_owned)
+
+        val starIconIv = view.findViewById<ImageView>(R.id.team_star3)
+        val shieldIconIv = view.findViewById<ImageView>(R.id.shield_sprite)
+        val swordIconIv = view.findViewById<ImageView>(R.id.sword_sprite)
 
         nameAndId.text = "${pokemon.name.capitalize()} ${pokemon.formatId(pokemon.id)}"
 
@@ -90,6 +100,26 @@ class  PopupPokemonDetail : DialogFragment() {
         defense.text = pokemon.getAttribute(Attribute.DEFENSE).toString()
 
         rarity.text = pokemon.getRarity().name
+
+        // Change color if pokemon is not owned
+        if (pokemonIsOwned)
+        {
+            isOwnedTv.visibility = View.VISIBLE
+        }
+        else
+        {
+            isOwnedTv.visibility = View.GONE
+            val cardDrawableSecondary = ContextCompat.getDrawable(requireContext(), R.drawable.popup_container_secondary)
+            card.background = cardDrawableSecondary
+            val secondaryColor = ColorHelper.resolveThemeColorAttribute(requireContext(), com.google.android.material.R.attr.colorSecondaryContainer)
+            val onSecondaryColor = ColorHelper.resolveThemeColorAttribute(requireContext(), com.google.android.material.R.attr.colorOnSecondaryContainer)
+            close.setBackgroundColor(secondaryColor)
+            close.setTextColor(onSecondaryColor)
+
+            starIconIv.setImageResource(R.drawable.star_svgrepo_com_secondary)
+            shieldIconIv.setImageResource(R.drawable.shield_alt_svgrepo_com_secondary)
+            swordIconIv.setImageResource( R.drawable.sword_svgrepo_com_secondary)
+        }
     }
 
 }

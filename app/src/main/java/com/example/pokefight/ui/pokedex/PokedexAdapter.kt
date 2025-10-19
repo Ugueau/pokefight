@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.formatId
+import com.example.pokefight.tools.ColorHelper
 import com.squareup.picasso.Picasso
 
 class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemon>, private val fragmentManager: FragmentManager)  : RecyclerView.Adapter<PokedexAdapter.PokedexViewHolder>(){
@@ -65,16 +66,16 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
         holder.pokemon_card.background = label
 
         val textColor = if (!teamMode && !discoveredPokemons.contains(pokemon.id)) {
-            resolveThemeColorAttribute(context, com.google.android.material.R.attr.colorOnSecondaryContainer)
+            ColorHelper.resolveThemeColorAttribute(context, com.google.android.material.R.attr.colorOnSecondaryContainer)
         } else {
-            resolveThemeColorAttribute(context, com.google.android.material.R.attr.colorOnPrimaryContainer)
+            ColorHelper.resolveThemeColorAttribute(context, com.google.android.material.R.attr.colorOnPrimaryContainer)
         }
         holder.pokemon_name.setTextColor(textColor)
 
         if(!teamMode) {
             holder.pokemon_card.setOnClickListener {
                 val popupPokemonDetail = PopupPokemonDetail()
-                popupPokemonDetail.setPokemonToDisplay(pokemon)
+                popupPokemonDetail.setPokemonToDisplay(pokemon, discoveredPokemons.contains(pokemon.id))
                 popupPokemonDetail.show(fragmentManager, "popupPokemonDetail")
             }
         }
@@ -85,12 +86,5 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
         }
         val imageUrl = pokemon.sprites.frontDefault
         Picasso.get().load(imageUrl).into(holder.pokemon_sprite)
-    }
-
-    private fun resolveThemeColorAttribute(context: Context, attr: Int): Int {
-        val typedValue = TypedValue()
-        val theme = context.theme
-        theme.resolveAttribute(attr, typedValue, true)
-        return typedValue.data
     }
 }
