@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flow
 
 object PokemonRepository {
 
-    const val MAX_ID: Int = 151
+    const val MAX_ID: Int = 251
     suspend fun fetchPokemons(fromId: Int, toId: Int): Flow<List<Pokemon>> = flow {
         if (DSPokemonCache.getCacheSize() == MAX_ID) {
             emit(DSPokemonCache.all())
