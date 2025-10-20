@@ -1,6 +1,8 @@
 package com.example.pokefight.ui.pokedex
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -80,10 +82,15 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
 
 
         if(!teamMode) {
-            holder.pokemon_card.setOnClickListener {
-                val popupPokemonDetail = PopupPokemonDetail()
-                popupPokemonDetail.setPokemonToDisplay(pokemon, discoveredPokemons.contains(pokemon.id))
-                popupPokemonDetail.show(fragmentManager, "popupPokemonDetail")
+            if (discoveredPokemons.contains(pokemon.id)) {
+                holder.pokemon_card.setOnClickListener {
+                    val popupPokemonDetail = PopupPokemonDetail()
+                    popupPokemonDetail.setPokemonToDisplay(
+                        pokemon,
+                        discoveredPokemons.contains(pokemon.id)
+                    )
+                    popupPokemonDetail.show(fragmentManager, "popupPokemonDetail")
+                }
             }
         }
         else{
@@ -92,22 +99,20 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
             }
         }
         val imageUrl = pokemon.sprites.frontDefault
+        Picasso.get().load(imageUrl).into(holder.pokemon_sprite)
         if (isUndiscovered)
         {
-            holder.pokemon_sprite.setImageResource(R.drawable.question_mark_circled_svgrepo_com)
+            holder.pokemon_sprite.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+            holder.pokemon_name.text = "?".repeat(holder.pokemon_name.text.length)
         }
         else
         {
-            Picasso.get().load(imageUrl).into(holder.pokemon_sprite)
+            holder.pokemon_sprite.clearColorFilter()
         }
         val alpha = if (isUndiscovered) 0.55f else 1f
         holder.pokemon_sprite.alpha = alpha
         holder.pokemon_name.alpha = alpha
-        holder.pokemon_id.alpha = alpha
         holder.pokemon_card.alpha = alpha
 
-        val scale = if (isUndiscovered) 1f else 3f
-        holder.pokemon_sprite.scaleX = scale
-        holder.pokemon_sprite.scaleY = scale
     }
 }
