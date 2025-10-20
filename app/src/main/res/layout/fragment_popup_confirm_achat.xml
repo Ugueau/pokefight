@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:background="@drawable/outlined_button_secondary"
             android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="parent"

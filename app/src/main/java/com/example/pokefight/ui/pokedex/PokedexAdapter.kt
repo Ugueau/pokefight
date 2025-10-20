@@ -27,6 +27,8 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
         val pokemon_id: TextView = view.findViewById(R.id.pokedex_pokemon_id)
         val pokemon_sprite: ImageView = view.findViewById(R.id.pokedex_pokemon_sprite)
         val pokemon_card : ConstraintLayout = view.findViewById(R.id.pokedex_pokemon)
+
+        val pokeball_owned_icon : ImageView = view.findViewById<ImageView>(R.id.pokeball_owned_icon)
     }
 
     fun updatePokemonList(pokemonList: List<Pokemon>){
@@ -58,19 +60,24 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
         holder.pokemon_name.text = pokemon.name.capitalize()
         holder.pokemon_id.text = pokemon.formatId(pokemon.id)
 
-        val label = if (!teamMode && !discoveredPokemons.contains(pokemon.id)) {
-            ContextCompat.getDrawable(context, R.drawable.undiscovered_pokemon_container)
-        } else {
-            ContextCompat.getDrawable(context, R.drawable.primary_container)
-        }
-        holder.pokemon_card.background = label
+        val isUndiscovered = !teamMode && !discoveredPokemons.contains(pokemon.id)
+        holder.pokeball_owned_icon.visibility = if (isUndiscovered) View.GONE else View.VISIBLE
 
-        val textColor = if (!teamMode && !discoveredPokemons.contains(pokemon.id)) {
-            ColorHelper.resolveThemeColorAttribute(context, com.google.android.material.R.attr.colorOnSecondaryContainer)
+        val backgroundRes = if (isUndiscovered) {
+            R.drawable.undiscovered_pokemon_container
         } else {
-            ColorHelper.resolveThemeColorAttribute(context, com.google.android.material.R.attr.colorOnPrimaryContainer)
+            R.drawable.primary_container
         }
+        holder.pokemon_card.background = ContextCompat.getDrawable(context, backgroundRes)
+
+        val textColorAttr = if (isUndiscovered) {
+            com.google.android.material.R.attr.colorOnSecondaryContainer
+        } else {
+            com.google.android.material.R.attr.colorOnPrimaryContainer
+        }
+        val textColor = ColorHelper.resolveThemeColorAttribute(context, textColorAttr)
         holder.pokemon_name.setTextColor(textColor)
+
 
         if(!teamMode) {
             holder.pokemon_card.setOnClickListener {
@@ -85,6 +92,22 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
             }
         }
         val imageUrl = pokemon.sprites.frontDefault
-        Picasso.get().load(imageUrl).into(holder.pokemon_sprite)
+        if (isUndiscovered)
+        {
+            holder.pokemon_sprite.setImageResource(R.drawable.question_mark_circled_svgrepo_com)
+        }
+        else
+        {
+            Picasso.get().load(imageUrl).into(holder.pokemon_sprite)
+        }
+        val alpha = if (isUndiscovered) 0.55f else 1f
+        holder.pokemon_sprite.alpha = alpha
+        holder.pokemon_name.alpha = alpha
+        holder.pokemon_id.alpha = alpha
+        holder.pokemon_card.alpha = alpha
+
+        val scale = if (isUndiscovered) 1f else 3f
+        holder.pokemon_sprite.scaleX = scale
+        holder.pokemon_sprite.scaleY = scale
     }
 }
