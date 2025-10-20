@@ -62,7 +62,6 @@ class ConnectionManager {
                 connection.instanceFollowRedirects = false
                 connection.connect()
                 val success = connection.responseCode == 204
-                Timber.tag("ConnectionManager").e("HTTP success: $success (code ${connection.responseCode})")
                 emit(success)
                 connection.disconnect()
             } catch (e: Exception) {

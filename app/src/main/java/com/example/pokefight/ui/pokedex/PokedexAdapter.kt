@@ -18,6 +18,7 @@ import com.example.pokefight.model.Pokemon
 import com.example.pokefight.model.formatId
 import com.example.pokefight.tools.ColorHelper
 import com.squareup.picasso.Picasso
+import timber.log.Timber
 
 class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemon>, private val fragmentManager: FragmentManager)  : RecyclerView.Adapter<PokedexAdapter.PokedexViewHolder>(){
     private var teamMode = false
