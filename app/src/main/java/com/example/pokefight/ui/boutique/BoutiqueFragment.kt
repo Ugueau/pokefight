@@ -15,6 +15,8 @@ import androidx.fragment.app.viewModels
 import com.example.pokefight.R
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.Rarity
+import com.example.pokefight.model.getRarity
 import com.example.pokefight.ui.MainViewModel
 import com.squareup.picasso.Picasso
 
@@ -42,6 +44,10 @@ class BoutiqueFragment : Fragment() {
     private lateinit var SpritePokemon2 : ImageView
     private lateinit var SpritePokemon3 : ImageView
 
+    private lateinit var RarityPokeon1 : ImageView
+    private lateinit var RarityPokeon2 : ImageView
+    private lateinit var RarityPokeon3 : ImageView
+
     private lateinit var NomPokemon1 : TextView
     private lateinit var NomPokemon2 : TextView
     private lateinit var NomPokemon3 : TextView
@@ -68,6 +74,10 @@ class BoutiqueFragment : Fragment() {
         SpritePokemon1 = view.findViewById(R.id.SpritePokemon1)
         SpritePokemon2 = view.findViewById(R.id.SpritePokemon2)
         SpritePokemon3 = view.findViewById(R.id.SpritePokemon3)
+
+        RarityPokeon1 = view.findViewById(R.id.RarityPokemon1)
+        RarityPokeon2 = view.findViewById(R.id.RarityPokemon2)
+        RarityPokeon3 = view.findViewById(R.id.RarityPokemon3)
 
         NomPokemon1 = view.findViewById(R.id.NomPokemon1)
         NomPokemon2 = view.findViewById(R.id.NomPokemon2)

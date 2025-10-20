@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.example.pokefight.R
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.Rarity
 import com.example.pokefight.model.formatId
 import com.example.pokefight.model.getRarity
 import com.example.pokefight.model.getTypeColor
@@ -78,6 +79,15 @@ class TeamAdapter(val context : Context, private val fragmentManager: FragmentMa
 
         val rarity = layout.findViewById<TextView>(R.id.team_rarity)
         rarity.text = pokemon.getRarity().name
+
+        val rarity_logo = layout.findViewById<ImageView>(R.id.team_rarity_logo)
+        when(pokemon.getRarity().value){
+            Rarity.COMMON.value -> rarity_logo.setImageResource(R.drawable.common_logo_on_primary_container)
+            Rarity.UNCOMMON.value -> rarity_logo.setImageResource(R.drawable.uncommon_logo_on_primary_container)
+            Rarity.RARE.value -> rarity_logo.setImageResource(R.drawable.rare_logo_on_primary_container)
+            Rarity.EPIC.value -> rarity_logo.setImageResource(R.drawable.epic_logo_on_primary_container)
+            Rarity.LEGENDARY.value -> rarity_logo.setImageResource(R.drawable.legendary_logo_on_primary_container)
+        }
 
         val pokemonClick = layout.findViewById<ConstraintLayout>(R.id.team_pokemon)
         pokemonClick.setOnClickListener{

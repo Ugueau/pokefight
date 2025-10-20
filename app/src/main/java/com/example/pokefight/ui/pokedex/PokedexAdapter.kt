@@ -1,7 +1,6 @@
 package com.example.pokefight.ui.pokedex
 
 import android.content.Context
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokefight.R
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.Rarity
 import com.example.pokefight.model.formatId
+import com.example.pokefight.model.getRarity
 import com.example.pokefight.tools.ColorHelper
 import com.squareup.picasso.Picasso
 
@@ -28,7 +29,7 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
         val pokemon_sprite: ImageView = view.findViewById(R.id.pokedex_pokemon_sprite)
         val pokemon_card : ConstraintLayout = view.findViewById(R.id.pokedex_pokemon)
 
-        val pokeball_owned_icon : ImageView = view.findViewById<ImageView>(R.id.pokeball_owned_icon)
+        val pokemon_rarity : ImageView = view.findViewById<ImageView>(R.id.pokemon_rarity)
     }
 
     fun updatePokemonList(pokemonList: List<Pokemon>){
@@ -61,7 +62,16 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
         holder.pokemon_id.text = pokemon.formatId(pokemon.id)
 
         val isUndiscovered = !teamMode && !discoveredPokemons.contains(pokemon.id)
-        holder.pokeball_owned_icon.visibility = if (isUndiscovered) View.GONE else View.VISIBLE
+
+        when (pokemon.getRarity().value){
+            Rarity.COMMON.value -> holder.pokemon_rarity.setImageResource(R.drawable.common_logo_on_primary_container)
+            Rarity.UNCOMMON.value -> holder.pokemon_rarity.setImageResource(R.drawable.uncommon_logo_on_primary_container)
+            Rarity.RARE.value -> holder.pokemon_rarity.setImageResource(R.drawable.rare_logo_on_primary_container)
+            Rarity.EPIC.value -> holder.pokemon_rarity.setImageResource(R.drawable.epic_logo_on_primary_container)
+            Rarity.LEGENDARY.value -> holder.pokemon_rarity.setImageResource(R.drawable.legendary_logo_on_primary_container)
+        }
+
+        holder.pokemon_rarity.visibility = if (isUndiscovered) View.GONE else View.VISIBLE
 
         val backgroundRes = if (isUndiscovered) {
             R.drawable.undiscovered_pokemon_container

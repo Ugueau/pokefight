@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.pokefight.R
 import com.example.pokefight.model.Attribute
 import com.example.pokefight.model.Pokemon
+import com.example.pokefight.model.Rarity
 import com.example.pokefight.model.formatId
 import com.example.pokefight.model.getAttribute
 import com.example.pokefight.model.getRarity
@@ -71,7 +72,7 @@ class  PopupPokemonDetail : DialogFragment() {
         val rarity = view.findViewById<TextView>(R.id.pokedex_rarity)
         val isOwnedTv = view.findViewById<TextView>(R.id.is_owned)
 
-        val starIconIv = view.findViewById<ImageView>(R.id.team_star3)
+        val rarity_logo = view.findViewById<ImageView>(R.id.rarity_logo)
         val shieldIconIv = view.findViewById<ImageView>(R.id.shield_sprite)
         val swordIconIv = view.findViewById<ImageView>(R.id.sword_sprite)
 
@@ -100,6 +101,13 @@ class  PopupPokemonDetail : DialogFragment() {
         defense.text = pokemon.getAttribute(Attribute.DEFENSE).toString()
 
         rarity.text = pokemon.getRarity().name
+        when (pokemon.getRarity().value){
+            Rarity.COMMON.value -> rarity_logo.setImageResource(R.drawable.common_logo_on_primary_container)
+            Rarity.UNCOMMON.value -> rarity_logo.setImageResource(R.drawable.uncommon_logo_on_primary_container)
+            Rarity.RARE.value -> rarity_logo.setImageResource(R.drawable.rare_logo_on_primary_container)
+            Rarity.EPIC.value -> rarity_logo.setImageResource(R.drawable.epic_logo_on_primary_container)
+            Rarity.LEGENDARY.value -> rarity_logo.setImageResource(R.drawable.legendary_logo_on_primary_container)
+        }
 
         // Change color if pokemon is not owned
         if (pokemonIsOwned)
@@ -116,7 +124,6 @@ class  PopupPokemonDetail : DialogFragment() {
             close.setBackgroundColor(secondaryColor)
             close.setTextColor(onSecondaryColor)
 
-            starIconIv.setImageResource(R.drawable.star_svgrepo_com_secondary)
             shieldIconIv.setImageResource(R.drawable.shield_alt_svgrepo_com_secondary)
             swordIconIv.setImageResource( R.drawable.sword_svgrepo_com_secondary)
         }
