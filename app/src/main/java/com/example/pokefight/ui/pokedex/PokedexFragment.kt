@@ -60,7 +60,7 @@ class PokedexFragment : Fragment() {
                 Timber.tag("OWNED").e(dp.toString())
                 if (filterString == "Owned")
                 {
-                    mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
+                    mainViewModel.getPokemonList(1, 20)
                         .observe(viewLifecycleOwner) { pokemons ->
                             filterString = ""
                             recyclerViewAdapter.updateDiscoveredPokemon(dp)
