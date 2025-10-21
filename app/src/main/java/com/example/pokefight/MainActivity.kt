@@ -24,7 +24,6 @@ import com.example.pokefight.ui.swap.PopupSwapDemand
 import com.example.pokefight.ui.swap.PopupSwapWaiting
 import com.example.pokefight.ui.swap.SwapActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), PopupSwapDemand.OnDialogDestroyListenner, PopupConfirmAchat.OnPopupConfirmAchatListener {
 

@@ -8,10 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,8 +21,6 @@ import com.example.pokefight.databinding.FragmentPokedexBinding
 import com.example.pokefight.domain.PokemonRepository
 import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import timber.log.Timber
 
 class PokedexFragment : Fragment() {
@@ -54,19 +52,50 @@ class PokedexFragment : Fragment() {
         recyclerView.layoutManager = recyclerViewLayoutManager
         recyclerView.adapter = recyclerViewAdapter
 
+        val filterButton = view.findViewById<Button>(R.id.filter_button)
+        filterButton.setOnClickListener {
+            Timber.tag("OWNED").e("CLICK")
+            mainViewModel.getDiscoveredPokemonsIds().observe(viewLifecycleOwner) { dp ->
+                Timber.tag("OWNED").e(dp.toString())
+                mainViewModel.getPokemonListByIds(dp)
+                    .observe(viewLifecycleOwner) { pokemons ->
+                        filterString = "Owned"
+                        recyclerViewAdapter.updateDiscoveredPokemon(dp)
+                        recyclerViewAdapter.updatePokemonList(pokemons.toList())
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }
+            }
+        }
+
         val searchBarInput = view.findViewById<EditText>(R.id.search_bar)
         searchBarInput.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 searchBarInput.setText("")
                 filterString = ""
+                mainViewModel.getDiscoveredPokemonsIds().observe(viewLifecycleOwner) { dp ->
+                    mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
+                        .observe(viewLifecycleOwner) { pokemons ->
+                            filterString = searchBarInput.text.toString()
+                            val filteredPokemons =
+                                if (filterString != "") pokemons.filter { it.name.contains(this.filterString) } else pokemons
+                            recyclerViewAdapter.updateDiscoveredPokemon(dp)
+                            recyclerViewAdapter.updatePokemonList(filteredPokemons.toList())
+                            recyclerViewAdapter.notifyDataSetChanged()
+                        }
+                }
             }
             else
             {
-                mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount()).observe(viewLifecycleOwner) { pokemons ->
-                    filterString = searchBarInput.text.toString()
-                    val filteredPokemons =  if (filterString != "") pokemons.filter { it.name.contains(this.filterString) } else pokemons
-                    recyclerViewAdapter.updatePokemonList(filteredPokemons.toList())
-                    recyclerViewAdapter.notifyDataSetChanged()
+                mainViewModel.getDiscoveredPokemonsIds().observe(viewLifecycleOwner) { dp ->
+                    mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
+                        .observe(viewLifecycleOwner) { pokemons ->
+                            filterString = searchBarInput.text.toString()
+                            val filteredPokemons =
+                                if (filterString != "") pokemons.filter { it.name.contains(this.filterString) } else pokemons
+                            recyclerViewAdapter.updateDiscoveredPokemon(dp)
+                            recyclerViewAdapter.updatePokemonList(filteredPokemons.toList())
+                            recyclerViewAdapter.notifyDataSetChanged()
+                        }
                 }
             }
         }
@@ -135,7 +164,14 @@ class PokedexFragment : Fragment() {
                     mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 9)
                         .observe(viewLifecycleOwner) { pokemons ->
                             isLoading = false
-                            val filteredPokemons =  if (filterString != "") pokemons.filter { it.name.contains(filterString) } else pokemons
+                            val filteredPokemons = if (filterString != "") pokemons.filter {
+                                it.name.contains(filterString)
+                            } else if (filterString == "Owned") {
+                                mainViewModel.getPokemonListByIds(dp)
+                                    .observe(viewLifecycleOwner) { pokemons ->
+
+                                    }
+                            } else pokemons
                             recyclerViewAdapter.updatePokemonList(filteredPokemons.toList())
                             recyclerViewAdapter.notifyDataSetChanged()
                         }

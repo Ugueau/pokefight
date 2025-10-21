@@ -91,8 +91,7 @@ class PokedexAdapter(val context : Context, private var pokemonList: List<Pokemo
         }
         val textColor = ColorHelper.resolveThemeColorAttribute(context, textColorAttr)
         holder.pokemon_name.setTextColor(textColor)
-
-
+        holder.pokemon_card.setOnClickListener(null)
         if(!teamMode) {
             if (discoveredPokemons.contains(pokemon.id)) {
                 holder.pokemon_card.setOnClickListener {
