@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -53,17 +54,32 @@ class PokedexFragment : Fragment() {
         recyclerView.adapter = recyclerViewAdapter
 
         val filterButton = view.findViewById<Button>(R.id.filter_button)
+        val filterIV = view.findViewById<ImageView>(R.id.filter_button_iv)
         filterButton.setOnClickListener {
-            Timber.tag("OWNED").e("CLICK")
             mainViewModel.getDiscoveredPokemonsIds().observe(viewLifecycleOwner) { dp ->
                 Timber.tag("OWNED").e(dp.toString())
-                mainViewModel.getPokemonListByIds(dp)
-                    .observe(viewLifecycleOwner) { pokemons ->
-                        filterString = "Owned"
-                        recyclerViewAdapter.updateDiscoveredPokemon(dp)
-                        recyclerViewAdapter.updatePokemonList(pokemons.toList())
-                        recyclerViewAdapter.notifyDataSetChanged()
-                    }
+                if (filterString == "Owned")
+                {
+                    mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount())
+                        .observe(viewLifecycleOwner) { pokemons ->
+                            filterString = ""
+                            recyclerViewAdapter.updateDiscoveredPokemon(dp)
+                            recyclerViewAdapter.updatePokemonList(pokemons.toList())
+                            recyclerViewAdapter.notifyDataSetChanged()
+                        }
+                    filterIV.setImageResource(R.drawable.bento_menu_svgrepo_com)
+                }
+                else
+                {
+                    mainViewModel.getPokemonListByIds(dp)
+                        .observe(viewLifecycleOwner) { pokemons ->
+                            filterString = "Owned"
+                            recyclerViewAdapter.updateDiscoveredPokemon(dp)
+                            recyclerViewAdapter.updatePokemonList(pokemons.toList())
+                            recyclerViewAdapter.notifyDataSetChanged()
+                        }
+                    filterIV.setImageResource(R.drawable.pokeball_pokemon_catch_svgrepo_com)
+                }
             }
         }
 
@@ -144,39 +160,39 @@ class PokedexFragment : Fragment() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                if (filterString != "Owned") {
+                    val visibleItemCount = recyclerViewLayoutManager.childCount
+                    val totalItemCount = recyclerViewLayoutManager.itemCount
+                    val firstVisibleItemPosition =
+                        recyclerViewLayoutManager.findFirstVisibleItemPosition()
 
-                val visibleItemCount = recyclerViewLayoutManager.childCount
-                val totalItemCount = recyclerViewLayoutManager.itemCount
-                val firstVisibleItemPosition =
-                    recyclerViewLayoutManager.findFirstVisibleItemPosition()
-
-                mainViewModel.checkNetworkConnection(requireContext()).observe(viewLifecycleOwner){isConnected ->
-                    if(!isConnected){
-                        val i = Intent(requireContext(), ErrorActivity::class.java)
-                        startActivity(i)
-                        activity?.finish()
+                    mainViewModel.checkNetworkConnection(requireContext())
+                        .observe(viewLifecycleOwner) { isConnected ->
+                            if (!isConnected) {
+                                val i = Intent(requireContext(), ErrorActivity::class.java)
+                                startActivity(i)
+                                activity?.finish()
+                            }
+                        }
+                    // Check end of the list reached
+                    if (totalItemCount < PokemonRepository.MAX_ID && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && !isLoading) {
+                        // Load more data
+                        isLoading = true
+                        mainViewModel.getPokemonList(
+                            1,
+                            PokemonRepository.getLoadedPokemonAmount() + 9
+                        )
+                            .observe(viewLifecycleOwner) { pokemons ->
+                                isLoading = false
+                                val filteredPokemons =
+                                    if (filterString != "")
+                                        pokemons.filter { it.name.contains(filterString) }
+                                    else pokemons
+                                recyclerViewAdapter.updatePokemonList(filteredPokemons.toList())
+                                recyclerViewAdapter.notifyDataSetChanged()
+                            }
                     }
                 }
-                // Check end of the list reached
-                if (totalItemCount < PokemonRepository.MAX_ID && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && !isLoading) {
-                    // Load more data
-                    isLoading = true
-                    mainViewModel.getPokemonList(1, PokemonRepository.getLoadedPokemonAmount() + 9)
-                        .observe(viewLifecycleOwner) { pokemons ->
-                            isLoading = false
-                            val filteredPokemons = if (filterString != "") pokemons.filter {
-                                it.name.contains(filterString)
-                            } else if (filterString == "Owned") {
-                                mainViewModel.getPokemonListByIds(dp)
-                                    .observe(viewLifecycleOwner) { pokemons ->
-
-                                    }
-                            } else pokemons
-                            recyclerViewAdapter.updatePokemonList(filteredPokemons.toList())
-                            recyclerViewAdapter.notifyDataSetChanged()
-                        }
-                }
-
             }
         })
 

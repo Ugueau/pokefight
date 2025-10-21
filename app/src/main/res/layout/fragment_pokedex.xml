@@ -35,7 +35,7 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/inverse_primary_container"
                 android:padding="16dp"
-                android:hint="Search Pokémon"
+                android:hint="Search Pokemon"
                 android:textColor="?attr/colorOnPrimaryContainer"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -54,10 +54,11 @@
                 app:layout_constraintBottom_toBottomOf="parent" />
 
             <ImageView
+                android:id="@+id/filter_button_iv"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
-                android:src="@drawable/filter_svgrepo_com"
+                android:src="@drawable/bento_menu_svgrepo_com"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:elevation="10dp"
