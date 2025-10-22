@@ -37,4 +37,14 @@ object DSFireAuth {
             Log.e("Logout", e.message.toString())
         }
     }
+
+    fun isUserStillAuthenticated() : String?
+    {
+        val auth = Firebase.auth
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            return auth.currentUser?.uid
+        }
+        return null
+    }
 }

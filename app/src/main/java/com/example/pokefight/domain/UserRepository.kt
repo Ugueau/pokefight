@@ -259,4 +259,14 @@ object UserRepository {
         }
         return friends
     }
+
+    suspend fun isUserStillAuthenticated() : User?
+    {
+        val uid = DSFireAuth.isUserStillAuthenticated()
+        if (uid != null)
+        {
+            return this.fetchUser(uid)
+        }
+        return null
+    }
 }

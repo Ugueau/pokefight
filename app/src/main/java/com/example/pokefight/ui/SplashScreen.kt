@@ -7,13 +7,16 @@ import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.example.pokefight.BuildConfig
 import com.example.pokefight.LoginActivity
+import com.example.pokefight.MainActivity
 import com.example.pokefight.R
+import com.example.pokefight.domain.UserRepository
 
 class SplashScreen : AppCompatActivity() {
     val mainViewModel by viewModels<MainViewModel>()
@@ -37,9 +40,29 @@ class SplashScreen : AppCompatActivity() {
         mainViewModel.checkNetworkConnection(this).observe(this) { isConnected ->
             if (isConnected) {
                 mainViewModel.getPokemonList(1, 30).observe(this) {
-                    val i = Intent(applicationContext, LoginActivity::class.java)
-                    startActivity(i)
-                    finish()
+                    // Try auto auth the user and if failed launch login activity for casual log
+                    mainViewModel.autoAuthUser().observe(this){ user ->
+                        if (user != null)
+                        {
+                            Toast.makeText(
+                                baseContext,
+                                "${user.Email} connected",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                            mainViewModel.connectUser(user)
+                            mainViewModel.endSwapDemand().observe(this) {
+                                val mainActivity = Intent(this, MainActivity::class.java)
+                                startActivity(mainActivity)
+                                finish()
+                            }
+                        }
+                        else
+                        {
+                            val i = Intent(applicationContext, LoginActivity::class.java)
+                            startActivity(i)
+                            finish()
+                        }
+                    }
                 }
             } else {
                 val i = Intent(applicationContext, ErrorActivity::class.java)

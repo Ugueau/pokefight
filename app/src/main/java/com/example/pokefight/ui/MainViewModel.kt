@@ -401,4 +401,19 @@ class MainViewModel : ViewModel() {
         }
         return liveData
     }
+
+    fun autoAuthUser() : LiveData<User?>
+    {
+        val liveData = MutableLiveData<User?>()
+        viewModelScope.launch {
+            val user = UserRepository.isUserStillAuthenticated()
+            if (user != null) {
+                UserRepository.fetchTeam(user.UserToken)
+                liveData.postValue(user)
+            } else {
+                liveData.postValue(null)
+            }
+        }
+        return liveData
+    }
 }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.pokefight.model.User
 import com.example.pokefight.ui.ErrorActivity
 import com.example.pokefight.ui.MainViewModel
 import com.google.android.material.textfield.TextInputEditText
@@ -92,27 +93,8 @@ class LoginActivity : AppCompatActivity() {
             passwordLayout.error = "Mandatory Password"
 
         } else {
-            mainViewModel.signIn(email.text.toString(), password.text.toString()).observe(this) {
-                if (it != null) {
-                    Toast.makeText(
-                        baseContext,
-                        "${it.Email} connected",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-
-                    mainViewModel.connectUser(it)
-                    mainViewModel.endSwapDemand().observe(this) {
-                        mainActivity = Intent(this, MainActivity::class.java)
-                        startActivity(mainActivity)
-                        finish()
-                    }
-                } else {
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+            mainViewModel.signIn(email.text.toString(), password.text.toString()).observe(this) { user ->
+                this.signUserInProcess(user)
             }
         }
     }
@@ -121,5 +103,29 @@ class LoginActivity : AppCompatActivity() {
         tunnelConnexion = Intent(this, TunnelConnexionActivity::class.java)
         startActivity(tunnelConnexion)
         finish()
+    }
+
+    fun signUserInProcess(user : User?)
+    {
+            if (user != null) {
+                Toast.makeText(
+                    baseContext,
+                    "${user.Email} connected",
+                    Toast.LENGTH_SHORT,
+                ).show()
+
+                mainViewModel.connectUser(user)
+                mainViewModel.endSwapDemand().observe(this) {
+                    mainActivity = Intent(this, MainActivity::class.java)
+                    startActivity(mainActivity)
+                    finish()
+                }
+            } else {
+                Toast.makeText(
+                    baseContext,
+                    "Authentication failed",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
     }
 }
