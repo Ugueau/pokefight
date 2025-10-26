@@ -65,10 +65,12 @@ object DSRealTimeDatabase {
         var success = true
         realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("")
             .addOnFailureListener {
+                Timber.tag("CLEAR_SWAP").e("failed 1")
                 success = false
             }
         realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("")
             .addOnFailureListener {
+                Timber.tag("CLEAR_SWAP").e("failed 2")
                 success = false
             }.await()
         return success

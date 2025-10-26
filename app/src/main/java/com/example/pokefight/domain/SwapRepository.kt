@@ -3,6 +3,7 @@ package com.example.pokefight.domain
 import com.example.pokefight.domain.UserRepository.getConnectedUser
 import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.RealTimeDatabaseEvent
+import timber.log.Timber
 
 object SwapRepository {
     private var currentSwap : String = ""
@@ -24,6 +25,7 @@ object SwapRepository {
         if(currentSwap.isNotEmpty() && currentSwap.split("_")[0] == UserRepository.getConnectedUser().UserToken){
             DSRealTimeDatabase.closeSwap(currentSwap)
         }
+        Timber.tag("CLEAR_SWAP").e("etape2")
         val succeeded = DSRealTimeDatabase.clearSwapDemand(UserRepository.getConnectedUser().UserToken)
         currentSwap = ""
         return succeeded
@@ -85,7 +87,7 @@ object SwapRepository {
         UserRepository.addDiscoveredPokemon(newDP)
         UserRepository.removeDiscoveredPokemon(pokemonId1)
 
-
+        Timber.tag("CLEAR_SWAP").e("etape1")
         clearSwapDemand()
         return success
     }
