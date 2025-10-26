@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 object DSRealTimeDatabase {
     private lateinit var realtime: DatabaseReference
@@ -133,7 +134,7 @@ object DSRealTimeDatabase {
             .addOnFailureListener {
                 Log.e("insertUserInRealTimeDatabase", "crashed")
             }.await()
-        realtime.child("users").child(userToken).child("esp32_swap").setValue("")
+        realtime.child("users").child(userToken).child("swap").child("swap_target").setValue("")
             .addOnFailureListener {
                 Log.e("insertUserInRealTimeDatabase", "crashed")
             }.await()
@@ -163,10 +164,12 @@ object DSRealTimeDatabase {
                             }
                         }
                     }
-                }else if(snapshot.key == "esp32_swap") {
-                    snapshot.getValue<String>()?.let {value ->
-                        realtime.child("users").child(userToken).child("esp32_swap").setValue("")
-                        callback(RealTimeDatabaseEvent.SWAP_CREATE_SWAP(value))
+                    snapshot.child("swap_target").key?.let { field ->
+                        snapshot.child("swap_target").getValue<String>()?.let { value ->
+                            Timber.tag("SWAP_CREATE").e("from onchange swap $value")
+                            realtime.child("users").child(userToken).child("swap").child("swap_target").setValue("")
+                            callback(RealTimeDatabaseEvent.SWAP_CREATE_SWAP(value))
+                        }
                     }
                 }else if(snapshot.key == "friend") {
                     snapshot.child("fromUser").key?.let { field ->
@@ -207,6 +210,14 @@ object DSRealTimeDatabase {
         realtime.child("users").child(userToken).addChildEventListener(postListener)
     }
 
+    suspend fun askForASwap(targetUserToken : String, fromUserToken : String) :Boolean {
+        var success = true
+        realtime.child("users").child(fromUserToken).child("swap").child("swap_target").setValue(targetUserToken).addOnFailureListener {
+            success = false
+        }.await()
+        return success
+    }
+
     suspend fun sendSwapAccept(creatorToken: String) {
         realtime.child("users").child(creatorToken).child("swap").child("hasAccepted")
             .setValue("accepted").await()
@@ -222,22 +233,22 @@ object DSRealTimeDatabase {
     suspend fun validateSwap(swapName: String) {
         realtime.child("swap").child(swapName).child("hasValidated").get().addOnSuccessListener {
             val nbOfValidation = it.value as Long
-            if (nbOfValidation.toInt() == 1) {
-                val creatorToken = swapName.split("_")[0]
-                val targetToken = swapName.split("_")[1]
-                realtime.child("swap").child(swapName).child("creator_${creatorToken}").get()
-                    .addOnSuccessListener { p1 ->
-                        val pokemon1 = p1.value as Long
-                        realtime.child("swap").child(swapName).child("target_${targetToken}").get()
-                            .addOnSuccessListener { p2 ->
-                                val pokemon2 = p2.value as Long
-                                realtime.child("swap").child(swapName)
-                                    .child("creator_${creatorToken}").setValue(pokemon2)
-                                realtime.child("swap").child(swapName)
-                                    .child("target_${targetToken}").setValue(pokemon1)
-                            }
-                    }
-            }
+//            if (nbOfValidation.toInt() == 1) { // check if the other has validated the swap adn process to it else just add 1 to number of validation and let the other do it
+//                val creatorToken = swapName.split("_")[0]
+//                val targetToken = swapName.split("_")[1]
+//                realtime.child("swap").child(swapName).child("creator_${creatorToken}").get()
+//                    .addOnSuccessListener { p1 ->
+//                        val pokemon1 = p1.value as Long
+//                        realtime.child("swap").child(swapName).child("target_${targetToken}").get()
+//                            .addOnSuccessListener { p2 ->
+//                                val pokemon2 = p2.value as Long
+//                                realtime.child("swap").child(swapName)
+//                                    .child("creator_${creatorToken}").setValue(pokemon2)
+//                                realtime.child("swap").child(swapName)
+//                                    .child("target_${targetToken}").setValue(pokemon1)
+//                            }
+//                    }
+//            }
             realtime.child("swap").child(swapName).child("hasValidated")
                 .setValue(nbOfValidation + 1)
         }.await()
@@ -266,7 +277,7 @@ object DSRealTimeDatabase {
     suspend fun clearUserSpace(userToken: String){
         realtime.child("users").child(userToken).child("friend").child("hasAccepted").setValue("").await()
         realtime.child("users").child(userToken).child("friend").child("fromUser").setValue("").await()
-        realtime.child("users").child(userToken).child("esp32_swap").setValue("").await()
+        realtime.child("users").child(userToken).child("swap").child("swap_target").setValue("").await()
         realtime.child("users").child(userToken).child("swap").child("hasAccepted").setValue("").await()
         realtime.child("users").child(userToken).child("swap").child("fromUser").setValue("").await()
     }

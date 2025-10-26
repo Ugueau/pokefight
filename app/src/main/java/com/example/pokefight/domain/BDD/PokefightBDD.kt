@@ -9,7 +9,7 @@ import com.example.pokefight.domain.BDD.entity.DiscoveredPokemonBDD
 import com.example.pokefight.domain.BDD.entity.TeamBDD
 import com.example.pokefight.domain.BDD.entity.UserBDD
 
-@Database(entities = [ UserBDD::class, DiscoveredPokemonBDD::class, TeamBDD::class ], version = 10)
+@Database(entities = [ UserBDD::class, DiscoveredPokemonBDD::class, TeamBDD::class ], version = 1)
 @TypeConverters(Converters::class)
 abstract class PokefightBDD: RoomDatabase() {
 
@@ -22,6 +22,7 @@ abstract class PokefightBDD: RoomDatabase() {
         private lateinit var instance: PokefightBDD
 
         fun initDatabase(context: Context){
+            //context.deleteDatabase("PokefightBDD")
             instance = Room.databaseBuilder(
                 context, PokefightBDD::class.java, "PokefightBDD"
             )
@@ -29,7 +30,7 @@ abstract class PokefightBDD: RoomDatabase() {
                 .build()
         }
 
-        fun getInstance(): PokefightBDD{
+        fun getInstance(): PokefightBDD {
             return instance
         }
 

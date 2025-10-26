@@ -80,11 +80,6 @@ class SettingsFragment : Fragment() {
                 }
         }
 
-        mainViewModel.userUpdated.observe(viewLifecycleOwner) {
-            user = mainViewModel.getConnectedUser()
-            nickname.text = user.Nickname
-            email.text = user.Email
-        }
 
         val friendList = view.findViewById<RecyclerView>(R.id.settings_friends_list)
         val friendAdapter = FriendsAdapter()
@@ -94,7 +89,10 @@ class SettingsFragment : Fragment() {
             friendAdapter.setFriendList(friends)
             friendAdapter.notifyDataSetChanged()
         }
-        mainViewModel.userUpdated.observe(viewLifecycleOwner){
+        mainViewModel.userUpdated.observe(viewLifecycleOwner) {
+            user = mainViewModel.getConnectedUser()
+            nickname.text = user.Nickname
+            email.text = user.Email
             mainViewModel.getFriends().observe(viewLifecycleOwner){friends ->
                 friendAdapter.setFriendList(friends)
                 friendAdapter.notifyDataSetChanged()

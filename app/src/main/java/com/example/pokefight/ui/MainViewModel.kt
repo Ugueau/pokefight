@@ -306,6 +306,17 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
+    // Used by fragment to ask for a swap to activity because popup and swap event are managed in activity
+    fun askForASwap(targetUserToken : String) : LiveData<Boolean>
+    {
+        val liveData = MutableLiveData<Boolean>()
+        viewModelScope.launch {
+            val data = SwapRepository.askForASwap(targetUserToken)
+            liveData.postValue(data)
+        }
+        return liveData
+    }
+
     fun logout() {
         UserRepository.logout()
         logout.postValue(true)
@@ -416,4 +427,6 @@ class MainViewModel : ViewModel() {
         }
         return liveData
     }
+
+
 }

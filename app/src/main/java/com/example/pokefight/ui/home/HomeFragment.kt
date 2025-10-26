@@ -16,9 +16,11 @@ import com.example.pokefight.R
 import com.example.pokefight.databinding.FragmentHomeBinding
 import com.example.pokefight.tools.QRCodeTool
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.swap.PopupSwapWaiting
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
+import timber.log.Timber
 
 class HomeFragment : Fragment() {
 
@@ -52,6 +54,17 @@ class HomeFragment : Fragment() {
         TextViewTrophy.text = mainViewModel.getConnectedUser().Trophy.toString()
 
         val qrcodeReader = QRCodeTool(this, requireContext())
+        qrcodeReader.result.observe(viewLifecycleOwner){token ->
+            if(token != "") {
+                mainViewModel.askForASwap(token)
+//                if (currentpopup == null) {
+//                    mainViewModel.createNewSwap(event.targetToken)
+//                    isWaitingForSwapResponse = true
+//                    currentPopup = PopupSwapWaiting(event.targetToken)
+//                    currentPopup?.show(supportFragmentManager, "popupSwapDemand")
+//                }
+            }
+        }
 
         FightButton = view.findViewById<Button>(R.id.FightButton)
         FightButton.setOnClickListener {

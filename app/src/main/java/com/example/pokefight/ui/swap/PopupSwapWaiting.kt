@@ -1,5 +1,7 @@
 package com.example.pokefight.ui.swap
 
+import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,12 +15,25 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.pokefight.R
 import com.example.pokefight.ui.MainViewModel
+import com.example.pokefight.ui.swap.PopupSwapDemand.OnDialogDestroyListenner
 
 class PopupSwapWaiting(private val swaperToken: String) : DialogFragment() {
 
     private val mainViewModel by activityViewModels<MainViewModel>()
     private var hasClicked = false
     private var response = false
+
+    private var onDestroyListenner: OnDialogDestroyListenner? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            onDestroyListenner = context as OnDialogDestroyListenner
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$context must implement OnAcceptedListenner")
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,6 +62,7 @@ class PopupSwapWaiting(private val swaperToken: String) : DialogFragment() {
             creatorDemand.text = "Waiting for $name"
         }
 
+        denyBtn.text = "Cancel"
         denyBtn.setOnClickListener {
             hasClicked = true
             mainViewModel.sendSwapResponse(false)
@@ -73,5 +89,10 @@ class PopupSwapWaiting(private val swaperToken: String) : DialogFragment() {
             mainViewModel.sendSwapResponse(false)
             mainViewModel.endSwapDemand()
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        onDestroyListenner?.onDialogDismiss()
     }
 }

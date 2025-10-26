@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 object DSFireAuth {
     suspend fun signWithEmailAndPassword(email : String, password : String): String? {
@@ -25,6 +26,7 @@ object DSFireAuth {
             return signing.user?.uid
 
         }catch (e : FirebaseException){
+            Timber.tag("account creation").e(e)
             return null
         }
     }

@@ -1,5 +1,6 @@
 package com.example.pokefight.domain
 
+import com.example.pokefight.domain.UserRepository.getConnectedUser
 import com.example.pokefight.domain.firebase.DSRealTimeDatabase
 import com.example.pokefight.model.RealTimeDatabaseEvent
 
@@ -87,5 +88,9 @@ object SwapRepository {
 
         clearSwapDemand()
         return success
+    }
+
+    suspend fun askForASwap(targetUserToken : String) : Boolean {
+        return DSRealTimeDatabase.askForASwap(targetUserToken, getConnectedUser().UserToken)
     }
 }
